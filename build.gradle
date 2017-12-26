@@ -1,9 +1,9 @@
 buildscript {
     repositories {
-	mavenCentral()
+        mavenCentral()
     }
     dependencies {
-	classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
     }
 }
 
@@ -12,7 +12,7 @@ repositories {
 }
 
 ext.junitPlatformVersion = '1.0.2'
-ext.junitJupiterVersion  = '5.0.2'
+ext.junitJupiterVersion = '5.0.2'
 
 apply plugin: 'java'
 apply plugin: 'org.junit.platform.gradle.plugin'
@@ -29,22 +29,22 @@ compileTestJava {
 }
 
 junitPlatform {
-	// platformVersion '1.0.2'
-	filters {
-		engines {
-			// include 'junit-jupiter', 'junit-vintage'
-			// exclude 'custom-engine'
-		}
-		tags {
-			// include 'fast'
-			exclude 'slow'
-		}
-		// includeClassNamePattern '.*Test'
-	}
-	// configurationParameter 'junit.jupiter.conditions.deactivate', '*'
-	// enableStandardTestTask true
-	// reportsDir file('build/test-results/junit-platform') // this is the default
-	logManager 'org.apache.logging.log4j.jul.LogManager'
+    // platformVersion '1.0.2'
+    filters {
+        engines {
+            // include 'junit-jupiter', 'junit-vintage'
+            // exclude 'custom-engine'
+        }
+        tags {
+            // include 'fast'
+            exclude 'slow'
+        }
+        // includeClassNamePattern '.*Test'
+    }
+    // configurationParameter 'junit.jupiter.conditions.deactivate', '*'
+    // enableStandardTestTask true
+    // reportsDir file('build/test-results/junit-platform') // this is the default
+    logManager 'java.util.logging.LogManager'
 }
 
 dependencies {

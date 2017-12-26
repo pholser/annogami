@@ -1,13 +1,12 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.util.Optional;
 
-class DirectPresenceOnConstructor {
-    private final Constructor<?> target;
+class DirectPresenceOnPackage {
+    private final Package target;
 
-    DirectPresenceOnConstructor(Constructor<?> target) {
+    DirectPresenceOnPackage(Package target) {
         this.target = target;
     }
 

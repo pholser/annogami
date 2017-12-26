@@ -14,7 +14,7 @@ class FindingAnnotationDirectlyOnAFieldTest {
             .find(A.class)
             .orElseThrow(() -> new AssertionError("Missing annotation"));
 
-        assertEquals(2, found.value());
+        assertEquals(4, found.value());
     }
 
     @Test void missingFromDirectlyOnField() throws Exception {

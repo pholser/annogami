@@ -5,14 +5,14 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 class DirectPresenceOnMethod {
-    private final Method method;
+    private final Method target;
 
-    DirectPresenceOnMethod(Method method) {
-        this.method = method;
+    DirectPresenceOnMethod(Method target) {
+        this.target = target;
     }
 
     <A extends Annotation> Optional<A> find(Class<A> annotationType) {
         return Optional.ofNullable(
-            method.getDeclaredAnnotation(annotationType));
+            target.getDeclaredAnnotation(annotationType));
     }
 }

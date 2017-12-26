@@ -11,6 +11,7 @@ class DirectPresenceOnType {
     }
 
     <A extends Annotation> Optional<A> find(Class<A> annotationType) {
-        return Optional.ofNullable(target.getDeclaredAnnotation(annotationType));
+        return Optional.ofNullable(
+            target.getDeclaredAnnotation(annotationType));
     }
 }
