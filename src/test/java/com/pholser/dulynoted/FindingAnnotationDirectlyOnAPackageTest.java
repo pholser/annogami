@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FindingAnnotationDirectlyOnAPackageTest {
-    @Test void directlyOnPackage() throws Exception {
+    @Test void directlyOnPackage() {
         A found =
             new DirectPresenceOnPackage(getClass().getPackage())
                 .find(A.class)
@@ -16,7 +16,7 @@ class FindingAnnotationDirectlyOnAPackageTest {
         assertEquals(8, found.value());
     }
 
-    @Test void missingFromDirectlyOnPackage() throws Exception {
+    @Test void missingFromDirectlyOnPackage() {
         assertNull(
             new DirectPresenceOnPackage(getClass().getPackage())
                 .find(B.class)
