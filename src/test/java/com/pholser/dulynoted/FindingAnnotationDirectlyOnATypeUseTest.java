@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FindingAnnotationDirectlyOnATypeUseTest {
     @Test void directlyOnTypeUse() throws Exception {
         C found =
-            new DirectPresenceOnTypeUse(
+            new DirectPresence(
                 DirectlyOnTypeUse.class
                     .getDeclaredMethod("foo")
                     .getAnnotatedExceptionTypes()[0])
@@ -23,7 +23,7 @@ class FindingAnnotationDirectlyOnATypeUseTest {
 
     @Test void missingFromDirectlyOnTypeUse() {
         assertNull(
-            new DirectPresenceOnType(DirectlyOnTypeUse.class).find(B.class)
+            new DirectPresence(DirectlyOnTypeUse.class).find(B.class)
                 .orElse(null));
     }
 

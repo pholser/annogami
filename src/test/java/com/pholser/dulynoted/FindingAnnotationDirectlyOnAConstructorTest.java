@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FindingAnnotationDirectlyOnAConstructorTest {
     @Test void directlyOnConstructor() throws Exception {
         A found =
-            new DirectPresenceOnConstructor(
+            new DirectPresence(
                 DirectlyOnConstructor.class.getDeclaredConstructor())
             .find(A.class)
             .orElseThrow(() -> new AssertionError("Missing annotation"));
@@ -19,7 +19,7 @@ class FindingAnnotationDirectlyOnAConstructorTest {
 
     @Test void missingFromDirectlyOnConstructor() throws Exception {
         assertNull(
-            new DirectPresenceOnConstructor(
+            new DirectPresence(
                 DirectlyOnConstructor.class.getDeclaredConstructor())
             .find(B.class)
             .orElse(null));

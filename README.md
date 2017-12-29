@@ -9,9 +9,14 @@
 - [x] Find annotation directly on a method/ctor parameter
 - [x] Find annotation directly on an annotation type
 - [x] Find annotation directly on a package declaration
-- [ ] Find annotation directly on various type parameters
-- [ ] Find annotation directly on various type use contexts
+- [x] Find annotation directly on various type parameters
+- [x] Find annotation directly on various type use contexts
 - [ ] (JDK 9: Find annotation directly on module declaration)
+
+- [x] Find annotation directly meta-present on an annotated element
+
+- [x] Class nesting
+- [x] Class hierarchy, depth-first, no repeats
 
 ...
 

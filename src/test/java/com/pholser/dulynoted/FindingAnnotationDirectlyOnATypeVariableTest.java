@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FindingAnnotationDirectlyOnATypeVariableTest {
     @Test void directlyOnClassTypeVariable() {
         C found =
-            new DirectPresenceOnTypeVariable<>(
+            new DirectPresence(
                 DirectlyOnTypeVariable.class.getTypeParameters()[0])
                 .find(C.class)
                 .orElseThrow(() -> new AssertionError("Missing annotation"));
@@ -19,7 +19,7 @@ class FindingAnnotationDirectlyOnATypeVariableTest {
 
     @Test void missingFromDirectlyOnClassTypeVariable() {
         assertNull(
-            new DirectPresenceOnTypeVariable<>(
+            new DirectPresence(
                 DirectlyOnTypeVariable.class.getTypeParameters()[0])
                 .find(B.class)
                 .orElse(null));
@@ -27,7 +27,7 @@ class FindingAnnotationDirectlyOnATypeVariableTest {
 
     @Test void directlyOnConstructorTypeVariable() throws Exception {
         C found =
-            new DirectPresenceOnTypeVariable<>(
+            new DirectPresence(
                 DirectlyOnTypeVariable.class
                     .getDeclaredConstructor(Object.class)
                     .getTypeParameters()[0])
@@ -39,7 +39,7 @@ class FindingAnnotationDirectlyOnATypeVariableTest {
 
     @Test void missingFromDirectlyOnConstructorTypeVariable() throws Exception {
         assertNull(
-            new DirectPresenceOnTypeVariable<>(
+            new DirectPresence(
                 DirectlyOnTypeVariable.class
                     .getDeclaredConstructor(Object.class)
                     .getTypeParameters()[0])
@@ -49,7 +49,7 @@ class FindingAnnotationDirectlyOnATypeVariableTest {
 
     @Test void directlyOnMethodTypeVariable() throws Exception {
         C found =
-            new DirectPresenceOnTypeVariable<>(
+            new DirectPresence(
                 DirectlyOnTypeVariable.class
                     .getDeclaredMethod("foo", Object.class)
                     .getTypeParameters()[0])
@@ -61,7 +61,7 @@ class FindingAnnotationDirectlyOnATypeVariableTest {
 
     @Test void missingFromDirectlyOnMethodTypeVariable() throws Exception {
         assertNull(
-            new DirectPresenceOnTypeVariable<>(
+            new DirectPresence(
                 DirectlyOnTypeVariable.class
                     .getDeclaredMethod("foo", Object.class)
                     .getTypeParameters()[0])

@@ -4,15 +4,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-class DirectPresenceOnMethod {
+class DirectMetaPresenceEnclosing {
     private final Method target;
 
-    DirectPresenceOnMethod(Method target) {
+    DirectMetaPresenceEnclosing(Method target) {
         this.target = target;
     }
 
     <A extends Annotation> Optional<A> find(Class<A> annotationType) {
-        return Optional.ofNullable(
-            target.getDeclaredAnnotation(annotationType));
+        return new DirectMetaPresence(target).find(annotationType);
     }
 }

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FindingAnnotationDirectlyOnAMethodParameterTest {
     @Test void directlyOnConstructorParameter() throws Exception {
         A found =
-            new DirectPresenceOnMethodParameter(
+            new DirectPresence(
                 DirectlyOnMethodParameter.class
                     .getDeclaredConstructor(int.class)
                     .getParameters()[0])
@@ -21,7 +21,7 @@ class FindingAnnotationDirectlyOnAMethodParameterTest {
 
     @Test void missingFromDirectlyOnConstructorParameter() throws Exception {
         assertNull(
-            new DirectPresenceOnMethodParameter(
+            new DirectPresence(
                 DirectlyOnMethodParameter.class
                     .getDeclaredConstructor(int.class)
                     .getParameters()[0])
@@ -31,7 +31,7 @@ class FindingAnnotationDirectlyOnAMethodParameterTest {
 
     @Test void directlyOnMethodParameter() throws Exception {
         A found =
-            new DirectPresenceOnMethodParameter(
+            new DirectPresence(
                 DirectlyOnMethodParameter.class
                     .getDeclaredMethod("foo", int.class)
                     .getParameters()[0])
@@ -43,7 +43,7 @@ class FindingAnnotationDirectlyOnAMethodParameterTest {
 
     @Test void missingFromDirectlyOnMethodParameter() throws Exception {
         assertNull(
-            new DirectPresenceOnMethodParameter(
+            new DirectPresence(
                 DirectlyOnMethodParameter.class
                     .getDeclaredMethod("foo", int.class)
                     .getParameters()[0])

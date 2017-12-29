@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FindingAnnotationDirectlyOnAMethodTest {
     @Test void directlyOnMethod() throws Exception {
         A found =
-            new DirectPresenceOnMethod(
+            new DirectPresence(
                 DirectlyOnMethod.class.getDeclaredMethod("foo"))
             .find(A.class)
             .orElseThrow(() -> new AssertionError("Missing annotation"));
@@ -19,7 +19,7 @@ class FindingAnnotationDirectlyOnAMethodTest {
 
     @Test void missingFromDirectlyOnMethod() throws Exception {
         assertNull(
-            new DirectPresenceOnMethod(
+            new DirectPresence(
                 DirectlyOnMethod.class.getDeclaredMethod("foo"))
             .find(B.class)
             .orElse(null));

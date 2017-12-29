@@ -1,14 +1,13 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
 
-class DirectPresenceOnTypeVariable<D extends GenericDeclaration> {
-    private final TypeVariable<D> target;
+class DirectPresence {
+    private final AnnotatedElement target;
 
-    DirectPresenceOnTypeVariable(TypeVariable<D> target) {
+    DirectPresence(AnnotatedElement target) {
         this.target = target;
     }
 
