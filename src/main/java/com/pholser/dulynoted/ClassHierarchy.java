@@ -1,10 +1,12 @@
 package com.pholser.dulynoted;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-
-import static java.util.Collections.*;
+import java.util.Queue;
 
 class ClassHierarchy {
     private final Class<?> leaf;
@@ -13,43 +15,70 @@ class ClassHierarchy {
         this.leaf = leaf;
     }
 
-    List<Class<?>> depthFirst() {
-        List<Class<?>> results = new ArrayList<>();
-        collectDepthFirst(leaf, results);
-        return results;
+    List<Class<?>> depthFirstUnique() {
+        List<Class<?>> collected = new LinkedList<>();
+
+        Deque<Class<?>> unconsidered = new LinkedList<>();
+        unconsidered.push(leaf);
+
+        while (!unconsidered.isEmpty()) {
+            Class<?> candidate = unconsidered.pop();
+            if (candidate != Object.class) {
+                if (!collected.contains(candidate))
+                    collected.add(candidate);
+
+                interfacesOf(candidate).forEach(unconsidered::push);
+                superclassHierarchyOf(candidate).forEach(unconsidered::push);
+            }
+        }
+
+        return collected;
     }
 
-    private static void collectDepthFirst(
-        Class<?> start,
-        List<Class<?>> collected) {
+    List<Class<?>> breadthFirstUnique() {
+        List<Class<?>> collected = new LinkedList<>();
 
-        if (start == Object.class)
-            return;
+        Queue<Class<?>> unconsidered = new LinkedList<>();
+        unconsidered.offer(leaf);
 
-        if (!collected.contains(start))
-            collected.add(start);
+        while (!unconsidered.isEmpty()) {
+            Class<?> candidate = unconsidered.remove();
 
-        for (Class<?> c = start.getSuperclass();
+            if (candidate != Object.class) {
+                if (!collected.contains(candidate))
+                collected.add(candidate);
+
+                if (candidate.getSuperclass() != null)
+                    unconsidered.offer(candidate.getSuperclass());
+
+                Arrays.stream(candidate.getInterfaces())
+                    .forEach(unconsidered::offer);
+            }
+        }
+
+        return collected;
+    }
+
+    private static List<Class<?>> superclassHierarchyOf(Class<?> target) {
+        List<Class<?>> hierarchy = new ArrayList<>();
+
+        for (Class<?> c = target.getSuperclass();
             c != null;
             c = c.getSuperclass()) {
 
-            collectDepthFirst(c, collected);
+            hierarchy.add(c);
         }
 
-        for (Class<?> iface : start.getInterfaces())
-            collectDepthFirst(iface, collected);
+        Collections.reverse(hierarchy);
+
+        return hierarchy;
     }
 
-    List<Class<?>> breadthFirst() {
-        if (leaf == Object.class)
-            return emptyList();
+    private static List<Class<?>> interfacesOf(Class<?> target) {
+        List<Class<?>> interfaces = new ArrayList<>();
+        Collections.addAll(interfaces, target.getInterfaces());
+        Collections.reverse(interfaces);
 
-        List<Class<?>> results = new LinkedList<>();
-
-        for (Class<?> c = leaf; c != null; c = c.getSuperclass()) {
-            results.add(c);
-        }
-
-        return results;
+        return interfaces;
     }
 }

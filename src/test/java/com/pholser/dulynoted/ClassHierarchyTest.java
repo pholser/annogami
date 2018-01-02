@@ -9,19 +9,19 @@ import static java.util.Collections.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ClassHierarchyTest {
-    @Test void javaLangObjectDepthFirst() {
+    @Test void javaLangObjectDepthFirstUnique() {
         assertEquals(
             emptyList(),
-            new ClassHierarchy(Object.class).depthFirst());
+            new ClassHierarchy(Object.class).depthFirstUnique());
     }
 
-    @Test void javaLangObjectBreadthFirst() {
+    @Test void javaLangObjectBreadthFirstUnique() {
         assertEquals(
             emptyList(),
-            new ClassHierarchy(Object.class).breadthFirst());
+            new ClassHierarchy(Object.class).breadthFirstUnique());
     }
 
-    @Test void leafDepthFirst() {
+    @Test void leafDepthFirstUnique() {
         assertEquals(
             asList(
                 Child.class,
@@ -32,10 +32,10 @@ class ClassHierarchyTest {
                 Serializable.class,
                 Comparable.class,
                 Cloneable.class),
-            new ClassHierarchy(Child.class).depthFirst());
+            new ClassHierarchy(Child.class).depthFirstUnique());
     }
 
-    @Test void leafBreadthFirst() {
+    @Test void leafBreadthFirstUnique() {
         assertEquals(
             asList(
                 Child.class,
@@ -44,10 +44,9 @@ class ClassHierarchyTest {
                 Grandparent.class,
                 Comparable.class,
                 Cloneable.class,
-                Object.class,
                 Bar.class,
                 Foo.class),
-            new ClassHierarchy(Child.class).breadthFirst());
+            new ClassHierarchy(Child.class).breadthFirstUnique());
     }
 
     private static class Grandparent implements Bar {
