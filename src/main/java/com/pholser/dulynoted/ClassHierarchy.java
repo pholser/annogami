@@ -15,7 +15,7 @@ class ClassHierarchy {
         this.leaf = leaf;
     }
 
-    List<Class<?>> depthFirstUnique() {
+    List<Class<?>> depthFirst() {
         List<Class<?>> collected = new LinkedList<>();
 
         Deque<Class<?>> unconsidered = new LinkedList<>();
@@ -24,18 +24,18 @@ class ClassHierarchy {
         while (!unconsidered.isEmpty()) {
             Class<?> candidate = unconsidered.pop();
             if (candidate != Object.class) {
-                if (!collected.contains(candidate))
-                    collected.add(candidate);
+                collected.add(candidate);
 
                 interfacesOf(candidate).forEach(unconsidered::push);
-                superclassHierarchyOf(candidate).forEach(unconsidered::push);
+                if (candidate.getSuperclass() != null)
+                    unconsidered.push(candidate.getSuperclass());
             }
         }
 
         return collected;
     }
 
-    List<Class<?>> breadthFirstUnique() {
+    List<Class<?>> breadthFirst() {
         List<Class<?>> collected = new LinkedList<>();
 
         Queue<Class<?>> unconsidered = new LinkedList<>();
@@ -45,7 +45,6 @@ class ClassHierarchy {
             Class<?> candidate = unconsidered.remove();
 
             if (candidate != Object.class) {
-                if (!collected.contains(candidate))
                 collected.add(candidate);
 
                 if (candidate.getSuperclass() != null)
@@ -57,21 +56,6 @@ class ClassHierarchy {
         }
 
         return collected;
-    }
-
-    private static List<Class<?>> superclassHierarchyOf(Class<?> target) {
-        List<Class<?>> hierarchy = new ArrayList<>();
-
-        for (Class<?> c = target.getSuperclass();
-            c != null;
-            c = c.getSuperclass()) {
-
-            hierarchy.add(c);
-        }
-
-        Collections.reverse(hierarchy);
-
-        return hierarchy;
     }
 
     private static List<Class<?>> interfacesOf(Class<?> target) {
