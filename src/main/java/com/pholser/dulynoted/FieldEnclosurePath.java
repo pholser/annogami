@@ -4,6 +4,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 class FieldEnclosurePath implements EnclosurePath {
     private final Field target;
@@ -12,13 +13,13 @@ class FieldEnclosurePath implements EnclosurePath {
         this.target = target;
     }
 
-    @Override public List<AnnotatedElement> enclosures() {
+    @Override public Stream<AnnotatedElement> stream() {
         List<AnnotatedElement> enclosures = new ArrayList<>();
         enclosures.add(target);
         enclosures.addAll(new ClassNesting(target.getDeclaringClass()).layers());
         if (target.getDeclaringClass().getPackage() != null)
             enclosures.add(target.getDeclaringClass().getPackage());
 
-        return enclosures;
+        return enclosures.stream();
     }
 }

@@ -1,6 +1,7 @@
 package com.pholser.dulynoted;
 
 import com.pholser.dulynoted.annotations.A;
+import com.pholser.dulynoted.annotations.G;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,7 +37,8 @@ class FindingAnnotationDirectlyMetaPresentOnEnclosuresTest {
 
     @Test void methodOnNestedClass() throws Exception {
         A found =
-            new DirectMetaPresenceEnclosing(I1.class.getDeclaredMethod("a"))
+            new DirectMetaPresenceEnclosing(
+                I1.class.getDeclaredMethod("a", int.class))
                 .find(A.class)
                 .orElseThrow(() -> new AssertionError("Missing annotation"));
 
@@ -65,22 +67,43 @@ class FindingAnnotationDirectlyMetaPresentOnEnclosuresTest {
     @Test void methodOnDoublyNestedClass() throws Exception {
         A found =
             new DirectMetaPresenceEnclosing(
-                I1.I1Level1.class.getDeclaredMethod("b"))
+                I1.I1Level1.class.getDeclaredMethod("b", int.class))
                 .find(A.class)
                 .orElseThrow(() -> new AssertionError("Missing annotation"));
 
         assertEquals(102, found.value());
     }
 
+    @Test void unmarkedMethodParameter() throws Exception {
+        A found =
+            new DirectMetaPresenceEnclosing(
+                I1.class.getDeclaredMethod("a", int.class).getParameters()[0])
+                .find(A.class)
+                .orElseThrow(() -> new AssertionError("Missing annotation"));
+
+        assertEquals(101, found.value());
+    }
+
+    @Test void markedMethodParameter() throws Exception {
+        A found =
+            new DirectMetaPresenceEnclosing(
+                I1.I1Level1.class.getDeclaredMethod("b", int.class)
+                    .getParameters()[0])
+                .find(A.class)
+                .orElseThrow(() -> new AssertionError("Missing annotation"));
+
+        assertEquals(15, found.value());
+    }
+
     @A(100) private interface I1 {
         int I = 0;
 
-        @A(101) void a();
+        @G @A(101) void a(int i);
 
         @A(102) interface I1Level1 {
             @A(103) int J = 0;
 
-            void b();
+            void b(@G int i);
         }
     }
 }

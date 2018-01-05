@@ -1,8 +1,8 @@
 package com.pholser.dulynoted;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.List;
+import java.util.stream.Stream;
 
 interface EnclosurePath {
-    List<AnnotatedElement> enclosures();
+    Stream<AnnotatedElement> stream();
 }

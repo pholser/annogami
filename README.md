@@ -18,5 +18,11 @@
 - [x] Class nesting
 - [x] Class hierarchy, depth-first, no repeats
 
+- [ ] Find annotation directly meta-present on an annotated element
+    or any enclosing class
+
 ...
 
+
+- [ ] Include local and anonymous class possibilities for enclosing
+    structures to find annotations on
