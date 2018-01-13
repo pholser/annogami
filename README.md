@@ -1,5 +1,17 @@
 # Duly Noted: Annotation-finding strategies for Java
 
+* Search path: a sequence of annotated elements
+* Presence: a particular kind of annotation presence
+  * Direct presence, via `getDeclaredAnnotation(Class<T>)`
+  * Indirect presence
+    * where the annotation is repeatable, and either the repeatable
+    annotation is directly present or contained in a directly present
+    container annotation
+
+
+
+- [ ] Search path: an 
+- [ ] Find the first annotation of a given type in a 
 - [ ] Find annotation directly on a type declaration (class)
 - [ ] Find annotation directly on a method
 - [ ] Find annotation directly on a constructor

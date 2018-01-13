@@ -48,6 +48,7 @@ junitPlatform {
 }
 
 dependencies {
+    testCompile("org.hamcrest:java-hamcrest:2.0.0.0")
     testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 
