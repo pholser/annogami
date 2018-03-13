@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class IndirectPresenceOfRepeatedRepeatableAnnotation {
+class IndirectPresenceOfRepeatedRepeatableAnnotationTest {
     private AnnotatedElement target;
 
     @BeforeEach void setup() throws Exception {

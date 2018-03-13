@@ -2,7 +2,7 @@ package com.pholser.dulynoted.annotations;
 
 @Unit(1)
 @Unit(2)
-public class X {
+public class X extends SuperX {
     @Unit(3) @Marker int i;
 
     @Aggregate({@Unit(4), @Unit(5)}) void foo() {

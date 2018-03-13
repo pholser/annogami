@@ -2,13 +2,40 @@ package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-class DirectPresence implements Presence {
+import static java.util.stream.Collectors.*;
+
+public final class DirectPresence implements Detector {
     @Override
-    public <A extends Annotation>
-    Optional<A> find(Class<A> annotationType, AnnotatedElement target) {
+    public <A extends Annotation> Optional<A> find(
+        Class<A> annotationType,
+        AnnotatedElement target) {
+
         return Optional.ofNullable(
             target.getDeclaredAnnotation(annotationType));
+    }
+
+    @Override
+    public <A extends Annotation> List<A> findAll(
+        Class<A> annotationType,
+        AnnotatedElement target) {
+
+        return Arrays.stream(target.getDeclaredAnnotations())
+            .filter(annotationType::isInstance)
+            .map(annotationType::cast)
+            .collect(toList());
+    }
+
+    @Override
+    public List<Annotation> all(AnnotatedElement target) {
+        List<Annotation> annotations = new ArrayList<>();
+        Collections.addAll(annotations, target.getDeclaredAnnotations());
+
+        return annotations;
     }
 }

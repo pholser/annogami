@@ -11,17 +11,16 @@ import com.pholser.dulynoted.annotations.X;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.pholser.dulynoted.annotations.Units.*;
 import static java.util.Arrays.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class DirectPresenceOfRepeatedRepeatableAnnotation {
+class IndirectPresenceOfNonRepeatedRepeatableAnnotationTest {
     private AnnotatedElement target;
 
-    @BeforeEach void setup() {
-        target = X.class;
+    @BeforeEach void setup() throws Exception {
+        target = X.class.getDeclaredMethod("bar");
     }
 
     @Test void askingForDeclaredSingle() {
@@ -29,13 +28,10 @@ class DirectPresenceOfRepeatedRepeatableAnnotation {
     }
 
     @Test void askingForDeclaredMulti() {
-        List<Unit> units =
-            asList(target.getDeclaredAnnotationsByType(Unit.class));
+        Unit[] units = target.getDeclaredAnnotationsByType(Unit.class);
 
-        assertEquals(2, units.size());
-        assertThat(
-            units,
-            containsInAnyOrder(unitOfValue(1), unitOfValue(2)));
+        assertEquals(1, units.length);
+        assertEquals(6, units[0].value());
     }
 
     @Test void askingForDeclaredAll() {
@@ -44,13 +40,9 @@ class DirectPresenceOfRepeatedRepeatableAnnotation {
         assertEquals(1, annotations.length);
 
         Aggregate aggregate = (Aggregate) annotations[0];
-        List<Unit> units = asList(aggregate.value());
-
-        assertThat(
-            units,
-            containsInAnyOrder(
-                unitAnnotationOfValue(1),
-                unitAnnotationOfValue(2)));
+        Unit[] units = aggregate.value();
+        assertEquals(1, units.length);
+        assertEquals(6, units[0].value());
     }
 
     @Test void askingForSingle() {
@@ -58,12 +50,10 @@ class DirectPresenceOfRepeatedRepeatableAnnotation {
     }
 
     @Test void askingForMulti() {
-        List<Unit> units = asList(target.getAnnotationsByType(Unit.class));
+        Unit[] units = target.getDeclaredAnnotationsByType(Unit.class);
 
-        assertEquals(2, units.size());
-        assertThat(
-            units,
-            containsInAnyOrder(unitOfValue(1), unitOfValue(2)));
+        assertEquals(1, units.length);
+        assertEquals(6, units[0].value());
     }
 
     @Test void askingForAll() {
@@ -72,12 +62,8 @@ class DirectPresenceOfRepeatedRepeatableAnnotation {
         assertEquals(1, annotations.length);
 
         Aggregate aggregate = (Aggregate) annotations[0];
-        List<Unit> units = asList(aggregate.value());
-
-        assertThat(
-            units,
-            containsInAnyOrder(
-                unitAnnotationOfValue(1),
-                unitAnnotationOfValue(2)));
+        Unit[] units = aggregate.value();
+        assertEquals(1, units.length);
+        assertEquals(6, units[0].value());
     }
 }

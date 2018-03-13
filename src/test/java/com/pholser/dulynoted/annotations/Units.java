@@ -34,4 +34,29 @@ public final class Units {
             }
         };
     }
+
+    public static Matcher<SuperUnit> superUnitOfValue(int i) {
+        return new TypeSafeMatcher<SuperUnit>() {
+            @Override protected boolean matchesSafely(SuperUnit item) {
+                return item.value() == i;
+            }
+
+            @Override public void describeTo(Description description) {
+                description.appendText("a SuperUnit with value ").appendValue(i);
+            }
+        };
+    }
+
+    public static Matcher<Annotation> superUnitAnnotationOfValue(int i) {
+        return new TypeSafeMatcher<Annotation>() {
+            @Override protected boolean matchesSafely(Annotation item) {
+                return item instanceof SuperUnit
+                    && ((SuperUnit) item).value() == i;
+            }
+
+            @Override public void describeTo(Description description) {
+                description.appendText("a SuperUnit with value ").appendValue(i);
+            }
+        };
+    }
 }

@@ -1,11 +1,14 @@
 package com.pholser.dulynoted.annotations;
 
 import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.*;
 
-@Retention(value = RUNTIME)
+@Retention(RUNTIME)
 @Inherited
-public @interface Marker {
+@Repeatable(SuperAggregate.class)
+public @interface SuperUnit {
+    int value();
 }

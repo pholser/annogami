@@ -5,7 +5,8 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.*;
 
-@Retention(value = RUNTIME)
+@Retention(RUNTIME)
 @Inherited
-public @interface Marker {
+public @interface SuperAggregate {
+    SuperUnit[] value();
 }

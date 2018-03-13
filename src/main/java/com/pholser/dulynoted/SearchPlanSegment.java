@@ -6,9 +6,9 @@ import java.util.Optional;
 
 class SearchPlanSegment {
     private final AnnotatedElement target;
-    private final Presence presence;
+    private final Detector presence;
 
-    SearchPlanSegment(AnnotatedElement target, Presence presence) {
+    SearchPlanSegment(AnnotatedElement target, Detector presence) {
         this.target = target;
         this.presence = presence;
     }
