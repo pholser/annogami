@@ -2,14 +2,35 @@ package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
+
+import static java.util.Arrays.*;
 
 final class Annotations {
     static boolean containsRepeatableAnnotation(Annotation a) {
         return singleValueMethod(a.annotationType())
             .filter(Annotations::returnsRepeatableAnnotations)
             .isPresent();
+    }
+
+    static List<Annotation> repeatedAnnotationsOn(Annotation a) {
+        Method method = singleValueMethod(a.annotationType())
+            .filter(Annotations::returnsRepeatableAnnotations)
+            .orElseThrow(() ->
+                new IllegalArgumentException(
+                    a.annotationType() + " is not Repeatable"));
+
+        try {
+            Annotation[] repeated = (Annotation[]) method.invoke(a);
+            return asList(repeated);
+        } catch (IllegalAccessException e) {
+            throw new ReflectionException(e);
+        } catch (InvocationTargetException e) {
+            throw new ReflectionException(e);
+        }
     }
 
     private static Optional<Method> singleValueMethod(

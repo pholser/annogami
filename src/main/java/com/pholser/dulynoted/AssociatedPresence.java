@@ -1,6 +1,7 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
 import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,9 @@ import java.util.Optional;
 import static java.util.stream.Collectors.*;
 
 public final class AssociatedPresence implements Detector {
+    private final DirectOrIndirectPresence directOrIndirect =
+        new DirectOrIndirectPresence();
+
     @Override
     public <A extends Annotation> Optional<A> find(
         Class<A> annotationType,
@@ -37,12 +41,25 @@ public final class AssociatedPresence implements Detector {
 
     @Override
     public List<Annotation> all(AnnotatedElement target) {
-        // ??
+        List<Annotation> roots = directOrIndirect.all(target);
+        List<Annotation> results = new ArrayList<>(roots);
 
-        return Arrays.stream(target.getAnnotations())
-            .filter(Annotations::containsRepeatableAnnotation)
-            .flatMap(a -> Arrays.stream(a.annotationType().getDeclaredAnnotations()))
-            .collect(toList());
+        if (target instanceof Class<?>) {
+            for (Class<?> c = ((Class<?>) target).getSuperclass();
+                c != null;
+                c = c.getSuperclass()) {
 
+                directOrIndirect.all(c).stream()
+                    .filter(this::inherited)
+                    .forEach(results::add);
+            }
+        }
+
+        return results;
+    }
+
+    private boolean inherited(Annotation a) {
+        return a.annotationType().getDeclaredAnnotation(Inherited.class)
+            != null;
     }
 }

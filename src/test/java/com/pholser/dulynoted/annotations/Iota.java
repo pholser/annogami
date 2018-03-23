@@ -1,14 +1,13 @@
 package com.pholser.dulynoted.annotations;
 
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
+@Target(METHOD)
 @Retention(RUNTIME)
-@Inherited
-@Repeatable(SuperAggregate.class)
-public @interface SuperUnit {
+public @interface Iota {
     int value();
 }

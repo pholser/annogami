@@ -12,13 +12,14 @@ class DecidingWhetherAnnotationContainsRepeatableTest {
     @Test void containerOfRepeatableAnnotation() throws Exception {
         assertTrue(
             containsRepeatableAnnotation(
-                X.class.getDeclaredMethod("foo")
+                X.class.getDeclaredMethod("bar")
                     .getDeclaredAnnotation(Aggregate.class)));
     }
 
-    @Test void notAContainerOfRepeatableAnnotation() {
+    @Test void notAContainerOfRepeatableAnnotation() throws Exception {
         assertFalse(
             containsRepeatableAnnotation(
-                X.class.getDeclaredAnnotationsByType(Unit.class)[0]));
+                X.class.getDeclaredMethod("bar")
+                    .getDeclaredAnnotationsByType(Unit.class)[0]));
     }
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.*;
 
-public final class IndirectPresence implements Detector {
+public final class DirectOrIndirectPresence implements Detector {
     @Override
     public <A extends Annotation> Optional<A> find(
         Class<A> annotationType,
@@ -37,9 +37,15 @@ public final class IndirectPresence implements Detector {
 
     @Override
     public List<Annotation> all(AnnotatedElement target) {
-        return Arrays.stream(target.getDeclaredAnnotations())
-            .filter(Annotations::containsRepeatableAnnotation)
-            .flatMap(a -> Arrays.stream(a.annotationType().getDeclaredAnnotations()))
-            .collect(toList());
+        List<Annotation> directOrIndirect = new ArrayList<>();
+        Collections.addAll(directOrIndirect, target.getDeclaredAnnotations());
+
+        directOrIndirect.addAll(
+            Arrays.stream(target.getDeclaredAnnotations())
+                .filter(Annotations::containsRepeatableAnnotation)
+                .flatMap(a -> Annotations.repeatedAnnotationsOn(a).stream())
+                .collect(toList()));
+
+        return directOrIndirect;
     }
 }

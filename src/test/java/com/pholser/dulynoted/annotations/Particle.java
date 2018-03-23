@@ -9,7 +9,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 
 @Target({FIELD, METHOD})
 @Retention(RUNTIME)
-@Repeatable(Aggregate.class)
-public @interface Unit {
+@Repeatable(Compound.class)
+public @interface Particle {
     int value();
 }

@@ -1,13 +1,14 @@
 package com.pholser.dulynoted.annotations;
 
-@Unit(1)
-@Unit(2)
-public class X extends SuperX {
-    @Unit(3) @Marker int i;
+public class X {
+    @Atom(1) int i;
 
-    @Aggregate({@Unit(4), @Unit(5)}) void foo() {
+    @Atom(2) @Iota(3) void foo() {
     }
 
-    @Aggregate(@Unit(6)) void bar() {
+    @Particle(4) String s;
+
+    @Particle(5) @Particle(6) @Unit(7) @Unit(8)
+    void bar() {
     }
 }
