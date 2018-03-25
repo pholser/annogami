@@ -1,6 +1,7 @@
 package com.pholser.dulynoted.annotations;
 
-public class X {
+@Atom(9)
+public class X extends SuperX {
     @Atom(1) int i;
 
     @Atom(2) @Iota(3) void foo() {

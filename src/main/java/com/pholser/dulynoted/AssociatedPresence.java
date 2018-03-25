@@ -4,10 +4,13 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static java.util.stream.Collectors.*;
 
@@ -41,21 +44,37 @@ public final class AssociatedPresence implements Detector {
 
     @Override
     public List<Annotation> all(AnnotatedElement target) {
-        List<Annotation> roots = directOrIndirect.all(target);
-        List<Annotation> results = new ArrayList<>(roots);
+        Map<Class<? extends Annotation>, List<Annotation>> results =
+            new HashMap<>();
+        directOrIndirect.all(target).forEach(accumulateInto(results));
 
         if (target instanceof Class<?>) {
             for (Class<?> c = ((Class<?>) target).getSuperclass();
                 c != null;
                 c = c.getSuperclass()) {
 
-                directOrIndirect.all(c).stream()
+                directOrIndirect.all(c)
+                    .stream()
                     .filter(this::inherited)
-                    .forEach(results::add);
+                    .filter(a -> !results.containsKey(a.annotationType()))
+                    .forEach(accumulateInto(results));
             }
         }
 
-        return results;
+        return results.values()
+            .stream()
+            .flatMap(Collection::stream)
+            .collect(toList());
+    }
+
+    private Consumer<Annotation> accumulateInto(
+        Map<Class<? extends Annotation>, List<Annotation>> results) {
+
+        return a ->
+            results.computeIfAbsent(
+                a.annotationType(),
+                k -> new ArrayList<>())
+                .add(a);
     }
 
     private boolean inherited(Annotation a) {
