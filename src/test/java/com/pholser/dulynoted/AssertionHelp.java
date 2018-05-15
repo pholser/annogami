@@ -2,12 +2,12 @@ package com.pholser.dulynoted;
 
 import java.util.function.Supplier;
 
-public final class AssertionHelp {
+final class AssertionHelp {
     private AssertionHelp() {
         throw new UnsupportedOperationException();
     }
 
-    public static Supplier<AssertionError> failure(
+    static Supplier<AssertionError> failure(
         String template,
         Object... args) {
 
