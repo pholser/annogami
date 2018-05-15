@@ -30,24 +30,10 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
         assertEquals(1, a.value());
     }
 
-    @Test void findAllDirect() {
-        List<Atom> all = new DirectPresence().findAll(Atom.class, target);
-
-        assertThat(all, containsInAnyOrder(atomOfValue(1)));
-    }
-
     @Test void allDirect() {
         List<Annotation> all = new DirectPresence().all(target);
 
         assertThat(all, containsInAnyOrder(atomAnnotationOfValue(1)));
-    }
-
-    @Test void findDirectOrIndirect() {
-        Atom a =
-            new DirectOrIndirectPresence().find(Atom.class, target)
-                .orElseThrow(failure("Missing annotation"));
-
-        assertEquals(1, a.value());
     }
 
     @Test void findAllDirectOrIndirect() {
@@ -71,28 +57,15 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
         assertEquals(1, a.value());
     }
 
-    @Test void findAllPresent() {
-        List<Atom> all = new Presence().findAll(Atom.class, target);
-
-        assertThat(all, containsInAnyOrder(atomOfValue(1)));
-    }
-
     @Test void allPresent() {
         List<Annotation> all = new Presence().all(target);
 
         assertThat(all, containsInAnyOrder(atomAnnotationOfValue(1)));
     }
 
-    @Test void findAssociated() {
-        Atom a =
-            new AssociatedPresence().find(Atom.class, target)
-                .orElseThrow(failure("Missing annotation"));
-
-        assertEquals(1, a.value());
-    }
-
     @Test void findAllAssociated() {
-        List<Atom> all = new AssociatedPresence().findAll(Atom.class, target);
+        List<Atom> all =
+            new AssociatedPresence().findAll(Atom.class, target);
 
         assertThat(all, containsInAnyOrder(atomOfValue(1)));
     }

@@ -114,7 +114,33 @@ public final class AnnotationMatching {
         };
     }
 
-    public static Matcher<Compound> compoundWith(
+    public static Matcher<Single> singleOfValue(int i) {
+        return new TypeSafeMatcher<Single>() {
+            @Override protected boolean matchesSafely(Single item) {
+                return item.value() == i;
+            }
+
+            @Override public void describeTo(Description description) {
+                description.appendText("a Single with value ").appendValue(i);
+            }
+        };
+    }
+
+    public static Matcher<Annotation> singleAnnotationOfValue(int i) {
+        return new TypeSafeMatcher<Annotation>() {
+            @Override protected boolean matchesSafely(Annotation item) {
+                return item instanceof Single
+                    && ((Single) item).value() == i;
+            }
+
+            @Override public void describeTo(Description description) {
+                description.appendText("a Single with value ")
+                    .appendValue(i);
+            }
+        };
+    }
+
+    @SafeVarargs public static Matcher<Compound> compoundWith(
         Matcher<Particle>... particles) {
 
         return new TypeSafeMatcher<Compound>() {
@@ -130,7 +156,7 @@ public final class AnnotationMatching {
         };
     }
 
-    public static Matcher<Annotation> compoundAnnotationWith(
+    @SafeVarargs public static Matcher<Annotation> compoundAnnotationWith(
         Matcher<Particle>... particles) {
 
         return new TypeSafeMatcher<Annotation>() {
@@ -146,7 +172,7 @@ public final class AnnotationMatching {
         };
     }
 
-    public static Matcher<Aggregate> aggregateWith(
+    @SafeVarargs public static Matcher<Aggregate> aggregateWith(
         Matcher<Unit>... units) {
 
         return new TypeSafeMatcher<Aggregate>() {
@@ -162,7 +188,7 @@ public final class AnnotationMatching {
         };
     }
 
-    public static Matcher<Annotation> aggregateAnnotationWith(
+    @SafeVarargs public static Matcher<Annotation> aggregateAnnotationWith(
         Matcher<Unit>... units) {
 
         return new TypeSafeMatcher<Annotation>() {
@@ -174,6 +200,38 @@ public final class AnnotationMatching {
             @Override public void describeTo(Description description) {
                 description.appendText("an Aggregate with values ")
                     .appendValue(asList(units));
+            }
+        };
+    }
+
+    @SafeVarargs public static Matcher<Many> manyWith(
+        Matcher<Single>... singles) {
+
+        return new TypeSafeMatcher<Many>() {
+            @Override protected boolean matchesSafely(Many item) {
+                return containsInAnyOrder(singles)
+                    .matches(asList(item.value()));
+            }
+
+            @Override public void describeTo(Description description) {
+                description.appendText("a Many with values ")
+                    .appendValue(asList(singles));
+            }
+        };
+    }
+
+    @SafeVarargs public static Matcher<Annotation> manyAnnotationWith(
+        Matcher<Single>... singles) {
+
+        return new TypeSafeMatcher<Annotation>() {
+            @Override protected boolean matchesSafely(Annotation item) {
+                return item instanceof Many
+                    && manyWith(singles).matches(item);
+            }
+
+            @Override public void describeTo(Description description) {
+                description.appendText("a Many with values ")
+                    .appendValue(asList(singles));
             }
         };
     }

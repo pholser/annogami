@@ -1,7 +1,6 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Inherited;
 import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,25 +8,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static java.util.stream.Collectors.*;
 
-public final class AssociatedPresence implements Detector {
+public final class AssociatedPresence
+    implements AllByTypeDetector, AllDetector {
+
     private final DirectOrIndirectPresence directOrIndirect =
         new DirectOrIndirectPresence();
-
-    @Override
-    public <A extends Annotation> Optional<A> find(
-        Class<A> annotationType,
-        AnnotatedElement target) {
-
-        A[] annotations = target.getAnnotationsByType(annotationType);
-        return annotations.length == 1
-            ? Optional.of(annotations[0])
-            : Optional.empty();
-    }
 
     @Override
     public <A extends Annotation> List<A> findAll(
@@ -53,11 +42,14 @@ public final class AssociatedPresence implements Detector {
                 c != null;
                 c = c.getSuperclass()) {
 
-                directOrIndirect.all(c)
-                    .stream()
-                    .filter(this::inherited)
-                    .filter(a -> !results.containsKey(a.annotationType()))
-                    .forEach(accumulateInto(results));
+                Map<Class<? extends Annotation>, List<Annotation>> nextLevel =
+                    new HashMap<>();
+                directOrIndirect.all(c).forEach(accumulateInto(nextLevel));
+
+                nextLevel.entrySet().stream()
+                    .filter(e -> Annotations.inherited(e.getKey()))
+                    .filter(e -> !results.containsKey(e.getKey()))
+                    .forEach(mergeInto(results));
             }
         }
 
@@ -77,8 +69,14 @@ public final class AssociatedPresence implements Detector {
                 .add(a);
     }
 
-    private boolean inherited(Annotation a) {
-        return a.annotationType().getDeclaredAnnotation(Inherited.class)
-            != null;
+    private Consumer<Map.Entry<Class<? extends Annotation>, List<Annotation>>>
+    mergeInto(
+        Map<Class<? extends Annotation>, List<Annotation>> results) {
+
+        return e ->
+            results.computeIfAbsent(
+                e.getKey(),
+                k -> new ArrayList<>()
+            ).addAll(e.getValue());
     }
 }

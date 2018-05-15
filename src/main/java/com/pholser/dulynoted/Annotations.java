@@ -1,6 +1,7 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,6 +11,10 @@ import java.util.Optional;
 import static java.util.Arrays.*;
 
 final class Annotations {
+    static boolean inherited(Class<? extends Annotation> c) {
+        return c.getDeclaredAnnotation(Inherited.class) != null;
+    }
+
     static boolean containsRepeatableAnnotation(Annotation a) {
         return singleValueMethod(a.annotationType())
             .filter(Annotations::returnsRepeatableAnnotations)

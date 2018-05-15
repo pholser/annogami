@@ -37,18 +37,6 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
             .ifPresent(i -> fail("Iota should not be directly present here"));
     }
 
-    @Test void findAllOneKindDirect() {
-        List<Atom> all = new DirectPresence().findAll(Atom.class, target);
-
-        assertThat(all, containsInAnyOrder(atomOfValue(9)));
-    }
-
-    @Test void findAllAnotherKindDirect() {
-        List<Iota> all = new DirectPresence().findAll(Iota.class, target);
-
-        assertEquals(emptyList(), all);
-    }
-
     @Test void allDirect() {
         List<Annotation> all = new DirectPresence().all(target);
 
@@ -56,19 +44,6 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
             all,
             containsInAnyOrder(
                 atomAnnotationOfValue(9)));
-    }
-
-    @Test void findOneKindDirectOrIndirect() {
-        Atom a =
-            new DirectOrIndirectPresence().find(Atom.class, target)
-                .orElseThrow(failure("Missing annotation"));
-
-        assertEquals(9, a.value());
-    }
-
-    @Test void findAnotherKindDirectOrIndirect() {
-        new DirectOrIndirectPresence().find(Iota.class, target)
-            .ifPresent(i -> fail("Iota should not be directly present here"));
     }
 
     @Test void findAllOneKindDirectOrIndirect() {
@@ -110,18 +85,6 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
         assertEquals(10, i.value());
     }
 
-    @Test void findAllOneKindPresent() {
-        List<Atom> all = new Presence().findAll(Atom.class, target);
-
-        assertThat(all, containsInAnyOrder(atomOfValue(9)));
-    }
-
-    @Test void findAllAnotherKindPresent() {
-        List<Iota> all = new Presence().findAll(Iota.class, target);
-
-        assertThat(all, containsInAnyOrder(iotaOfValue(10)));
-    }
-
     @Test void allPresent() {
         List<Annotation> all = new Presence().all(target);
 
@@ -130,22 +93,6 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
             containsInAnyOrder(
                 atomAnnotationOfValue(9),
                 iotaAnnotationOfValue(10)));
-    }
-
-    @Test void findOneKindAssociated() {
-        Atom a =
-            new AssociatedPresence().find(Atom.class, target)
-                .orElseThrow(failure("Missing annotation"));
-
-        assertEquals(9, a.value());
-    }
-
-    @Test void findAnotherKindAssociated() {
-        Iota i =
-            new AssociatedPresence().find(Iota.class, target)
-                .orElseThrow(failure("Missing annotation"));
-
-        assertEquals(10, i.value());
     }
 
     @Test void findAllOneKindAssociated() {

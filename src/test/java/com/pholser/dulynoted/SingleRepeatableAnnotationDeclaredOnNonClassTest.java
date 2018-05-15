@@ -30,25 +30,10 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
         assertEquals(4, p.value());
     }
 
-    @Test void findAllDirect() {
-        List<Particle> all =
-            new DirectPresence().findAll(Particle.class, target);
-
-        assertThat(all, containsInAnyOrder(particleOfValue(4)));
-    }
-
     @Test void allDirect() {
         List<Annotation> all = new DirectPresence().all(target);
 
         assertThat(all, containsInAnyOrder(particleAnnotationOfValue(4)));
-    }
-
-    @Test void findDirectOrIndirect() {
-        Particle p =
-            new DirectOrIndirectPresence().find(Particle.class, target)
-                .orElseThrow(failure("Missing annotation"));
-
-        assertEquals(4, p.value());
     }
 
     @Test void findAllDirectOrIndirect() {
@@ -72,24 +57,10 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
         assertEquals(4, p.value());
     }
 
-    @Test void findAllPresent() {
-        List<Particle> all = new Presence().findAll(Particle.class, target);
-
-        assertThat(all, containsInAnyOrder(particleOfValue(4)));
-    }
-
     @Test void allPresent() {
         List<Annotation> all = new Presence().all(target);
 
         assertThat(all, containsInAnyOrder(particleAnnotationOfValue(4)));
-    }
-
-    @Test void findAssociated() {
-        Particle p =
-            new AssociatedPresence().find(Particle.class, target)
-                .orElseThrow(failure("Missing annotation"));
-
-        assertEquals(4, p.value());
     }
 
     @Test void findAllAssociated() {

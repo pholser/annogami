@@ -6,21 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
+import static com.pholser.dulynoted.Annotations.*;
 import static java.util.stream.Collectors.*;
 
-public final class DirectOrIndirectPresence implements Detector {
-    @Override
-    public <A extends Annotation> Optional<A> find(
-        Class<A> annotationType,
-        AnnotatedElement target) {
-
-        A[] annotations = target.getDeclaredAnnotationsByType(annotationType);
-        return annotations.length == 1
-            ? Optional.of(annotations[0])
-            : Optional.empty();
-    }
+public final class DirectOrIndirectPresence
+    implements AllByTypeDetector, AllDetector {
 
     @Override
     public <A extends Annotation> List<A> findAll(
@@ -37,15 +28,15 @@ public final class DirectOrIndirectPresence implements Detector {
 
     @Override
     public List<Annotation> all(AnnotatedElement target) {
-        List<Annotation> directOrIndirect = new ArrayList<>();
-        Collections.addAll(directOrIndirect, target.getDeclaredAnnotations());
+        List<Annotation> results = new ArrayList<>();
+        Collections.addAll(results, target.getDeclaredAnnotations());
 
-        directOrIndirect.addAll(
+        results.addAll(
             Arrays.stream(target.getDeclaredAnnotations())
                 .filter(Annotations::containsRepeatableAnnotation)
-                .flatMap(a -> Annotations.repeatedAnnotationsOn(a).stream())
+                .flatMap(a -> repeatedAnnotationsOn(a).stream())
                 .collect(toList()));
 
-        return directOrIndirect;
+        return results;
     }
 }
