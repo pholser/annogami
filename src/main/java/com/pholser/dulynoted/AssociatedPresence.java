@@ -18,8 +18,7 @@ public final class AssociatedPresence
     private final DirectOrIndirectPresence directOrIndirect =
         new DirectOrIndirectPresence();
 
-    @Override
-    public <A extends Annotation> List<A> findAll(
+    @Override public <A extends Annotation> List<A> findAll(
         Class<A> annotationType,
         AnnotatedElement target) {
 
@@ -31,8 +30,7 @@ public final class AssociatedPresence
         return results;
     }
 
-    @Override
-    public List<Annotation> all(AnnotatedElement target) {
+    @Override public List<Annotation> all(AnnotatedElement target) {
         Map<Class<? extends Annotation>, List<Annotation>> results =
             new HashMap<>();
         directOrIndirect.all(target).forEach(accumulateInto(results));
@@ -70,8 +68,8 @@ public final class AssociatedPresence
     }
 
     private Consumer<Map.Entry<Class<? extends Annotation>, List<Annotation>>>
-    mergeInto(
-        Map<Class<? extends Annotation>, List<Annotation>> results) {
+        mergeInto(
+            Map<Class<? extends Annotation>, List<Annotation>> results) {
 
         return e ->
             results.computeIfAbsent(

@@ -10,8 +10,7 @@ import java.util.Optional;
 public final class DirectPresence
     implements SingleByTypeDetector, AllDetector {
 
-    @Override
-    public <A extends Annotation> Optional<A> find(
+    @Override public <A extends Annotation> Optional<A> find(
         Class<A> annotationType,
         AnnotatedElement target) {
 
@@ -19,8 +18,7 @@ public final class DirectPresence
             target.getDeclaredAnnotation(annotationType));
     }
 
-    @Override
-    public List<Annotation> all(AnnotatedElement target) {
+    @Override public List<Annotation> all(AnnotatedElement target) {
         List<Annotation> results = new ArrayList<>();
         Collections.addAll(results, target.getDeclaredAnnotations());
 

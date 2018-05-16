@@ -10,16 +10,14 @@ import java.util.Optional;
 public final class Presence
     implements SingleByTypeDetector, AllDetector {
 
-    @Override
-    public <A extends Annotation> Optional<A> find(
+    @Override public <A extends Annotation> Optional<A> find(
         Class<A> annotationType,
         AnnotatedElement target) {
 
         return Optional.ofNullable(target.getAnnotation(annotationType));
     }
 
-    @Override
-    public List<Annotation> all(AnnotatedElement target) {
+    @Override public List<Annotation> all(AnnotatedElement target) {
         List<Annotation> results = new ArrayList<>();
         Collections.addAll(results, target.getAnnotations());
 

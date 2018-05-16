@@ -13,8 +13,7 @@ import static java.util.stream.Collectors.*;
 public final class DirectOrIndirectPresence
     implements AllByTypeDetector, AllDetector {
 
-    @Override
-    public <A extends Annotation> List<A> findAll(
+    @Override public <A extends Annotation> List<A> findAll(
         Class<A> annotationType,
         AnnotatedElement target) {
 
@@ -26,8 +25,7 @@ public final class DirectOrIndirectPresence
         return results;
     }
 
-    @Override
-    public List<Annotation> all(AnnotatedElement target) {
+    @Override public List<Annotation> all(AnnotatedElement target) {
         List<Annotation> results = new ArrayList<>();
         Collections.addAll(results, target.getDeclaredAnnotations());
 
