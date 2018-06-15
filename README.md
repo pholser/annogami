@@ -12,6 +12,7 @@
   - [ ] Include local and anonymous class possibilities for enclosing
     structures to find annotations on
 - [ ] Class hierarchy, depth-first, no repeats
+- [ ] Merging operations on a search path
 
 - [ ] Find annotation directly meta-present on an annotated element
     or any enclosing class/package
