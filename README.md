@@ -3,7 +3,7 @@
 - [x] Direct presence, direct-or-indirect presence, presence, associated
   - [x] On non-classes and classes
 - [x] find-one by type, find-all by type, all: as appropriate for above
-- [ ] Meta-presence: either <presence-level> on an element, or
+- [*********] Meta-presence: either <presence-level> on an element, or
   recursively <presence-level> on one of the annotations that are
   <presence-level> on the element
 
