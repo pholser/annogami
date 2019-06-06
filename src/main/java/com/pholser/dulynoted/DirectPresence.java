@@ -2,10 +2,11 @@ package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Collections.unmodifiableList;
 
 public final class DirectPresence
     implements SingleByTypeDetector, AllDetector {
@@ -19,9 +20,7 @@ public final class DirectPresence
     }
 
     @Override public List<Annotation> all(AnnotatedElement target) {
-        List<Annotation> results = new ArrayList<>();
-        Collections.addAll(results, target.getDeclaredAnnotations());
-
-        return results;
+        return unmodifiableList(
+            Arrays.asList(target.getDeclaredAnnotations()));
     }
 }

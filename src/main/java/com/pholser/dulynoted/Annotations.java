@@ -31,9 +31,7 @@ final class Annotations {
         try {
             Annotation[] repeated = (Annotation[]) method.invoke(a);
             return asList(repeated);
-        } catch (IllegalAccessException e) {
-            throw new ReflectionException(e);
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             throw new ReflectionException(e);
         }
     }

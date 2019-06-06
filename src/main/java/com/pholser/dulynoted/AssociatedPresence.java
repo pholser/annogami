@@ -2,15 +2,11 @@ package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
-import static java.util.stream.Collectors.*;
+import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.toList;
 
 public final class AssociatedPresence
     implements AllByTypeDetector, AllDetector {
@@ -22,12 +18,8 @@ public final class AssociatedPresence
         Class<A> annotationType,
         AnnotatedElement target) {
 
-        List<A> results = new ArrayList<>();
-        Collections.addAll(
-            results,
-            target.getAnnotationsByType(annotationType));
-
-        return results;
+        return unmodifiableList(
+            Arrays.asList(target.getAnnotationsByType(annotationType)));
     }
 
     @Override public List<Annotation> all(AnnotatedElement target) {
@@ -51,10 +43,11 @@ public final class AssociatedPresence
             }
         }
 
-        return results.values()
-            .stream()
-            .flatMap(Collection::stream)
-            .collect(toList());
+        return unmodifiableList(
+            results.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .collect(toList()));
     }
 
     private Consumer<Annotation> accumulateInto(

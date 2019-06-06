@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.pholser.dulynoted.Annotations.*;
+import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.*;
 
 public final class DirectOrIndirectPresence
@@ -17,12 +18,9 @@ public final class DirectOrIndirectPresence
         Class<A> annotationType,
         AnnotatedElement target) {
 
-        List<A> results = new ArrayList<>();
-        Collections.addAll(
-            results,
-            target.getDeclaredAnnotationsByType(annotationType));
-
-        return results;
+        return unmodifiableList(
+            Arrays.asList(
+                target.getDeclaredAnnotationsByType(annotationType)));
     }
 
     @Override public List<Annotation> all(AnnotatedElement target) {
@@ -35,6 +33,6 @@ public final class DirectOrIndirectPresence
                 .flatMap(a -> repeatedAnnotationsOn(a).stream())
                 .collect(toList()));
 
-        return results;
+        return unmodifiableList(results);
     }
 }
