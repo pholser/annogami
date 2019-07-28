@@ -18,9 +18,7 @@ public final class DirectOrIndirectPresence
         Class<A> annotationType,
         AnnotatedElement target) {
 
-        return unmodifiableList(
-            Arrays.asList(
-                target.getDeclaredAnnotationsByType(annotationType)));
+        return List.of(target.getDeclaredAnnotationsByType(annotationType));
     }
 
     @Override public List<Annotation> all(AnnotatedElement target) {

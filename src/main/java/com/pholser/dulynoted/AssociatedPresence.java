@@ -18,8 +18,7 @@ public final class AssociatedPresence
         Class<A> annotationType,
         AnnotatedElement target) {
 
-        return unmodifiableList(
-            Arrays.asList(target.getAnnotationsByType(annotationType)));
+        return List.of(target.getAnnotationsByType(annotationType));
     }
 
     @Override public List<Annotation> all(AnnotatedElement target) {
