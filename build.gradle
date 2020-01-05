@@ -24,8 +24,8 @@ jar {
 }
 
 compileTestJava {
-    sourceCompatibility = 1.9
-    targetCompatibility = 1.9
+    sourceCompatibility = 12
+    targetCompatibility = 12
 }
 
 test {
