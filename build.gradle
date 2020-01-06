@@ -12,8 +12,8 @@ repositories {
     mavenCentral()
 }
 
-ext.junitPlatformVersion = '1.4.2'
-ext.junitJupiterVersion = '5.4.2'
+ext.junitPlatformVersion = '1.5.2'
+ext.junitJupiterVersion = '5.5.2'
 
 apply plugin: 'java'
 apply plugin: 'ru.vyarus.animalsniffer'
@@ -24,8 +24,8 @@ jar {
 }
 
 compileTestJava {
-    sourceCompatibility = 12
-    targetCompatibility = 12
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 }
 
 test {
@@ -43,4 +43,3 @@ dependencies {
     // To avoid compiler warnings about @API annotations in JUnit code
     testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
 }
-

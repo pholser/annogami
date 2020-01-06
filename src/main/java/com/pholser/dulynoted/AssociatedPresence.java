@@ -2,11 +2,16 @@ package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
-import static java.util.Collections.unmodifiableList;
-import static java.util.stream.Collectors.toList;
+import static java.util.Arrays.*;
+import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 
 public final class AssociatedPresence
     implements AllByTypeDetector, AllDetector {
@@ -18,7 +23,7 @@ public final class AssociatedPresence
         Class<A> annotationType,
         AnnotatedElement target) {
 
-        return List.of(target.getAnnotationsByType(annotationType));
+        return asList(target.getAnnotationsByType(annotationType));
     }
 
     @Override public List<Annotation> all(AnnotatedElement target) {

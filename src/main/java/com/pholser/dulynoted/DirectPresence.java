@@ -5,6 +5,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.*;
+
 public final class DirectPresence
     implements SingleByTypeDetector, AllDetector {
 
@@ -17,6 +19,6 @@ public final class DirectPresence
     }
 
     @Override public List<Annotation> all(AnnotatedElement target) {
-        return List.of(target.getDeclaredAnnotations());
+        return asList(target.getDeclaredAnnotations());
     }
 }

@@ -5,6 +5,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.*;
+
 public final class Presence
     implements SingleByTypeDetector, AllDetector {
 
@@ -16,6 +18,6 @@ public final class Presence
     }
 
     @Override public List<Annotation> all(AnnotatedElement target) {
-        return List.of(target.getAnnotations());
+        return asList(target.getAnnotations());
     }
 }
