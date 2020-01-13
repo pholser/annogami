@@ -8,7 +8,7 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class DPTest {
+class DirectPresenceTest {
     @Retention(RUNTIME)
     @interface A {
         int value();
