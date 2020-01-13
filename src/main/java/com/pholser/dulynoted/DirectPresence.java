@@ -7,6 +7,10 @@ import java.util.Optional;
 
 import static java.util.Arrays.*;
 
+/**
+ * An object that can find annotations that are "directly present" on a
+ * program element.
+ */
 public final class DirectPresence
     implements SingleByTypeDetector, AllDetector {
 

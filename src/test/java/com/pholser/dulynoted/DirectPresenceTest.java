@@ -64,15 +64,15 @@ class DirectPresenceTest {
     static class ManyBsHaver {
     }
 
-    @Test void singleDirect() {
+    @Test void singleNonRepeatable() {
         A a =
             new DirectPresence().find(A.class, AHaver.class)
-                .orElseThrow(() -> new AssertionError("Cannot find A"));
+                .orElseThrow(() -> new AssertionError("Missing annotation"));
 
         assertEquals(3, a.value());
     }
 
-    @Test void singleRepeatableDirect() {
+    @Test void singleRepeatable() {
         B b =
             new DirectPresence().find(B.class, SingleBHaver.class)
                 .orElseThrow(() -> new AssertionError("Cannot find B"));
@@ -80,12 +80,17 @@ class DirectPresenceTest {
         assertEquals("1", b.value());
     }
 
-    @Test void singleRepeatableDirectContainer() {
+    @Test void singleRepeatableContainer() {
         new DirectPresence().find(Bs.class, SingleBHaver.class)
             .ifPresent(bs -> fail("Should not have a Bs element"));
     }
 
-    @Test void manyRepeatableDirectContainer() {
+    @Test void manyRepeatable() {
+        new DirectPresence().find(B.class, ManyBHaver.class)
+            .ifPresent(bs -> fail("Should not have a single B element"));
+    }
+
+    @Test void manyRepeatableContainer() {
         Bs bs =
             new DirectPresence().find(Bs.class, ManyBHaver.class)
                 .orElseThrow(() -> new AssertionError("Cannot find Bs"));
@@ -94,7 +99,7 @@ class DirectPresenceTest {
         assertEquals(2, value.length);
     }
 
-    @Test void singleRepeatableContainerRepeatableContainer() {
+    @Test void singleInstanceOfRepeatableContainer() {
         Bs bs =
             new DirectPresence().find(Bs.class, BsHaver.class)
                 .orElseThrow(() -> new AssertionError("Cannot find Bs"));
@@ -103,17 +108,17 @@ class DirectPresenceTest {
         assertEquals(2, value.length);
     }
 
-    @Test void singleRepeatableContainerDirectContainer() {
+    @Test void containerOfSingleRepeatableContainer() {
         new DirectPresence().find(Cs.class, BsHaver.class)
             .ifPresent(cs -> fail("Should not have a Cs element"));
     }
 
-    @Test void manyRepeatableContainerInAContainer() {
+    @Test void manyRepeatableContainers() {
         new DirectPresence().find(Bs.class, ManyBsHaver.class)
             .ifPresent(cs -> fail("Should not have a Bs element"));
     }
 
-    @Test void manyRepeatableContainerInAContainerDirect() {
+    @Test void containerOfManyRepeatableContainers() {
         Cs cs =
             new DirectPresence().find(Cs.class, ManyBsHaver.class)
                 .orElseThrow(() -> new AssertionError("Cannot find Cs"));
