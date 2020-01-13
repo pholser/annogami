@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 
+import static com.pholser.dulynoted.AssertionHelp.*;
 import static java.lang.annotation.RetentionPolicy.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,7 +68,7 @@ class DirectPresenceTest {
     @Test void singleNonRepeatable() {
         A a =
             new DirectPresence().find(A.class, AHaver.class)
-                .orElseThrow(() -> new AssertionError("Missing annotation"));
+                .orElseThrow(failure("Missing annotation"));
 
         assertEquals(3, a.value());
     }
@@ -75,7 +76,7 @@ class DirectPresenceTest {
     @Test void singleRepeatable() {
         B b =
             new DirectPresence().find(B.class, SingleBHaver.class)
-                .orElseThrow(() -> new AssertionError("Cannot find B"));
+                .orElseThrow(failure("Missing annotation"));
 
         assertEquals("1", b.value());
     }
@@ -93,7 +94,7 @@ class DirectPresenceTest {
     @Test void manyRepeatableContainer() {
         Bs bs =
             new DirectPresence().find(Bs.class, ManyBHaver.class)
-                .orElseThrow(() -> new AssertionError("Cannot find Bs"));
+                .orElseThrow(failure("missing annotation"));
 
         B[] value = bs.value();
         assertEquals(2, value.length);
@@ -102,7 +103,7 @@ class DirectPresenceTest {
     @Test void singleInstanceOfRepeatableContainer() {
         Bs bs =
             new DirectPresence().find(Bs.class, BsHaver.class)
-                .orElseThrow(() -> new AssertionError("Cannot find Bs"));
+                .orElseThrow(failure("Missing annotation"));
 
         B[] value = bs.value();
         assertEquals(2, value.length);
@@ -121,7 +122,7 @@ class DirectPresenceTest {
     @Test void containerOfManyRepeatableContainers() {
         Cs cs =
             new DirectPresence().find(Cs.class, ManyBsHaver.class)
-                .orElseThrow(() -> new AssertionError("Cannot find Cs"));
+                .orElseThrow(failure("Missing annotation"));
 
         Bs[] value = cs.value();
         assertEquals(2, value.length);
