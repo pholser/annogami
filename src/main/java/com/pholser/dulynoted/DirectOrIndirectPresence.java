@@ -12,6 +12,10 @@ import static java.util.Arrays.*;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 
+/**
+ * An object that can find annotations that are "directly present" or
+ * "indirectly present" on a program element.
+ */
 public final class DirectOrIndirectPresence
     implements AllByTypeDetector, AllDetector {
 
