@@ -43,12 +43,6 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
         assertThat(all, containsInAnyOrder(particleOfValue(4)));
     }
 
-    @Test void allDirectOrIndirect() {
-        List<Annotation> all = new DirectOrIndirectPresence().all(target);
-
-        assertThat(all, containsInAnyOrder(particleAnnotationOfValue(4)));
-    }
-
     @Test void findPresent() {
         Particle p =
             new Presence().find(Particle.class, target)
@@ -68,11 +62,5 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
             new AssociatedPresence().findAll(Particle.class, target);
 
         assertThat(all, containsInAnyOrder(particleOfValue(4)));
-    }
-
-    @Test void allAssociated() {
-        List<Annotation> all = new AssociatedPresence().all(target);
-
-        assertThat(all, containsInAnyOrder(particleAnnotationOfValue(4)));
     }
 }

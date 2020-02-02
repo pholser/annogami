@@ -1,27 +1,21 @@
 package com.pholser.dulynoted;
 
+import com.pholser.dulynoted.annotations.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
-import com.pholser.dulynoted.annotations.Aggregate;
-import com.pholser.dulynoted.annotations.Compound;
-import com.pholser.dulynoted.annotations.Many;
-import com.pholser.dulynoted.annotations.Particle;
-import com.pholser.dulynoted.annotations.Single;
-import com.pholser.dulynoted.annotations.Unit;
-import com.pholser.dulynoted.annotations.Y;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
-import static com.pholser.dulynoted.AssertionHelp.*;
+import static com.pholser.dulynoted.AssertionHelp.failure;
 import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
-import static java.util.Arrays.*;
-import static java.util.Collections.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class RepeatableAnnotationsDeclaredOnClassTest {
     private AnnotatedElement target;
@@ -110,20 +104,6 @@ class RepeatableAnnotationsDeclaredOnClassTest {
             new DirectOrIndirectPresence().findAll(Aggregate.class, target);
 
         assertEquals(emptyList(), all);
-    }
-
-    @Test void allDirectOrIndirect() {
-        List<Annotation> all = new DirectOrIndirectPresence().all(target);
-
-        assertThat(
-            all,
-            containsInAnyOrder(
-                compoundAnnotationWith(
-                    particleOfValue(-1),
-                    particleOfValue(-2)),
-                unitAnnotationOfValue(-3),
-                particleAnnotationOfValue(-1),
-                particleAnnotationOfValue(-2)));
     }
 
     @Test void findOneKindPresent() {
@@ -228,28 +208,6 @@ class RepeatableAnnotationsDeclaredOnClassTest {
             all,
             containsInAnyOrder(
                 manyWith(
-                    singleOfValue(-7),
-                    singleOfValue(-8))));
-    }
-
-    @Test void allAssociated() {
-        List<Annotation> all = new AssociatedPresence().all(target);
-
-        assertThat(
-            all,
-            containsInAnyOrder(
-                particleAnnotationOfValue(-1),
-                particleAnnotationOfValue(-2),
-                compoundAnnotationWith(
-                    particleOfValue(-1),
-                    particleOfValue(-2)),
-                unitAnnotationOfValue(-3),
-                aggregateAnnotationWith(
-                    unitOfValue(-4),
-                    unitOfValue(-5)),
-                singleAnnotationOfValue(-7),
-                singleAnnotationOfValue(-8),
-                manyAnnotationWith(
                     singleOfValue(-7),
                     singleOfValue(-8))));
     }

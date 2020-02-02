@@ -121,24 +121,6 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
                     unitOfValue(8))));
     }
 
-    @Test void allDirectOrIndirect() {
-        List<Annotation> all = new DirectOrIndirectPresence().all(target);
-
-        assertThat(
-            all,
-            containsInAnyOrder(
-                particleAnnotationOfValue(5),
-                particleAnnotationOfValue(6),
-                unitAnnotationOfValue(7),
-                unitAnnotationOfValue(8),
-                compoundAnnotationWith(
-                    particleOfValue(5),
-                    particleOfValue(6)),
-                aggregateAnnotationWith(
-                    unitOfValue(7),
-                    unitOfValue(8))));
-    }
-
     @Test void findOneKindPresent() {
         new Presence().find(Particle.class, target)
             .ifPresent(p -> fail("Single Particle should not be found"));
@@ -229,24 +211,6 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
             all,
             containsInAnyOrder(
                 aggregateWith(
-                    unitOfValue(7),
-                    unitOfValue(8))));
-    }
-
-    @Test void allAssociated() {
-        List<Annotation> all = new AssociatedPresence().all(target);
-
-        assertThat(
-            all,
-            containsInAnyOrder(
-                particleAnnotationOfValue(5),
-                particleAnnotationOfValue(6),
-                unitAnnotationOfValue(7),
-                unitAnnotationOfValue(8),
-                compoundAnnotationWith(
-                    particleOfValue(5),
-                    particleOfValue(6)),
-                aggregateAnnotationWith(
                     unitOfValue(7),
                     unitOfValue(8))));
     }

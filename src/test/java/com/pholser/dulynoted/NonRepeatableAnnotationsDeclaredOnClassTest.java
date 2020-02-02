@@ -60,15 +60,6 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
         assertEquals(emptyList(), all);
     }
 
-    @Test void allDirectOrIndirect() {
-        List<Annotation> all = new DirectOrIndirectPresence().all(target);
-
-        assertThat(
-            all,
-            containsInAnyOrder(
-                atomAnnotationOfValue(9)));
-    }
-
     @Test void findOneKindPresent() {
         Atom a =
             new Presence().find(Atom.class, target)
@@ -107,15 +98,5 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
             new AssociatedPresence().findAll(Iota.class, target);
 
         assertThat(all, containsInAnyOrder(iotaOfValue(10)));
-    }
-
-    @Test void allAssociated() {
-        List<Annotation> all = new AssociatedPresence().all(target);
-
-        assertThat(
-            all,
-            containsInAnyOrder(
-                atomAnnotationOfValue(9),
-                iotaAnnotationOfValue(10)));
     }
 }

@@ -43,12 +43,6 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
         assertThat(all, containsInAnyOrder(atomOfValue(1)));
     }
 
-    @Test void allDirectOrIndirect() {
-        List<Annotation> all = new DirectOrIndirectPresence().all(target);
-
-        assertThat(all, containsInAnyOrder(atomAnnotationOfValue(1)));
-    }
-
     @Test void findPresent() {
         Atom a =
             new Presence().find(Atom.class, target)
@@ -68,11 +62,5 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
             new AssociatedPresence().findAll(Atom.class, target);
 
         assertThat(all, containsInAnyOrder(atomOfValue(1)));
-    }
-
-    @Test void allAssociated() {
-        List<Annotation> all = new AssociatedPresence().all(target);
-
-        assertThat(all, containsInAnyOrder(atomAnnotationOfValue(1)));
     }
 }
