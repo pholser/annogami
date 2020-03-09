@@ -16,51 +16,51 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
-    private AnnotatedElement target;
+  private AnnotatedElement target;
 
-    @BeforeEach void setUp() throws Exception {
-        target = X.class.getDeclaredField("i");
-    }
+  @BeforeEach void setUp() throws Exception {
+    target = X.class.getDeclaredField("i");
+  }
 
-    @Test void findDirect() {
-        Atom a =
-            new DirectPresence().find(Atom.class, target)
-                .orElseThrow(failure("Missing annotation"));
+  @Test void findDirect() {
+    Atom a =
+      new DirectPresence().find(Atom.class, target)
+        .orElseThrow(failure("Missing annotation"));
 
-        assertEquals(1, a.value());
-    }
+    assertEquals(1, a.value());
+  }
 
-    @Test void allDirect() {
-        List<Annotation> all = new DirectPresence().all(target);
+  @Test void allDirect() {
+    List<Annotation> all = new DirectPresence().all(target);
 
-        assertThat(all, containsInAnyOrder(atomAnnotationOfValue(1)));
-    }
+    assertThat(all, containsInAnyOrder(atomAnnotationOfValue(1)));
+  }
 
-    @Test void findAllDirectOrIndirect() {
-        List<Atom> all =
-            new DirectOrIndirectPresence().findAll(Atom.class, target);
+  @Test void findAllDirectOrIndirect() {
+    List<Atom> all =
+      new DirectOrIndirectPresence().findAll(Atom.class, target);
 
-        assertThat(all, containsInAnyOrder(atomOfValue(1)));
-    }
+    assertThat(all, containsInAnyOrder(atomOfValue(1)));
+  }
 
-    @Test void findPresent() {
-        Atom a =
-            new Presence().find(Atom.class, target)
-                .orElseThrow(failure("Missing annotation"));
+  @Test void findPresent() {
+    Atom a =
+      new Presence().find(Atom.class, target)
+        .orElseThrow(failure("Missing annotation"));
 
-        assertEquals(1, a.value());
-    }
+    assertEquals(1, a.value());
+  }
 
-    @Test void allPresent() {
-        List<Annotation> all = new Presence().all(target);
+  @Test void allPresent() {
+    List<Annotation> all = new Presence().all(target);
 
-        assertThat(all, containsInAnyOrder(atomAnnotationOfValue(1)));
-    }
+    assertThat(all, containsInAnyOrder(atomAnnotationOfValue(1)));
+  }
 
-    @Test void findAllAssociated() {
-        List<Atom> all =
-            new AssociatedPresence().findAll(Atom.class, target);
+  @Test void findAllAssociated() {
+    List<Atom> all =
+      new AssociatedPresence().findAll(Atom.class, target);
 
-        assertThat(all, containsInAnyOrder(atomOfValue(1)));
-    }
+    assertThat(all, containsInAnyOrder(atomOfValue(1)));
+  }
 }

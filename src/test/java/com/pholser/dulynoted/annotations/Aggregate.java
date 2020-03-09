@@ -8,5 +8,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Retention(RUNTIME)
 @Inherited
 public @interface Aggregate {
-    Unit[] value();
+  Unit[] value();
 }

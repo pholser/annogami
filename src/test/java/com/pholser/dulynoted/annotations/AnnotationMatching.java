@@ -10,229 +10,260 @@ import static java.util.Arrays.*;
 import static org.hamcrest.Matchers.*;
 
 public final class AnnotationMatching {
-    private AnnotationMatching() {
-        throw new UnsupportedOperationException();
-    }
+  private AnnotationMatching() {
+    throw new UnsupportedOperationException();
+  }
 
-    public static Matcher<Atom> atomOfValue(int i) {
-        return new TypeSafeMatcher<Atom>() {
-            @Override protected boolean matchesSafely(Atom item) {
-                return item.value() == i;
-            }
+  public static Matcher<Atom> atomOfValue(int i) {
+    return new TypeSafeMatcher<Atom>() {
+      @Override protected boolean matchesSafely(Atom item) {
+        return item.value() == i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("an Atom with value ").appendValue(i);
-            }
-        };
-    }
+      @Override public void describeTo(Description description) {
+        description.appendText("an Atom with value ").appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Annotation> atomAnnotationOfValue(int i) {
-        return new TypeSafeMatcher<Annotation>() {
-            @Override protected boolean matchesSafely(Annotation item) {
-                return item instanceof Atom && ((Atom) item).value() == i;
-            }
+  public static Matcher<Annotation> atomAnnotationOfValue(int i) {
+    return new TypeSafeMatcher<Annotation>() {
+      @Override protected boolean matchesSafely(Annotation item) {
+        return item instanceof Atom && ((Atom) item).value()==i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("an Atom with value ").appendValue(i);
-            }
-        };
-    }
+      @Override public void describeTo(Description description) {
+        description.appendText("an Atom with value ").appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Iota> iotaOfValue(int i) {
-        return new TypeSafeMatcher<Iota>() {
-            @Override protected boolean matchesSafely(Iota item) {
-                return item.value() == i;
-            }
+  public static Matcher<Iota> iotaOfValue(int i) {
+    return new TypeSafeMatcher<Iota>() {
+      @Override protected boolean matchesSafely(Iota item) {
+        return item.value() == i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("an Iota with value ").appendValue(i);
-            }
-        };
-    }
+      @Override public void describeTo(Description description) {
+        description.appendText("an Iota with value ").appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Annotation> iotaAnnotationOfValue(int i) {
-        return new TypeSafeMatcher<Annotation>() {
-            @Override protected boolean matchesSafely(Annotation item) {
-                return item instanceof Iota && ((Iota) item).value() == i;
-            }
+  public static Matcher<Annotation> iotaAnnotationOfValue(int i) {
+    return new TypeSafeMatcher<Annotation>() {
+      @Override protected boolean matchesSafely(Annotation item) {
+        return item instanceof Iota && ((Iota) item).value() == i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("an Iota with value ").appendValue(i);
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("an Iota with value ").appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Particle> particleOfValue(int i) {
-        return new TypeSafeMatcher<Particle>() {
-            @Override protected boolean matchesSafely(Particle item) {
-                return item.value() == i;
-            }
+  public static Matcher<Particle> particleOfValue(int i) {
+    return new TypeSafeMatcher<Particle>() {
+      @Override
+      protected boolean matchesSafely(Particle item) {
+        return item.value()==i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Particle with value ").appendValue(i);
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Particle with value ").appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Annotation> particleAnnotationOfValue(int i) {
-        return new TypeSafeMatcher<Annotation>() {
-            @Override protected boolean matchesSafely(Annotation item) {
-                return item instanceof Particle
-                    && ((Particle) item).value() == i;
-            }
+  public static Matcher<Annotation> particleAnnotationOfValue(int i) {
+    return new TypeSafeMatcher<Annotation>() {
+      @Override
+      protected boolean matchesSafely(Annotation item) {
+        return item instanceof Particle
+          && ((Particle) item).value()==i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Particle with value ")
-                    .appendValue(i);
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Particle with value ")
+          .appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Unit> unitOfValue(int i) {
-        return new TypeSafeMatcher<Unit>() {
-            @Override protected boolean matchesSafely(Unit item) {
-                return item.value() == i;
-            }
+  public static Matcher<Unit> unitOfValue(int i) {
+    return new TypeSafeMatcher<Unit>() {
+      @Override
+      protected boolean matchesSafely(Unit item) {
+        return item.value()==i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Unit with value ").appendValue(i);
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Unit with value ").appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Annotation> unitAnnotationOfValue(int i) {
-        return new TypeSafeMatcher<Annotation>() {
-            @Override protected boolean matchesSafely(Annotation item) {
-                return item instanceof Unit
-                    && ((Unit) item).value() == i;
-            }
+  public static Matcher<Annotation> unitAnnotationOfValue(int i) {
+    return new TypeSafeMatcher<Annotation>() {
+      @Override
+      protected boolean matchesSafely(Annotation item) {
+        return item instanceof Unit
+          && ((Unit) item).value()==i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Unit with value ")
-                    .appendValue(i);
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Unit with value ")
+          .appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Single> singleOfValue(int i) {
-        return new TypeSafeMatcher<Single>() {
-            @Override protected boolean matchesSafely(Single item) {
-                return item.value() == i;
-            }
+  public static Matcher<Single> singleOfValue(int i) {
+    return new TypeSafeMatcher<Single>() {
+      @Override
+      protected boolean matchesSafely(Single item) {
+        return item.value()==i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Single with value ").appendValue(i);
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Single with value ").appendValue(i);
+      }
+    };
+  }
 
-    public static Matcher<Annotation> singleAnnotationOfValue(int i) {
-        return new TypeSafeMatcher<Annotation>() {
-            @Override protected boolean matchesSafely(Annotation item) {
-                return item instanceof Single
-                    && ((Single) item).value() == i;
-            }
+  public static Matcher<Annotation> singleAnnotationOfValue(int i) {
+    return new TypeSafeMatcher<Annotation>() {
+      @Override
+      protected boolean matchesSafely(Annotation item) {
+        return item instanceof Single
+          && ((Single) item).value()==i;
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Single with value ")
-                    .appendValue(i);
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Single with value ")
+          .appendValue(i);
+      }
+    };
+  }
 
-    @SafeVarargs public static Matcher<Compound> compoundWith(
-        Matcher<Particle>... particles) {
+  @SafeVarargs
+  public static Matcher<Compound> compoundWith(
+    Matcher<Particle>... particles) {
 
-        return new TypeSafeMatcher<Compound>() {
-            @Override protected boolean matchesSafely(Compound item) {
-                return containsInAnyOrder(particles)
-                    .matches(asList(item.value()));
-            }
+    return new TypeSafeMatcher<Compound>() {
+      @Override
+      protected boolean matchesSafely(Compound item) {
+        return containsInAnyOrder(particles)
+          .matches(asList(item.value()));
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Compound with values ")
-                    .appendValue(asList(particles));
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Compound with values ")
+          .appendValue(asList(particles));
+      }
+    };
+  }
 
-    @SafeVarargs public static Matcher<Annotation> compoundAnnotationWith(
-        Matcher<Particle>... particles) {
+  @SafeVarargs
+  public static Matcher<Annotation> compoundAnnotationWith(
+    Matcher<Particle>... particles) {
 
-        return new TypeSafeMatcher<Annotation>() {
-            @Override protected boolean matchesSafely(Annotation item) {
-                return item instanceof Compound
-                    && compoundWith(particles).matches(item);
-            }
+    return new TypeSafeMatcher<Annotation>() {
+      @Override
+      protected boolean matchesSafely(Annotation item) {
+        return item instanceof Compound
+          && compoundWith(particles).matches(item);
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Compound with values ")
-                    .appendValue(asList(particles));
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Compound with values ")
+          .appendValue(asList(particles));
+      }
+    };
+  }
 
-    @SafeVarargs public static Matcher<Aggregate> aggregateWith(
-        Matcher<Unit>... units) {
+  @SafeVarargs
+  public static Matcher<Aggregate> aggregateWith(
+    Matcher<Unit>... units) {
 
-        return new TypeSafeMatcher<Aggregate>() {
-            @Override protected boolean matchesSafely(Aggregate item) {
-                return containsInAnyOrder(units)
-                    .matches(asList(item.value()));
-            }
+    return new TypeSafeMatcher<Aggregate>() {
+      @Override
+      protected boolean matchesSafely(Aggregate item) {
+        return containsInAnyOrder(units)
+          .matches(asList(item.value()));
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("an Aggregate with values ")
-                    .appendValue(asList(units));
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("an Aggregate with values ")
+          .appendValue(asList(units));
+      }
+    };
+  }
 
-    @SafeVarargs public static Matcher<Annotation> aggregateAnnotationWith(
-        Matcher<Unit>... units) {
+  @SafeVarargs
+  public static Matcher<Annotation> aggregateAnnotationWith(
+    Matcher<Unit>... units) {
 
-        return new TypeSafeMatcher<Annotation>() {
-            @Override protected boolean matchesSafely(Annotation item) {
-                return item instanceof Aggregate
-                    && aggregateWith(units).matches(item);
-            }
+    return new TypeSafeMatcher<Annotation>() {
+      @Override
+      protected boolean matchesSafely(Annotation item) {
+        return item instanceof Aggregate
+          && aggregateWith(units).matches(item);
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("an Aggregate with values ")
-                    .appendValue(asList(units));
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("an Aggregate with values ")
+          .appendValue(asList(units));
+      }
+    };
+  }
 
-    @SafeVarargs public static Matcher<Many> manyWith(
-        Matcher<Single>... singles) {
+  @SafeVarargs
+  public static Matcher<Many> manyWith(
+    Matcher<Single>... singles) {
 
-        return new TypeSafeMatcher<Many>() {
-            @Override protected boolean matchesSafely(Many item) {
-                return containsInAnyOrder(singles)
-                    .matches(asList(item.value()));
-            }
+    return new TypeSafeMatcher<Many>() {
+      @Override
+      protected boolean matchesSafely(Many item) {
+        return containsInAnyOrder(singles)
+          .matches(asList(item.value()));
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Many with values ")
-                    .appendValue(asList(singles));
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Many with values ")
+          .appendValue(asList(singles));
+      }
+    };
+  }
 
-    @SafeVarargs public static Matcher<Annotation> manyAnnotationWith(
-        Matcher<Single>... singles) {
+  @SafeVarargs
+  public static Matcher<Annotation> manyAnnotationWith(
+    Matcher<Single>... singles) {
 
-        return new TypeSafeMatcher<Annotation>() {
-            @Override protected boolean matchesSafely(Annotation item) {
-                return item instanceof Many
-                    && manyWith(singles).matches(item);
-            }
+    return new TypeSafeMatcher<Annotation>() {
+      @Override
+      protected boolean matchesSafely(Annotation item) {
+        return item instanceof Many
+          && manyWith(singles).matches(item);
+      }
 
-            @Override public void describeTo(Description description) {
-                description.appendText("a Many with values ")
-                    .appendValue(asList(singles));
-            }
-        };
-    }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("a Many with values ")
+          .appendValue(asList(singles));
+      }
+    };
+  }
 }

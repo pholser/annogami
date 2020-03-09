@@ -8,16 +8,16 @@ import java.util.Optional;
 import static java.util.Arrays.*;
 
 public final class Presence
-    implements SingleByTypeDetector, AllDetector {
+  implements SingleByTypeDetector, AllDetector {
 
-    @Override public <A extends Annotation> Optional<A> find(
-        Class<A> annotationType,
-        AnnotatedElement target) {
+  @Override public <A extends Annotation> Optional<A> find(
+    Class<A> annotationType,
+    AnnotatedElement target) {
 
-        return Optional.ofNullable(target.getAnnotation(annotationType));
-    }
+    return Optional.ofNullable(target.getAnnotation(annotationType));
+  }
 
-    @Override public List<Annotation> all(AnnotatedElement target) {
-        return asList(target.getAnnotations());
-    }
+  @Override public List<Annotation> all(AnnotatedElement target) {
+    return asList(target.getAnnotations());
+  }
 }

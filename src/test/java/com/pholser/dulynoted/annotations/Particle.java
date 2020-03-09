@@ -10,5 +10,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Repeatable(Compound.class)
 @Inherited
 public @interface Particle {
-    int value();
+  int value();
 }

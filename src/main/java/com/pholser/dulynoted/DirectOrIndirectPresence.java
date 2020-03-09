@@ -11,10 +11,10 @@ import static java.util.Arrays.asList;
  * "indirectly present" on a program element.
  */
 public final class DirectOrIndirectPresence implements AllByTypeDetector {
-    @Override public <A extends Annotation> List<A> findAll(
-        Class<A> annotationType,
-        AnnotatedElement target) {
+  @Override public <A extends Annotation> List<A> findAll(
+    Class<A> annotationType,
+    AnnotatedElement target) {
 
-        return asList(target.getDeclaredAnnotationsByType(annotationType));
-    }
+    return asList(target.getDeclaredAnnotationsByType(annotationType));
+  }
 }

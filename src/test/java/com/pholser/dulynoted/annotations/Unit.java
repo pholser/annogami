@@ -10,5 +10,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Repeatable(Aggregate.class)
 @Inherited
 public @interface Unit {
-    int value();
+  int value();
 }

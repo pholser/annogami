@@ -12,17 +12,17 @@ import static java.util.Arrays.*;
  * program element.
  */
 public final class DirectPresence
-    implements SingleByTypeDetector, AllDetector {
+  implements SingleByTypeDetector, AllDetector {
 
-    @Override public <A extends Annotation> Optional<A> find(
-        Class<A> annotationType,
-        AnnotatedElement target) {
+  @Override public <A extends Annotation> Optional<A> find(
+    Class<A> annotationType,
+    AnnotatedElement target) {
 
-        return Optional.ofNullable(
-            target.getDeclaredAnnotation(annotationType));
-    }
+    return Optional.ofNullable(
+      target.getDeclaredAnnotation(annotationType));
+  }
 
-    @Override public List<Annotation> all(AnnotatedElement target) {
-        return asList(target.getDeclaredAnnotations());
-    }
+  @Override public List<Annotation> all(AnnotatedElement target) {
+    return asList(target.getDeclaredAnnotations());
+  }
 }

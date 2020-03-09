@@ -8,5 +8,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Retention(RUNTIME)
 @Inherited
 public @interface Atom {
-    int value();
+  int value();
 }

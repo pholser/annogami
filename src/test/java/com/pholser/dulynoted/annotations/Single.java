@@ -10,5 +10,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Repeatable(Many.class)
 @Inherited
 public @interface Single {
-    int value();
+  int value();
 }
