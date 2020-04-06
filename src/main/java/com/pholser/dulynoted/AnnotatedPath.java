@@ -1,10 +1,25 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public interface AnnotatedPath {
+import static java.util.stream.Collectors.*;
+
+public final class AnnotatedPath {
+  private final List<AnnotatedElement> elements;
+
+  private AnnotatedPath(List<AnnotatedElement> elements) {
+    this.elements = new ArrayList<>(elements);
+  }
+
+  static Builder fromParameter(Parameter p) {
+    return new Builder().addParameter(p);
+  }
+
   /**
    * Gives the first non-repeated annotation of the given type found
    * along this path of annotated elements using the given detector.
@@ -17,11 +32,21 @@ public interface AnnotatedPath {
    */
   <A extends Annotation> Optional<A> find(
     Class<A> annotationType,
-    SingleByTypeDetector detector);
+    SingleByTypeDetector detector) {
+
+    return elements.stream()
+      .map(e -> detector.find(annotationType, e))
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .findFirst();
+  }
 
   <A extends Annotation> Optional<A> merge(
     Class<A> annotationType,
-    SingleByTypeDetector detector);
+    SingleByTypeDetector detector) {
+
+    return Optional.empty();
+  }
 
   /**
    * Gives all the annotations of a given type found along this path
@@ -34,11 +59,19 @@ public interface AnnotatedPath {
    */
   <A extends Annotation> List<A> findAll(
     Class<A> annotationType,
-    AllByTypeDetector detector);
+    AllByTypeDetector detector) {
+
+    return elements.stream()
+      .flatMap(e -> detector.findAll(annotationType, e).stream())
+      .collect(toList());
+  }
 
   <A extends Annotation> Optional<A> merge(
     Class<A> annotationType,
-    AllByTypeDetector detector);
+    AllByTypeDetector detector) {
+
+    return Optional.empty();
+  }
 
   /**
    * Gives all the annotations found along this path of annotated elements
@@ -47,7 +80,24 @@ public interface AnnotatedPath {
    * @param detector strategy for finding the annotations
    * @return list of all the annotations found
    */
-  List<Annotation> all(AllDetector detector);
+  List<Annotation> all(AllDetector detector) {
+    return new ArrayList<>();
+  }
 
-  List<Annotation> merge(AllDetector detector);
+  List<Annotation> merge(AllDetector detector) {
+    return new ArrayList<>();
+  }
+
+  static class Builder {
+    private final List<AnnotatedElement> elements = new ArrayList<>();
+
+    public Builder addParameter(Parameter p) {
+      elements.add(p);
+      return this;
+    }
+
+    public AnnotatedPath build() {
+      return new AnnotatedPath(elements);
+    }
+  }
 }

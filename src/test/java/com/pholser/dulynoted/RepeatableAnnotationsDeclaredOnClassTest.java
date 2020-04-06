@@ -9,6 +9,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
 import static com.pholser.dulynoted.AssertionHelp.failure;
+import static com.pholser.dulynoted.Presences.*;
 import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -25,13 +26,13 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   }
 
   @Test void findOneKindDirect() {
-    new DirectPresence().find(Particle.class, target)
+    DIRECT.find(Particle.class, target)
       .ifPresent(p -> fail("Single Particle should not be found"));
   }
 
   @Test void findOneContainerKindDirect() {
     Compound c =
-      new DirectPresence().find(Compound.class, target)
+      DIRECT.find(Compound.class, target)
         .orElseThrow(failure("Missing annotation"));
 
     assertThat(
@@ -43,23 +44,21 @@ class RepeatableAnnotationsDeclaredOnClassTest {
 
   @Test void findAnotherKindDirect() {
     Unit u =
-      new DirectPresence().find(Unit.class, target)
+      DIRECT.find(Unit.class, target)
         .orElseThrow(failure("Missing annotation"));
 
     assertEquals(-3, u.value());
   }
 
   @Test void findAnotherContainerKindDirect() {
-    new DirectPresence().find(Aggregate.class, target)
+    DIRECT.find(Aggregate.class, target)
       .ifPresent(p ->
         fail("Aggregate annotation should not be found"));
   }
 
   @Test void allDirect() {
-    List<Annotation> all = new DirectPresence().all(target);
-
     assertThat(
-      all,
+      DIRECT.all(target),
       containsInAnyOrder(
         compoundAnnotationWith(
           particleOfValue(-1),
@@ -68,22 +67,16 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   }
 
   @Test void findAllOneKindDirectOrIndirect() {
-    List<Particle> all =
-      new DirectOrIndirectPresence().findAll(Particle.class, target);
-
     assertThat(
-      all,
+      DIRECT_OR_INDIRECT.findAll(Particle.class, target),
       containsInAnyOrder(
         particleOfValue(-1),
         particleOfValue(-2)));
   }
 
   @Test void findAllOneContainerKindDirectOrIndirect() {
-    List<Compound> all =
-      new DirectOrIndirectPresence().findAll(Compound.class, target);
-
     assertThat(
-      all,
+      DIRECT_OR_INDIRECT.findAll(Compound.class, target),
       containsInAnyOrder(
         compoundWith(
           particleOfValue(-1),
@@ -91,24 +84,20 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   }
 
   @Test void findAllAnotherKindDirectOrIndirect() {
-    List<Unit> all =
-      new DirectOrIndirectPresence().findAll(Unit.class, target);
-
     assertThat(
-      all,
+      DIRECT_OR_INDIRECT.findAll(Unit.class, target),
       containsInAnyOrder(unitOfValue(-3)));
   }
 
   @Test void findAllAnotherContainerKindDirectOrIndirect() {
-    List<Aggregate> all =
-      new DirectOrIndirectPresence().findAll(Aggregate.class, target);
-
-    assertEquals(emptyList(), all);
+    assertEquals(
+      emptyList(),
+      DIRECT_OR_INDIRECT.findAll(Aggregate.class, target));
   }
 
   @Test void findOneKindPresent() {
     Particle p =
-      new Presence().find(Particle.class, target)
+      PRESENT.find(Particle.class, target)
         .orElseThrow(failure("Missing annotation"));
 
     assertEquals(-6, p.value());
@@ -116,7 +105,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
 
   @Test void findOneContainerKindPresent() {
     Compound c =
-      new Presence().find(Compound.class, target)
+      PRESENT.find(Compound.class, target)
         .orElseThrow(failure("Missing annotation"));
 
     assertThat(
@@ -128,7 +117,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
 
   @Test void findAnotherKindPresent() {
     Unit u =
-      new Presence().find(Unit.class, target)
+      PRESENT.find(Unit.class, target)
         .orElseThrow(failure("Missing annotation"));
 
     assertEquals(-3, u.value());
@@ -136,7 +125,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
 
   @Test void findAnotherContainerKindPresent() {
     Aggregate a =
-      new Presence().find(Aggregate.class, target)
+      PRESENT.find(Aggregate.class, target)
         .orElseThrow(failure("Missing annotation"));
 
     assertThat(
@@ -147,10 +136,8 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   }
 
   @Test void allPresent() {
-    List<Annotation> all = new Presence().all(target);
-
     assertThat(
-      all,
+      PRESENT.all(target),
       containsInAnyOrder(
         compoundAnnotationWith(
           particleOfValue(-1),
