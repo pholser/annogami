@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 
-import static com.pholser.dulynoted.AssertionHelp.*;
 import static com.pholser.dulynoted.Presences.*;
 import static java.lang.annotation.RetentionPolicy.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,7 +68,7 @@ class DirectPresenceTest {
   @Test void singleNonRepeatable() {
     A a =
       DIRECT.find(A.class, AHaver.class)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(3, a.value());
   }
@@ -77,7 +76,7 @@ class DirectPresenceTest {
   @Test void singleRepeatable() {
     B b =
       DIRECT.find(B.class, SingleBHaver.class)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals("1", b.value());
   }
@@ -95,7 +94,7 @@ class DirectPresenceTest {
   @Test void manyRepeatableContainer() {
     Bs bs =
       DIRECT.find(Bs.class, ManyBHaver.class)
-        .orElseThrow(failure("missing annotation"));
+        .orElseGet(() -> fail("missing annotation"));
 
     B[] value = bs.value();
     assertEquals(2, value.length);
@@ -104,7 +103,7 @@ class DirectPresenceTest {
   @Test void singleInstanceOfRepeatableContainer() {
     Bs bs =
       DIRECT.find(Bs.class, BsHaver.class)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     B[] value = bs.value();
     assertEquals(2, value.length);
@@ -123,7 +122,7 @@ class DirectPresenceTest {
   @Test void containerOfManyRepeatableContainers() {
     Cs cs =
       DIRECT.find(Cs.class, ManyBsHaver.class)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     Bs[] value = cs.value();
     assertEquals(2, value.length);

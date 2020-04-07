@@ -4,11 +4,9 @@ import com.pholser.dulynoted.annotations.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
-import static com.pholser.dulynoted.AssertionHelp.failure;
 import static com.pholser.dulynoted.Presences.*;
 import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
 import static java.util.Arrays.asList;
@@ -33,7 +31,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneContainerKindDirect() {
     Compound c =
       DIRECT.find(Compound.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertThat(
       asList(c.value()),
@@ -45,7 +43,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findAnotherKindDirect() {
     Unit u =
       DIRECT.find(Unit.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(-3, u.value());
   }
@@ -98,7 +96,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneKindPresent() {
     Particle p =
       PRESENT.find(Particle.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(-6, p.value());
   }
@@ -106,7 +104,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneContainerKindPresent() {
     Compound c =
       PRESENT.find(Compound.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertThat(
       asList(c.value()),
@@ -118,7 +116,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findAnotherKindPresent() {
     Unit u =
       PRESENT.find(Unit.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(-3, u.value());
   }
@@ -126,7 +124,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findAnotherContainerKindPresent() {
     Aggregate a =
       PRESENT.find(Aggregate.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertThat(
       asList(a.value()),

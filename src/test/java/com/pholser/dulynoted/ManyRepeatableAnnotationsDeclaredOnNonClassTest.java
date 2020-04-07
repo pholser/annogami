@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.AnnotatedElement;
 
-import static com.pholser.dulynoted.AssertionHelp.*;
 import static com.pholser.dulynoted.Presences.*;
 import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
 import static java.util.Arrays.*;
@@ -34,7 +33,7 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findOneContainerKindDirect() {
     Compound c =
       DIRECT.find(Compound.class, target)
-        .orElseThrow(failure("Missing Compound annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertThat(
       asList(c.value()),
@@ -51,7 +50,7 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findAnotherContainerKindDirect() {
     Aggregate a =
       DIRECT.find(Aggregate.class, target)
-        .orElseThrow(failure("Missing Aggregate annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertThat(
       asList(a.value()),
@@ -114,7 +113,7 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findOneContainerKindPresent() {
     Compound c =
       PRESENT.find(Compound.class, target)
-        .orElseThrow(failure("Missing Compound annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertThat(
       asList(c.value()),
@@ -131,7 +130,7 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findAnotherContainerKindPresent() {
     Aggregate a =
       PRESENT.find(Aggregate.class, target)
-        .orElseThrow(failure("Missing Aggregate annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertThat(
       asList(a.value()),

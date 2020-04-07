@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.AnnotatedElement;
 
-import static com.pholser.dulynoted.AssertionHelp.*;
 import static com.pholser.dulynoted.Presences.*;
 import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -25,7 +24,7 @@ class ManyNonRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findOneKindDirect() {
     Atom a =
       DIRECT.find(Atom.class, target)
-        .orElseThrow(failure("Missing Atom annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(2, a.value());
   }
@@ -33,7 +32,7 @@ class ManyNonRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findAnotherKindDirect() {
     Iota i =
       DIRECT.find(Iota.class, target)
-        .orElseThrow(failure("Missing Iota annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(3, i.value());
   }
@@ -61,7 +60,7 @@ class ManyNonRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findOneKindPresent() {
     Atom a =
       PRESENT.find(Atom.class, target)
-        .orElseThrow(failure("Missing Atom annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(2, a.value());
   }
@@ -69,7 +68,7 @@ class ManyNonRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findAnotherKindPresent() {
     Iota i =
       PRESENT.find(Iota.class, target)
-        .orElseThrow(failure("Missing Iota annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(3, i.value());
   }

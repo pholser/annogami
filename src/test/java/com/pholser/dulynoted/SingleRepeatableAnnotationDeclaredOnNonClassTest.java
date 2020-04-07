@@ -7,7 +7,6 @@ import com.pholser.dulynoted.annotations.X;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.pholser.dulynoted.AssertionHelp.*;
 import static com.pholser.dulynoted.Presences.*;
 import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -24,7 +23,7 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   @Test void findDirect() {
     Particle p =
       DIRECT.find(Particle.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(4, p.value());
   }
@@ -44,7 +43,7 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   @Test void findPresent() {
     Particle p =
       PRESENT.find(Particle.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(4, p.value());
   }

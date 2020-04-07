@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.AnnotatedElement;
 
-import static com.pholser.dulynoted.AssertionHelp.*;
 import static com.pholser.dulynoted.Presences.*;
 import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
 import static java.util.Collections.*;
@@ -26,7 +25,7 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneKindDirect() {
     Atom a =
       DIRECT.find(Atom.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(9, a.value());
   }
@@ -58,7 +57,7 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneKindPresent() {
     Atom a =
       PRESENT.find(Atom.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(9, a.value());
   }
@@ -66,7 +65,7 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
   @Test void findAnotherKindPresent() {
     Iota i =
       PRESENT.find(Iota.class, target)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(10, i.value());
   }

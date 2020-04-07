@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.pholser.dulynoted.AssertionHelp.*;
 import static com.pholser.dulynoted.Presences.*;
 import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
 import static java.util.Collections.*;
@@ -34,7 +33,7 @@ class BuildingAnnotatedPathsWithOnlyAMethodParameterTest {
   void findOneDirectSucceeds() {
     Atom atom =
       path.find(Atom.class, DIRECT)
-        .orElseThrow(failure("Missing annotation"));
+        .orElseGet(() -> fail("Missing annotation"));
 
     assertEquals(1, atom.value());
   }
