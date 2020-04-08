@@ -19,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BuildingAnnotatedPathsWithOnlyAMethodParameterTest {
   private AnnotatedPath path;
 
-  @BeforeEach
-  void setUp() throws Exception {
+  @BeforeEach void setUp() throws Exception {
     path =
       AnnotatedPath.fromParameter(
         AnnotatedParameterHaver.class
@@ -29,8 +28,7 @@ class BuildingAnnotatedPathsWithOnlyAMethodParameterTest {
         .build();
   }
 
-  @Test
-  void findOneDirectSucceeds() {
+  @Test void findOneDirectSucceeds() {
     Atom atom =
       path.find(Atom.class, DIRECT)
         .orElseGet(() -> fail("Missing annotation"));
@@ -38,21 +36,18 @@ class BuildingAnnotatedPathsWithOnlyAMethodParameterTest {
     assertEquals(1, atom.value());
   }
 
-  @Test
-  void findOneDirectFails() {
+  @Test void findOneDirectFails() {
     path.find(Iota.class, DIRECT)
       .ifPresent(i -> fail("Iota should not be directly present here"));
   }
 
-  @Test
-  void findAllDirectOrIndirectSucceeds() {
+  @Test void findAllDirectOrIndirectSucceeds() {
     List<Atom> atoms = path.findAll(Atom.class, DIRECT_OR_INDIRECT);
 
     assertThat(atoms, containsInAnyOrder(atomOfValue(1)));
   }
 
-  @Test
-  void findAllDirectOrIndirectFails() {
+  @Test void findAllDirectOrIndirectFails() {
     assertEquals(emptyList(), path.findAll(Unit.class, DIRECT_OR_INDIRECT));
   }
 }
