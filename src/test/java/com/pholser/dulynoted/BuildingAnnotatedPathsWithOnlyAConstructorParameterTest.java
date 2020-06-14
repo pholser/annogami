@@ -10,30 +10,31 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.pholser.dulynoted.Presences.*;
-import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
-import static java.util.Collections.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.pholser.dulynoted.annotations.AnnotationMatching.unitOfValue;
+import static java.util.Collections.emptyList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-class BuildingAnnotatedPathsWithOnlyAMethodParameterTest {
+class BuildingAnnotatedPathsWithOnlyAConstructorParameterTest {
   private AnnotatedPath path;
 
   @BeforeEach void setUp() throws Exception {
     path =
       AnnotatedPath.fromParameter(
         AnnotatedParameterHaver.class
-          .getMethod("x", int.class)
+          .getConstructor(int.class)
           .getParameters()[0])
         .build();
   }
 
   @Test void findOneDirectSucceeds() {
-    Atom atom =
-      path.find(Atom.class, DIRECT)
+    Unit unit =
+      path.find(Unit.class, DIRECT)
         .orElseGet(() -> fail("Missing annotation"));
 
-    assertEquals(1, atom.value());
+    assertEquals(2, unit.value());
   }
 
   @Test void findOneDirectFails() {
@@ -42,21 +43,21 @@ class BuildingAnnotatedPathsWithOnlyAMethodParameterTest {
   }
 
   @Test void findAllDirectOrIndirectSucceeds() {
-    List<Atom> atoms = path.findAll(Atom.class, DIRECT_OR_INDIRECT);
+    List<Unit> units = path.findAll(Unit.class, DIRECT_OR_INDIRECT);
 
-    assertThat(atoms, containsInAnyOrder(atomOfValue(1)));
+    assertThat(units, containsInAnyOrder(unitOfValue(2)));
   }
 
   @Test void findAllDirectOrIndirectFails() {
-    assertEquals(emptyList(), path.findAll(Unit.class, DIRECT_OR_INDIRECT));
+    assertEquals(emptyList(), path.findAll(Atom.class, DIRECT_OR_INDIRECT));
   }
 
   @Test void findOnePresentSucceeds() {
-    Atom atom =
-      path.find(Atom.class, PRESENT)
+    Unit unit =
+      path.find(Unit.class, PRESENT)
         .orElseGet(() -> fail("Missing annotation"));
 
-    assertEquals(1, atom.value());
+    assertEquals(2, unit.value());
   }
 
   @Test void findOnePresentFails() {
@@ -65,12 +66,12 @@ class BuildingAnnotatedPathsWithOnlyAMethodParameterTest {
   }
 
   @Test void findAllAssociatedSucceeds() {
-    List<Atom> atoms = path.findAll(Atom.class, ASSOCIATED);
+    List<Unit> units = path.findAll(Unit.class, ASSOCIATED);
 
-    assertThat(atoms, containsInAnyOrder(atomOfValue(1)));
+    assertThat(units, containsInAnyOrder(unitOfValue(2)));
   }
 
   @Test void findAllAssociatedFails() {
-    assertEquals(emptyList(), path.findAll(Unit.class, ASSOCIATED));
+    assertEquals(emptyList(), path.findAll(Atom.class, ASSOCIATED));
   }
 }
