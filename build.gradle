@@ -1,15 +1,15 @@
 buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.5.1'
-    }
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+  dependencies {
+    classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.5.1'
+  }
 }
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 ext.junitPlatformVersion = '1.6.2'
@@ -19,26 +19,26 @@ apply plugin: 'java'
 apply plugin: 'ru.vyarus.animalsniffer'
 
 jar {
-    baseName = 'duly-noted'
-    version = '0.1-SNAPSHOT'
+  baseName = 'duly-noted'
+  version = '0.1-SNAPSHOT'
 }
 
 compileTestJava {
-    sourceCompatibility = 11
-    targetCompatibility = 11
+  sourceCompatibility = 11
+  targetCompatibility = 11
 }
 
 test {
-    useJUnitPlatform {
-        systemProperty 'java.util.logging.manager', 'java.util.logging.LogManager'
-    }
+  useJUnitPlatform {
+    systemProperty 'java.util.logging.manager', 'java.util.logging.LogManager'
+  }
 }
 
 dependencies {
-    testCompile("org.hamcrest:java-hamcrest:2.0.0.0")
-    testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+  testCompile("org.hamcrest:java-hamcrest:2.0.0.0")
+  testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+  testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 
-    // To avoid compiler warnings about @API annotations in JUnit code
-    testCompileOnly('org.apiguardian:apiguardian-api:1.1.0')
+  // To avoid compiler warnings about @API annotations in JUnit code
+  testCompileOnly('org.apiguardian:apiguardian-api:1.1.0')
 }
