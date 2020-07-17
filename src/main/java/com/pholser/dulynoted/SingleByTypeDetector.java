@@ -6,7 +6,7 @@ import java.util.Optional;
 
 /**
  * Contract for an object that can ask for a non-repeated annotation
- * by its type on a program element.
+ * by its type on a program element. Implementers decide what "on" means.
  */
 interface SingleByTypeDetector {
   /**

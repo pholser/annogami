@@ -5,8 +5,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
 /**
- * Contract for an object that can ask for the annotations of a given type
- * on a program element.
+ * Contract for an object that can give the annotations of a given type
+ * on a program element. Implementers decide what "on" means.
  */
 interface AllByTypeDetector {
   /**
