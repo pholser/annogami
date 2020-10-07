@@ -1,6 +1,34 @@
 # Duly Noted: Annotation-finding strategies for Java
 
-Duly Noted is 
+Duly Noted is a Java library that facilitates finding and manipulating
+Java annotations on program elements at runtime.
+
+Duly Noted wraps the basic annotation-finding facilities of the JDK and
+offers similar functionality to Spring's annotation utilities. Its main
+design elements are:
+
+* *Presence levels* as a first-class concept. Rather than having
+to remember which method of
+[AnnotatedElement](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/AnnotatedElement.html)
+corresponds to which presence level, or which of the Spring or JUnit
+utility methods bake in certain levels of presence, instead you can use
+methods like `find()`, `findAll()`, and `all()` from a clearly-named
+implementation of a presence level on `Presences` to perform the operation
+on the element.
+
+* *Meta-presence*, as exploited in Spring and JUnit 5, as a first-class
+concept. An annotation is *meta-present* on an element if it is
+*presence-level* on the element, or *presence-level* on any annotations
+that are *presence-level* on the element, and so on up the annotation
+"hierarchy". A `MetaPresence` wraps another `Presence` to allow for
+finding meta-present annotations on program elements.
+
+* *Annotated path*: a sequence of program elements along which
+Duly Noted looks for and merges annotations.
+
+
+
+
 * [x] Direct presence, direct-or-indirect presence, presence, associated
   * [x] On non-classes and classes
 * [x] find-one by type, find-all by type, all: as appropriate for above
