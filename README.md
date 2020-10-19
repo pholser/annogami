@@ -24,10 +24,17 @@ that are *presence-level* on the element, and so on up the annotation
 finding meta-present annotations on program elements.
 
 * *Annotated path*: a sequence of program elements along which
-Duly Noted looks for and merges annotations.
+Duly Noted looks for and merges annotations. Many Spring and JUnit 5
+annotation helper methods prescribe a search path for the desired
+annotations; if you want a separate path, find a separate method.
+Duly Noted takes the approach of allowing for building a search path
+for annotations, then calling methods on the path such as
+`find(SingleByTypeDetector)` and `all(AllDetector)` to perform the
+desired operations. The presence level implementations from `Presence`
+support these detector types.
 
 
-
+## Capabilities to be added
 
 * [x] Direct presence, direct-or-indirect presence, presence, associated
   * [x] On non-classes and classes
