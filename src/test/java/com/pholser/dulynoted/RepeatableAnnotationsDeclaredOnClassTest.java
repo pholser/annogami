@@ -1,5 +1,6 @@
 package com.pholser.dulynoted;
 
+import com.pholser.dulynoted.annotated.Y;
 import com.pholser.dulynoted.annotations.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

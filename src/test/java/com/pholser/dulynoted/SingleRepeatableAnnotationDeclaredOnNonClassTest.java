@@ -3,7 +3,7 @@ package com.pholser.dulynoted;
 import java.lang.reflect.AnnotatedElement;
 
 import com.pholser.dulynoted.annotations.Particle;
-import com.pholser.dulynoted.annotations.X;
+import com.pholser.dulynoted.annotated.X;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

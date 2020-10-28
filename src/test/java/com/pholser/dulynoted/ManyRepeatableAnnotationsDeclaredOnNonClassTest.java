@@ -4,7 +4,7 @@ import com.pholser.dulynoted.annotations.Aggregate;
 import com.pholser.dulynoted.annotations.Compound;
 import com.pholser.dulynoted.annotations.Particle;
 import com.pholser.dulynoted.annotations.Unit;
-import com.pholser.dulynoted.annotations.X;
+import com.pholser.dulynoted.annotated.X;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
