@@ -5,8 +5,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.*;
-
 /**
  * An object that can find annotations that are "directly present" on a
  * program element.
@@ -23,6 +21,6 @@ public final class DirectPresence
   }
 
   @Override public List<Annotation> all(AnnotatedElement target) {
-    return asList(target.getDeclaredAnnotations());
+    return List.of(target.getDeclaredAnnotations());
   }
 }
