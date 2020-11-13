@@ -64,7 +64,7 @@ support these detector types.
       front of path superseding attributes further back
 
 * Implement several ways of producing meaningful
-  `AnnotatedPaths`
+  `AnnotatedPath`s
   * [ ] For example, starting with a method parameter,
     then its method, then method's declaring class, then
     superclass and interfaces and so forth, breadth-first
