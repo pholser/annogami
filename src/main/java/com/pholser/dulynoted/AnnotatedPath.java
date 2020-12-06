@@ -25,6 +25,10 @@ public class AnnotatedPath {
     return new Builder.Constructor(c);
   }
 
+  public static Builder.Field fromField(Field f) {
+    return new Builder.Field(f);
+  }
+
   public <A extends Annotation> Optional<A> findFirst(
     Class<A> annoType,
     SingleByTypeDetector direct) {
@@ -108,6 +112,32 @@ public class AnnotatedPath {
 
       public Class toDeclaringClass() {
         return new Class(m.getDeclaringClass(), elements);
+      }
+
+      public AnnotatedPath build() {
+        return new AnnotatedPath(elements);
+      }
+    }
+
+    public static class Field {
+      private final java.lang.reflect.Field f;
+      private final List<AnnotatedElement> elements = new ArrayList<>();
+
+      Field(java.lang.reflect.Field f) {
+        this(f, List.of());
+      }
+
+      Field(
+        java.lang.reflect.Field f,
+        List<AnnotatedElement> history) {
+
+        this.f = f;
+        elements.addAll(history);
+        elements.add(f);
+      }
+
+      public Class toDeclaringClass() {
+        return new Class(f.getDeclaringClass(), elements);
       }
 
       public AnnotatedPath build() {
