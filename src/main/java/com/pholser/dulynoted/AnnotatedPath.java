@@ -1,7 +1,12 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,20 +18,24 @@ public class AnnotatedPath {
     this.elements = elements;
   }
 
-  public static Builder.Parameter fromParameter(Parameter p) {
-    return new Builder.Parameter(p);
+  public static Builder.Parameter fromParameter(Parameter parm) {
+    return new Builder.Parameter(parm);
   }
 
   public static Builder.Method fromMethod(Method m) {
     return new Builder.Method(m);
   }
 
-  public static Builder.Constructor fromConstructor(Constructor<?> c) {
-    return new Builder.Constructor(c);
+  public static Builder.Constructor fromConstructor(Constructor<?> ctor) {
+    return new Builder.Constructor(ctor);
   }
 
   public static Builder.Field fromField(Field f) {
     return new Builder.Field(f);
+  }
+
+  public static Builder.Class fromClass(Class<?> clazz) {
+    return new Builder.Class(clazz);
   }
 
   public <A extends Annotation> Optional<A> findFirst(
@@ -41,51 +50,51 @@ public class AnnotatedPath {
   public static class Builder {
     public static class Parameter {
       private final List<AnnotatedElement> elements = new ArrayList<>();
-      private final java.lang.reflect.Parameter p;
+      private final java.lang.reflect.Parameter parm;
 
-      Parameter(java.lang.reflect.Parameter p) {
-        this.p = p;
-        elements.add(p);
+      Parameter(java.lang.reflect.Parameter parm) {
+        this.parm = parm;
+        elements.add(parm);
       }
 
       public Constructor toDeclaringConstructor() {
-        Executable exec = p.getDeclaringExecutable();
+        Executable exec = parm.getDeclaringExecutable();
         if (!(exec instanceof java.lang.reflect.Constructor<?>)) {
           throw new IllegalStateException(
-            "Parameter " + p + " not declared on a constructor");
+            "Parameter " + parm + " not declared on a constructor");
         }
         return new Constructor((java.lang.reflect.Constructor) exec, elements);
       }
 
       public Method toDeclaringMethod() {
-        Executable exec = p.getDeclaringExecutable();
+        Executable exec = parm.getDeclaringExecutable();
         if (!(exec instanceof java.lang.reflect.Method)) {
           throw new IllegalStateException(
-              "Parameter " + p + " not declared on a method");
+              "Parameter " + parm + " not declared on a method");
         }
         return new Method((java.lang.reflect.Method) exec, elements);
       }
     }
 
     public static class Constructor {
-      private final java.lang.reflect.Constructor c;
+      private final java.lang.reflect.Constructor ctor;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
-      Constructor(java.lang.reflect.Constructor c) {
-        this(c, List.of());
+      Constructor(java.lang.reflect.Constructor ctor) {
+        this(ctor, List.of());
       }
 
       Constructor(
-        java.lang.reflect.Constructor c,
+        java.lang.reflect.Constructor ctor,
         List<AnnotatedElement> history) {
 
-        this.c = c;
+        this.ctor = ctor;
         elements.addAll(history);
-        elements.add(c);
+        elements.add(ctor);
       }
 
       public Class toDeclaringClass() {
-        return new Class(c.getDeclaringClass(), elements);
+        return new Class(ctor.getDeclaringClass(), elements);
       }
 
       public AnnotatedPath build() {
@@ -146,20 +155,72 @@ public class AnnotatedPath {
     }
 
     public static class Class {
-      private final java.lang.Class<?> c;
+      private final java.lang.Class<?> clazz;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
-      Class(java.lang.Class c) {
-        this(c, List.of());
+      Class(java.lang.Class clazz) {
+        this(clazz, List.of());
       }
 
       Class(
-        java.lang.Class c,
+        java.lang.Class clazz,
         List<AnnotatedElement> history) {
 
-        this.c = c;
+        this.clazz = clazz;
         elements.addAll(history);
-        elements.add(c);
+        elements.add(clazz);
+      }
+
+      public AnnotatedPath build() {
+        return new AnnotatedPath(elements);
+      }
+
+      public Package toDeclaringPackage() {
+        return new Package(clazz.getPackage(), elements);
+      }
+
+      public Module toDeclaringModule() {
+        return new Module(clazz.getModule(), elements);
+      }
+    }
+
+    public static class Package{
+      private final java.lang.Package pkg;
+      private final List<AnnotatedElement> elements = new ArrayList<>();
+
+      Package(java.lang.Package pkg) {
+        this(pkg, List.of());
+      }
+
+      Package(
+        java.lang.Package pkg,
+        List<AnnotatedElement> history) {
+
+        this.pkg = pkg;
+        elements.addAll(history);
+        elements.add(pkg);
+      }
+
+      public AnnotatedPath build() {
+        return new AnnotatedPath(elements);
+      }
+    }
+
+    public static class Module {
+      private final java.lang.Module mod;
+      private final List<AnnotatedElement> elements = new ArrayList<>();
+
+      Module(java.lang.Module mod) {
+        this(mod, List.of());
+      }
+
+      Module(
+        java.lang.Module mod,
+        List<AnnotatedElement> history) {
+
+        this.mod = mod;
+        elements.addAll(history);
+        elements.add(mod);
       }
 
       public AnnotatedPath build() {
