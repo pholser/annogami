@@ -158,12 +158,12 @@ public class AnnotatedPath {
       private final java.lang.Class<?> clazz;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
-      Class(java.lang.Class clazz) {
+      Class(java.lang.Class<?> clazz) {
         this(clazz, List.of());
       }
 
       Class(
-        java.lang.Class clazz,
+        java.lang.Class<?> clazz,
         List<AnnotatedElement> history) {
 
         this.clazz = clazz;
@@ -184,13 +184,9 @@ public class AnnotatedPath {
       }
     }
 
-    public static class Package{
+    public static class Package {
       private final java.lang.Package pkg;
       private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Package(java.lang.Package pkg) {
-        this(pkg, List.of());
-      }
 
       Package(
         java.lang.Package pkg,
@@ -207,18 +203,12 @@ public class AnnotatedPath {
     }
 
     public static class Module {
-      private final java.lang.Module mod;
       private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Module(java.lang.Module mod) {
-        this(mod, List.of());
-      }
 
       Module(
         java.lang.Module mod,
         List<AnnotatedElement> history) {
 
-        this.mod = mod;
         elements.addAll(history);
         elements.add(mod);
       }
