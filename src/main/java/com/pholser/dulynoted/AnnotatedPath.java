@@ -185,14 +185,12 @@ public class AnnotatedPath {
     }
 
     public static class Package {
-      private final java.lang.Package pkg;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Package(
         java.lang.Package pkg,
         List<AnnotatedElement> history) {
 
-        this.pkg = pkg;
         elements.addAll(history);
         elements.add(pkg);
       }
