@@ -1,17 +1,21 @@
 package com.pholser.dulynoted;
 
-import java.lang.reflect.AnnotatedElement;
-
-import com.pholser.dulynoted.annotations.Particle;
 import com.pholser.dulynoted.annotated.X;
+import com.pholser.dulynoted.annotations.Particle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.pholser.dulynoted.Presences.*;
-import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.AnnotatedElement;
+
+import static com.pholser.dulynoted.Presences.ASSOCIATED;
+import static com.pholser.dulynoted.Presences.DIRECT;
+import static com.pholser.dulynoted.Presences.DIRECT_OR_INDIRECT;
+import static com.pholser.dulynoted.Presences.PRESENT;
+import static com.pholser.dulynoted.annotations.Annotations.annoValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   private AnnotatedElement target;
@@ -31,13 +35,13 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   @Test void allDirect() {
     assertThat(
       DIRECT.all(target),
-      containsInAnyOrder(particleAnnotationOfValue(4)));
+      containsInAnyOrder(annoValue(Particle.class, 4)));
   }
 
   @Test void findAllDirectOrIndirect() {
     assertThat(
       DIRECT_OR_INDIRECT.findAll(Particle.class, target),
-      containsInAnyOrder(particleOfValue(4)));
+      containsInAnyOrder(annoValue(Particle.class, 4)));
   }
 
   @Test void findPresent() {
@@ -51,12 +55,12 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   @Test void allPresent() {
     assertThat(
       PRESENT.all(target),
-      containsInAnyOrder(particleAnnotationOfValue(4)));
+      containsInAnyOrder(annoValue(Particle.class, 4)));
   }
 
   @Test void findAllAssociated() {
     assertThat(
       ASSOCIATED.findAll(Particle.class, target),
-      containsInAnyOrder(particleOfValue(4)));
+      containsInAnyOrder(annoValue(Particle.class, 4)));
   }
 }

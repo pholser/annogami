@@ -18,4 +18,7 @@ public class X extends SuperX {
   @Unit(7) @Unit(8)
   void bar() {
   }
+
+  @Red(10) void baz() {
+  }
 }

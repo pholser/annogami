@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 
-import static com.pholser.dulynoted.Presences.*;
-import static java.lang.annotation.RetentionPolicy.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.pholser.dulynoted.Presences.DIRECT;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class DirectPresenceTest {
   @Retention(RUNTIME)

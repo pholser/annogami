@@ -1,17 +1,21 @@
 package com.pholser.dulynoted;
 
-import java.lang.reflect.AnnotatedElement;
-
-import com.pholser.dulynoted.annotations.Atom;
 import com.pholser.dulynoted.annotated.X;
+import com.pholser.dulynoted.annotations.Atom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.pholser.dulynoted.Presences.*;
-import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.AnnotatedElement;
+
+import static com.pholser.dulynoted.Presences.ASSOCIATED;
+import static com.pholser.dulynoted.Presences.DIRECT;
+import static com.pholser.dulynoted.Presences.DIRECT_OR_INDIRECT;
+import static com.pholser.dulynoted.Presences.PRESENT;
+import static com.pholser.dulynoted.annotations.Annotations.annoValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
   private AnnotatedElement target;
@@ -31,13 +35,13 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
   @Test void allDirect() {
     assertThat(
       DIRECT.all(target),
-      containsInAnyOrder(atomAnnotationOfValue(1)));
+      containsInAnyOrder(annoValue(Atom.class, 1)));
   }
 
   @Test void findAllDirectOrIndirect() {
     assertThat(
       DIRECT_OR_INDIRECT.findAll(Atom.class, target),
-      containsInAnyOrder(atomOfValue(1)));
+      containsInAnyOrder(annoValue(Atom.class, 1)));
   }
 
   @Test void findPresent() {
@@ -51,12 +55,12 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
   @Test void allPresent() {
     assertThat(
       PRESENT.all(target),
-      containsInAnyOrder(atomAnnotationOfValue(1)));
+      containsInAnyOrder(annoValue(Atom.class, 1)));
   }
 
   @Test void findAllAssociated() {
     assertThat(
       ASSOCIATED.findAll(Atom.class, target),
-      containsInAnyOrder(atomOfValue(1)));
+      containsInAnyOrder(annoValue(Atom.class, 1)));
   }
 }

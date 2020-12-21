@@ -39,6 +39,7 @@ dependencies {
   testCompile("org.hamcrest:hamcrest:2.2")
   testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
   testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+  testCompile("io.leangen.geantyref:geantyref:1.3.11")
 
   // To avoid compiler warnings about @API annotations in JUnit code
   testCompileOnly('org.apiguardian:apiguardian-api:1.1.0')

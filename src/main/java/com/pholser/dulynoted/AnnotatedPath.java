@@ -40,7 +40,7 @@ public class AnnotatedPath {
 
   public <A extends Annotation> Optional<A> findFirst(
     Class<A> annoType,
-    SingleByTypeDetector direct) {
+    SingleByType direct) {
 
     return elements.stream()
       .flatMap(e -> direct.find(annoType, e).stream())

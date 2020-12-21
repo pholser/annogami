@@ -9,15 +9,13 @@ import java.util.Optional;
  * An object that can find annotations that are "directly present" on a
  * program element.
  */
-public final class DirectPresence
-  implements SingleByTypeDetector, AllDetector {
-
+final class Direct implements SingleByType, All {
   @Override public <A extends Annotation> Optional<A> find(
-    Class<A> annotationType,
+    Class<A> annoType,
     AnnotatedElement target) {
 
     return Optional.ofNullable(
-      target.getDeclaredAnnotation(annotationType));
+      target.getDeclaredAnnotation(annoType));
   }
 
   @Override public List<Annotation> all(AnnotatedElement target) {

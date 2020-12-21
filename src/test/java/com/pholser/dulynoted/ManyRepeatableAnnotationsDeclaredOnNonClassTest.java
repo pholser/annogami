@@ -1,21 +1,25 @@
 package com.pholser.dulynoted;
 
+import com.pholser.dulynoted.annotated.X;
 import com.pholser.dulynoted.annotations.Aggregate;
 import com.pholser.dulynoted.annotations.Compound;
 import com.pholser.dulynoted.annotations.Particle;
 import com.pholser.dulynoted.annotations.Unit;
-import com.pholser.dulynoted.annotated.X;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.AnnotatedElement;
 
-import static com.pholser.dulynoted.Presences.*;
-import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
-import static java.util.Arrays.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.pholser.dulynoted.Presences.ASSOCIATED;
+import static com.pholser.dulynoted.Presences.DIRECT;
+import static com.pholser.dulynoted.Presences.DIRECT_OR_INDIRECT;
+import static com.pholser.dulynoted.Presences.PRESENT;
+import static com.pholser.dulynoted.annotations.Annotations.annoValue;
+import static com.pholser.dulynoted.annotations.Annotations.containerAnno;
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   private AnnotatedElement target;
@@ -38,8 +42,8 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
     assertThat(
       asList(c.value()),
       containsInAnyOrder(
-        particleOfValue(5),
-        particleOfValue(6)));
+        annoValue(Particle.class, 5),
+        annoValue(Particle.class, 6)));
   }
 
   @Test void findAnotherKindDirect() {
@@ -55,54 +59,62 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
     assertThat(
       asList(a.value()),
       containsInAnyOrder(
-        unitOfValue(7),
-        unitOfValue(8)));
+        annoValue(Unit.class, 7),
+        annoValue(Unit.class, 8)));
   }
 
   @Test void allDirect() {
     assertThat(
       DIRECT.all(target),
       containsInAnyOrder(
-        compoundAnnotationWith(
-          particleOfValue(5),
-          particleOfValue(6)),
-        aggregateAnnotationWith(
-          unitOfValue(7),
-          unitOfValue(8))));
+        containerAnno(
+          Compound.class,
+          Particle.class,
+          annoValue(Particle.class, 5),
+          annoValue(Particle.class, 6)),
+        containerAnno(
+          Aggregate.class,
+          Unit.class,
+          annoValue(Unit.class, 7),
+          annoValue(Unit.class, 8))));
   }
 
   @Test void findAllOneKindDirectOrIndirect() {
     assertThat(
       DIRECT_OR_INDIRECT.findAll(Particle.class, target),
       containsInAnyOrder(
-        particleOfValue(5),
-        particleOfValue(6)));
+        annoValue(Particle.class, 5),
+        annoValue(Particle.class, 6)));
   }
 
   @Test void findAllOneContainerKindDirectOrIndirect() {
     assertThat(
       DIRECT_OR_INDIRECT.findAll(Compound.class, target),
       containsInAnyOrder(
-        compoundWith(
-          particleOfValue(5),
-          particleOfValue(6))));
+        containerAnno(
+          Compound.class,
+          Particle.class,
+          annoValue(Particle.class, 5),
+          annoValue(Particle.class, 6))));
   }
 
   @Test void findAllAnotherKindDirectOrIndirect() {
     assertThat(
       DIRECT_OR_INDIRECT.findAll(Unit.class, target),
       containsInAnyOrder(
-        unitOfValue(7),
-        unitOfValue(8)));
+        annoValue(Unit.class, 7),
+        annoValue(Unit.class, 8)));
   }
 
   @Test void findAllAnotherContainerKindDirectOrIndirect() {
     assertThat(
       DIRECT_OR_INDIRECT.findAll(Aggregate.class, target),
       containsInAnyOrder(
-        aggregateWith(
-          unitOfValue(7),
-          unitOfValue(8))));
+        containerAnno(
+          Aggregate.class,
+          Unit.class,
+          annoValue(Unit.class, 7),
+          annoValue(Unit.class, 8))));
   }
 
   @Test void findOneKindPresent() {
@@ -118,8 +130,8 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
     assertThat(
       asList(c.value()),
       containsInAnyOrder(
-        particleOfValue(5),
-        particleOfValue(6)));
+        annoValue(Particle.class, 5),
+        annoValue(Particle.class, 6)));
   }
 
   @Test void findAnotherKindPresent() {
@@ -135,53 +147,61 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
     assertThat(
       asList(a.value()),
       containsInAnyOrder(
-        unitOfValue(7),
-        unitOfValue(8)));
+        annoValue(Unit.class, 7),
+        annoValue(Unit.class, 8)));
   }
 
   @Test void allPresent() {
     assertThat(
       PRESENT.all(target),
       containsInAnyOrder(
-        compoundAnnotationWith(
-          particleOfValue(5),
-          particleOfValue(6)),
-        aggregateAnnotationWith(
-          unitOfValue(7),
-          unitOfValue(8))));
+        containerAnno(
+          Compound.class,
+          Particle.class,
+          annoValue(Particle.class, 5),
+          annoValue(Particle.class, 6)),
+        containerAnno(
+          Aggregate.class,
+          Unit.class,
+          annoValue(Unit.class, 7),
+          annoValue(Unit.class, 8))));
   }
 
   @Test void findAllOneKindAssociated() {
     assertThat(
       ASSOCIATED.findAll(Particle.class, target),
       containsInAnyOrder(
-        particleOfValue(5),
-        particleOfValue(6)));
+        annoValue(Particle.class, 5),
+        annoValue(Particle.class, 6)));
   }
 
   @Test void findAllOneContainerKindAssociated() {
     assertThat(
       ASSOCIATED.findAll(Compound.class, target),
       containsInAnyOrder(
-        compoundWith(
-          particleOfValue(5),
-          particleOfValue(6))));
+        containerAnno(
+          Compound.class,
+          Particle.class,
+          annoValue(Particle.class, 5),
+          annoValue(Particle.class, 6))));
   }
 
   @Test void findAllAnotherKindAssociated() {
     assertThat(
       ASSOCIATED.findAll(Unit.class, target),
       containsInAnyOrder(
-        unitOfValue(7),
-        unitOfValue(8)));
+        annoValue(Unit.class, 7),
+        annoValue(Unit.class, 8)));
   }
 
   @Test void findAllAnotherContainerKindAssociated() {
     assertThat(
       ASSOCIATED.findAll(Aggregate.class, target),
       containsInAnyOrder(
-        aggregateWith(
-          unitOfValue(7),
-          unitOfValue(8))));
+        containerAnno(
+          Aggregate.class,
+          Unit.class,
+          annoValue(Unit.class, 7),
+          annoValue(Unit.class, 8))));
   }
 }

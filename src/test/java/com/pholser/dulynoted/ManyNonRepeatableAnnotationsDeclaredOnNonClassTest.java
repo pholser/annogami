@@ -1,18 +1,22 @@
 package com.pholser.dulynoted;
 
+import com.pholser.dulynoted.annotated.X;
 import com.pholser.dulynoted.annotations.Atom;
 import com.pholser.dulynoted.annotations.Iota;
-import com.pholser.dulynoted.annotated.X;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.AnnotatedElement;
 
-import static com.pholser.dulynoted.Presences.*;
-import static com.pholser.dulynoted.annotations.AnnotationMatching.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.pholser.dulynoted.Presences.ASSOCIATED;
+import static com.pholser.dulynoted.Presences.DIRECT;
+import static com.pholser.dulynoted.Presences.DIRECT_OR_INDIRECT;
+import static com.pholser.dulynoted.Presences.PRESENT;
+import static com.pholser.dulynoted.annotations.Annotations.annoValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ManyNonRepeatableAnnotationsDeclaredOnNonClassTest {
   private AnnotatedElement target;
@@ -41,20 +45,20 @@ class ManyNonRepeatableAnnotationsDeclaredOnNonClassTest {
     assertThat(
       DIRECT.all(target),
       containsInAnyOrder(
-        atomAnnotationOfValue(2),
-        iotaAnnotationOfValue(3)));
+        annoValue(Atom.class, 2),
+        annoValue(Iota.class, 3)));
   }
 
   @Test void findAllOneKindDirectOrIndirect() {
     assertThat(
       DIRECT_OR_INDIRECT.findAll(Atom.class, target),
-      containsInAnyOrder(atomOfValue(2)));
+      containsInAnyOrder(annoValue(Atom.class, 2)));
   }
 
   @Test void findAllAnotherKindDirectOrIndirect() {
     assertThat(
       DIRECT_OR_INDIRECT.findAll(Iota.class, target),
-      containsInAnyOrder(iotaOfValue(3)));
+      containsInAnyOrder(annoValue(Iota.class, 3)));
   }
 
   @Test void findOneKindPresent() {
@@ -77,19 +81,19 @@ class ManyNonRepeatableAnnotationsDeclaredOnNonClassTest {
     assertThat(
       PRESENT.all(target),
       containsInAnyOrder(
-        atomAnnotationOfValue(2),
-        iotaAnnotationOfValue(3)));
+        annoValue(Atom.class, 2),
+        annoValue(Iota.class, 3)));
   }
 
   @Test void findAllOneKindAssociated() {
     assertThat(
       ASSOCIATED.findAll(Atom.class, target),
-      containsInAnyOrder(atomOfValue(2)));
+      containsInAnyOrder(annoValue(Atom.class, 2)));
   }
 
   @Test void findAllAnotherKindAssociated() {
     assertThat(
       ASSOCIATED.findAll(Iota.class, target),
-      containsInAnyOrder(iotaOfValue(3)));
+      containsInAnyOrder(annoValue(Iota.class, 3)));
   }
 }

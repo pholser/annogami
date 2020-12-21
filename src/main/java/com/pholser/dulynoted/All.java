@@ -8,7 +8,7 @@ import java.util.List;
  * Contract for an object that can give all the annotations on a given
  * program element. Implementers decide what "on" means.
  */
-interface AllDetector {
+interface All {
   /**
    * Gives all the annotations on a given program element.
    *

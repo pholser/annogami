@@ -1,12 +1,11 @@
-package com.pholser.dulynoted.annotations;
+package com.pholser.dulynoted.annotated;
 
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
-@Inherited
-public @interface Atom {
+@Red(2) @Green(3)
+public @interface Blue {
   int value();
 }
