@@ -182,6 +182,27 @@ public class AnnotatedPath {
       public Module toDeclaringModule() {
         return new Module(clazz.getModule(), elements);
       }
+
+      public Method toEnclosingMethod() {
+        java.lang.reflect.Method enclosing = clazz.getEnclosingMethod();
+        if (enclosing == null) {
+          throw new IllegalStateException(
+            clazz + " has no enclosing method");
+        }
+
+        return new Method(enclosing, elements);
+      }
+
+      public Constructor toEnclosingConstructor() {
+        java.lang.reflect.Constructor<?> enclosing =
+          clazz.getEnclosingConstructor();
+        if (enclosing == null) {
+          throw new IllegalStateException(
+            clazz + " has no enclosing constructor");
+        }
+
+        return new Constructor(enclosing, elements);
+      }
     }
 
     public static class Package {

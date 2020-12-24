@@ -9,8 +9,12 @@ public class AnnotationsGalore {
   @Atom(7) private int i;
 
   @Atom(2) @Iota(2) public AnnotationsGalore(@Atom(1) int i) {
+    @Iota(9) class Local {
+    }
   }
 
   @Atom(5) @Iota(5) public void foo(@Atom(4) int i) {
+    @Atom(8) class Local {
+    }
   }
 }
