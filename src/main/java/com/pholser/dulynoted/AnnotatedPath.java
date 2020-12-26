@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
+
 public class AnnotatedPath {
   private final List<AnnotatedElement> elements;
 
@@ -18,8 +20,8 @@ public class AnnotatedPath {
     this.elements = elements;
   }
 
-  public static Builder.Parameter fromParameter(Parameter parm) {
-    return new Builder.Parameter(parm);
+  public static Builder.Parameter fromParameter(Parameter p) {
+    return new Builder.Parameter(p);
   }
 
   public static Builder.Method fromMethod(Method m) {
@@ -40,37 +42,46 @@ public class AnnotatedPath {
 
   public <A extends Annotation> Optional<A> findFirst(
     Class<A> annoType,
-    SingleByType direct) {
+    SingleByType detector) {
 
     return elements.stream()
-      .flatMap(e -> direct.find(annoType, e).stream())
+      .flatMap(e -> detector.find(annoType, e).stream())
       .findFirst();
+  }
+
+  public <A extends Annotation> List<A> findAll(
+    Class<A> annoType,
+    AllByType detector) {
+
+    return elements.stream()
+      .flatMap(e -> detector.findAll(annoType, e).stream())
+      .collect(toList());
   }
 
   public static class Builder {
     public static class Parameter {
       private final List<AnnotatedElement> elements = new ArrayList<>();
-      private final java.lang.reflect.Parameter parm;
+      private final java.lang.reflect.Parameter p;
 
-      Parameter(java.lang.reflect.Parameter parm) {
-        this.parm = parm;
-        elements.add(parm);
+      Parameter(java.lang.reflect.Parameter p) {
+        this.p = p;
+        elements.add(p);
       }
 
       public Constructor toDeclaringConstructor() {
-        Executable exec = parm.getDeclaringExecutable();
+        Executable exec = p.getDeclaringExecutable();
         if (!(exec instanceof java.lang.reflect.Constructor<?>)) {
           throw new IllegalStateException(
-            "Parameter " + parm + " not declared on a constructor");
+            "Parameter " + p + " not declared on a constructor");
         }
         return new Constructor((java.lang.reflect.Constructor) exec, elements);
       }
 
       public Method toDeclaringMethod() {
-        Executable exec = parm.getDeclaringExecutable();
+        Executable exec = p.getDeclaringExecutable();
         if (!(exec instanceof java.lang.reflect.Method)) {
           throw new IllegalStateException(
-              "Parameter " + parm + " not declared on a method");
+              "Parameter " + p + " not declared on a method");
         }
         return new Method((java.lang.reflect.Method) exec, elements);
       }
@@ -202,6 +213,37 @@ public class AnnotatedPath {
         }
 
         return new Constructor(enclosing, elements);
+      }
+
+      public Classes toClassEnclosure() {
+        List<java.lang.Class<?>> enclosure = new ArrayList<>();
+        for (java.lang.Class<?> c = clazz.getEnclosingClass();
+          c != null;
+          c = c.getEnclosingClass()) {
+
+          enclosure.add(c);
+        }
+
+        return new Classes(enclosure, elements);
+      }
+    }
+
+    public static class Classes {
+      private final List<java.lang.Class<?>> classes;
+      private final List<AnnotatedElement> elements = new ArrayList<>();
+
+
+      Classes(
+        List<java.lang.Class<?>> classes,
+        List<AnnotatedElement> history) {
+
+        this.classes = classes;
+        elements.addAll(history);
+        elements.addAll(classes);
+      }
+
+      public AnnotatedPath build() {
+        return new AnnotatedPath(elements);
       }
     }
 
