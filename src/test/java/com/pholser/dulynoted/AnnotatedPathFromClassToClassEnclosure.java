@@ -2,7 +2,6 @@ package com.pholser.dulynoted;
 
 import com.pholser.dulynoted.annotated.ClassEnclosure.Enclosed1;
 import com.pholser.dulynoted.annotated.ClassEnclosure.Enclosed1.Enclosed2;
-import com.pholser.dulynoted.annotations.Annotations;
 import com.pholser.dulynoted.annotations.Iota;
 import com.pholser.dulynoted.annotations.Unit;
 import org.junit.jupiter.api.Test;
@@ -72,7 +71,8 @@ class AnnotatedPathFromClassToClassEnclosure {
         annoValue(Unit.class, -5),
         annoValue(Unit.class, -7),
         annoValue(Unit.class, -3),
-        annoValue(Unit.class, -4)),
+        annoValue(Unit.class, -4),
+        annoValue(Unit.class, -9)),
       units);
   }
 }

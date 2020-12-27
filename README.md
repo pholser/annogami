@@ -29,7 +29,7 @@ annotation helper methods prescribe a search path for the desired
 annotations; if you want a separate path, find a separate method.
 Duly Noted takes the approach of allowing for building a search path
 for annotations, then calling methods on the path such as
-`find(SingleByTypeDetector)` and `all(AllDetector)` to perform the
+`find(Class, SingleByTypeDetector)` and `all(AllDetector)` to perform the
 desired operations. The presence level implementations from `Presence`
 support these detector types.
 
@@ -46,14 +46,14 @@ support these detector types.
 * [x] Model `AnnotatedPath` as an abstraction over a sequence of
     `AnnotatedElements`
   * Along such a path, support the following operations:
-    * [ ] find first occurrence of a non-repeatable annotation
+    * [x] find first occurrence of a non-repeatable annotation
       along the path
-    * [ ] find every occurrence of a non-repeatable annotation
+    * [x] find every occurrence of a non-repeatable annotation
       along the path
     * [ ] corresponding merge operation along the path:
       give a synthesized annotation, with attributes at
       front of path superseding attributes further back
-    * [ ] find all occurrences of a repeatable annotation
+    * [x] find all occurrences of a repeatable annotation
       along the path
     * [ ] corresponding merge operation along the path:
       give synthesized annotation, with attributes at
@@ -63,11 +63,5 @@ support these detector types.
       give synthesized annotations, with attributes at
       front of path superseding attributes further back
 
-* Implement several ways of producing meaningful
+* [ ] Implement several ways of producing meaningful
   `AnnotatedPath`s
-  * [ ] For example, starting with a method parameter,
-    then its method, then method's declaring class, then
-    superclass and interfaces and so forth, breadth-first
-  * [ ] Method, then any method decls it overrides in
-    superclass and interfaces, breadth-first
-  * [ ] ...

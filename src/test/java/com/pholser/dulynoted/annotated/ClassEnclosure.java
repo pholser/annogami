@@ -4,7 +4,7 @@ import com.pholser.dulynoted.annotations.Atom;
 import com.pholser.dulynoted.annotations.Iota;
 import com.pholser.dulynoted.annotations.Unit;
 
-@Unit(-4) @Atom(-3) @Iota(-3)
+@Unit(-4) @Unit(-9) @Atom(-3) @Iota(-3)
 public class ClassEnclosure {
   @Unit(-3) @Atom(-2)
   public static class Enclosed1 {
@@ -15,7 +15,7 @@ public class ClassEnclosure {
 
     @Unit(-7) @Iota(-2)
     public class Enclosed2 {
-      @Unit(-6) @Iota(-1) public void foo() {
+      @Unit(-8) @Unit(-6) @Iota(-1) public void foo() {
         @Unit(-5) class B {
         }
       }
