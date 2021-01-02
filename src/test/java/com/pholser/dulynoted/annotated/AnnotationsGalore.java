@@ -5,7 +5,11 @@ import com.pholser.dulynoted.annotations.Iota;
 import com.pholser.dulynoted.annotations.Unit;
 
 @Atom(3) @Iota(3) @Unit(6)
-public class AnnotationsGalore {
+public class AnnotationsGalore
+  extends SuperAnnotationsGalore
+  implements IAnnotationsGalore1,
+    IAnnotationsGalore2 {
+
   @Atom(7) private int i;
 
   @Atom(2) @Iota(2) public AnnotationsGalore(@Atom(1) int i) {

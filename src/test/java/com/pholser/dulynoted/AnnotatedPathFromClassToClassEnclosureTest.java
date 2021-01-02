@@ -14,7 +14,7 @@ import static com.pholser.dulynoted.annotations.Annotations.annoValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class AnnotatedPathFromClassToClassEnclosure {
+class AnnotatedPathFromClassToClassEnclosureTest {
   @Test void findFirstDirectEnclosed2() {
     AnnotatedPath path =
       AnnotatedPath.fromClass(Enclosed2.class)

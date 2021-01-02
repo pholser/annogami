@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.pholser.dulynoted.ClassHierarchies.depthFirstHierarchyOf;
 import static java.util.stream.Collectors.toList;
 
 public class AnnotatedPath {
@@ -166,20 +167,20 @@ public class AnnotatedPath {
     }
 
     public static class Class {
-      private final java.lang.Class<?> clazz;
+      private final java.lang.Class<?> k;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
-      Class(java.lang.Class<?> clazz) {
-        this(clazz, List.of());
+      Class(java.lang.Class<?> k) {
+        this(k, List.of());
       }
 
       Class(
-        java.lang.Class<?> clazz,
+        java.lang.Class<?> k,
         List<AnnotatedElement> history) {
 
-        this.clazz = clazz;
+        this.k = k;
         elements.addAll(history);
-        elements.add(clazz);
+        elements.add(k);
       }
 
       public AnnotatedPath build() {
@@ -187,18 +188,18 @@ public class AnnotatedPath {
       }
 
       public Package toDeclaringPackage() {
-        return new Package(clazz.getPackage(), elements);
+        return new Package(k.getPackage(), elements);
       }
 
       public Module toDeclaringModule() {
-        return new Module(clazz.getModule(), elements);
+        return new Module(k.getModule(), elements);
       }
 
       public Method toEnclosingMethod() {
-        java.lang.reflect.Method enclosing = clazz.getEnclosingMethod();
+        java.lang.reflect.Method enclosing = k.getEnclosingMethod();
         if (enclosing == null) {
           throw new IllegalStateException(
-            clazz + " has no enclosing method");
+            k + " has no enclosing method");
         }
 
         return new Method(enclosing, elements);
@@ -206,10 +207,10 @@ public class AnnotatedPath {
 
       public Constructor toEnclosingConstructor() {
         java.lang.reflect.Constructor<?> enclosing =
-          clazz.getEnclosingConstructor();
+          k.getEnclosingConstructor();
         if (enclosing == null) {
           throw new IllegalStateException(
-            clazz + " has no enclosing constructor");
+            k + " has no enclosing constructor");
         }
 
         return new Constructor(enclosing, elements);
@@ -217,7 +218,7 @@ public class AnnotatedPath {
 
       public Classes toClassEnclosure() {
         List<java.lang.Class<?>> enclosure = new ArrayList<>();
-        for (java.lang.Class<?> c = clazz.getEnclosingClass();
+        for (java.lang.Class<?> c = k.getEnclosingClass();
           c != null;
           c = c.getEnclosingClass()) {
 
@@ -225,6 +226,10 @@ public class AnnotatedPath {
         }
 
         return new Classes(enclosure, elements);
+      }
+
+      public Classes toInheritanceHierarchy() {
+        return new Classes(depthFirstHierarchyOf(k), elements);
       }
     }
 
