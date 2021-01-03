@@ -16,7 +16,7 @@ class AnnotatedPathFromClassToClassHierarchyTest {
   @Test void findFirstDirectFromClassThruDepthHierarchy() {
     AnnotatedPath path =
       AnnotatedPath.fromClass(AnnotationsGalore.class)
-        .toInheritanceHierarchy()
+        .toDepthHierarchy()
         .build();
 
     Iota i =
@@ -26,11 +26,10 @@ class AnnotatedPathFromClassToClassHierarchyTest {
     assertEquals(3, i.value());
   }
 
-
   @Test void findAllByTypeDirectIndirectFromClassThruDepthHierarchy() {
     AnnotatedPath path =
       AnnotatedPath.fromClass(AnnotationsGalore.class)
-        .toInheritanceHierarchy()
+        .toDepthHierarchy()
         .build();
 
     List<Iota> iotas = path.findAll(Iota.class, DIRECT_OR_INDIRECT);
@@ -45,6 +44,28 @@ class AnnotatedPathFromClassToClassHierarchyTest {
         annoValue(Iota.class, -14),
         annoValue(Iota.class, -15),
         annoValue(Iota.class, -16),
+        annoValue(Iota.class, -17)),
+      iotas);
+  }
+
+  @Test void findAllByTypeDirectIndirectFromClassThruBreadthHierarchy() {
+    AnnotatedPath path =
+      AnnotatedPath.fromClass(AnnotationsGalore.class)
+        .toBreadthHierarchy()
+        .build();
+
+    List<Iota> iotas = path.findAll(Iota.class, DIRECT_OR_INDIRECT);
+
+    assertEquals(
+      List.of(
+        annoValue(Iota.class, 3),
+        annoValue(Iota.class, -10),
+        annoValue(Iota.class, -14),
+        annoValue(Iota.class, -12),
+        annoValue(Iota.class, -11),
+        annoValue(Iota.class, -16),
+        annoValue(Iota.class, -15),
+        annoValue(Iota.class, -13),
         annoValue(Iota.class, -17)),
       iotas);
   }

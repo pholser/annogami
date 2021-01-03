@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.pholser.dulynoted.ClassHierarchies.breadthFirstHierarchyOf;
 import static com.pholser.dulynoted.ClassHierarchies.depthFirstHierarchyOf;
 import static java.util.stream.Collectors.toList;
 
@@ -228,8 +229,12 @@ public class AnnotatedPath {
         return new Classes(enclosure, elements);
       }
 
-      public Classes toInheritanceHierarchy() {
+      public Classes toDepthHierarchy() {
         return new Classes(depthFirstHierarchyOf(k), elements);
+      }
+
+      public Classes toBreadthHierarchy() {
+        return new Classes(breadthFirstHierarchyOf(k), elements);
       }
     }
 

@@ -1,9 +1,13 @@
 package com.pholser.dulynoted;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 final class ClassHierarchies {
   private ClassHierarchies() {
@@ -11,25 +15,41 @@ final class ClassHierarchies {
   }
 
   static List<Class<?>> depthFirstHierarchyOf(Class<?> k) {
+    Deque<Class<?>> visitees = new ArrayDeque<>();
+    visitees.push(k);
+
     LinkedHashSet<Class<?>> hierarchy = new LinkedHashSet<>();
-    accumulateDepthFirst(k, k, hierarchy);
+    while (!visitees.isEmpty()) {
+      Class<?> next = visitees.pop();
+      if (next != k)
+        hierarchy.add(next);
+
+      for (int i = next.getInterfaces().length - 1; i >= 0; --i)
+        visitees.push(next.getInterfaces()[i]);
+
+      if (next.getSuperclass() != null)
+        visitees.push(next.getSuperclass());
+    }
+
     return new ArrayList<>(hierarchy);
   }
 
-  private static void accumulateDepthFirst(
-    Class<?> root,
-    Class<?> k,
-    LinkedHashSet<Class<?>> accumulated) {
+  static List<Class<?>> breadthFirstHierarchyOf(Class<?> k) {
+    Queue<Class<?>> visitees = new LinkedList<>();
+    visitees.add(k);
 
-    if (root != k) {
-      accumulated.add(k);
+    LinkedHashSet<Class<?>> hierarchy = new LinkedHashSet<>();
+    while (!visitees.isEmpty()) {
+      Class<?> next = visitees.remove();
+      if (next != k)
+        hierarchy.add(next);
+
+      if (next.getSuperclass() != null)
+        visitees.add(next.getSuperclass());
+
+      visitees.addAll(Arrays.asList(next.getInterfaces()));
     }
 
-    if (k.getSuperclass() != null) {
-      accumulateDepthFirst(root, k.getSuperclass(), accumulated);
-    }
-
-    Arrays.stream(k.getInterfaces())
-      .forEachOrdered(i -> accumulateDepthFirst(root, i, accumulated));
+    return new ArrayList<>(hierarchy);
   }
 }
