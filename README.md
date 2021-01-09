@@ -75,9 +75,9 @@ support these detector types.
   * [x] From class to module
   * [x] From field to declaring class
   * [x] From class to class enclosure
-  * [ ] From class to superclass/interface hierarchy
-    * [ ] Depth-first superclasses, then depth-first interfaces
-    * [ ] Breadth-first: superclass, then interfaces, ...
+  * [x] From class to superclass/interface hierarchy
+    * [x] Depth-first superclasses, then depth-first interfaces
+    * [x] Breadth-first: superclass, then interfaces, ...
   * [ ] From method to methods it overrides
     * [ ] Depth-first or breadth-first thru superclass/interfaces
   * [ ] For path-building stages that yield multiples (classes,
@@ -87,6 +87,14 @@ support these detector types.
     out to declaring classes, then chain from each of those etc.
     so that method1/class1/...1 come before method2/class2/...2)
 
-* [ ] Would it be useful to be able to create `AnnotatedPath`s
+* [x] Would it be useful to be able to create `AnnotatedPath`s
   in the other direction: e.g. class to declared fields? Maybe
   distinguish between inward and outward `AnnotatedPath`s?
+  * Answer: I'm going with "no".
+
+* empty class enclosure test
+* empty class hierarchy test
+* [x] Is it ok for these to be empty, and extended if they are
+  (with the "then" items as above)?
+  * Answer: yes; test for these
+
