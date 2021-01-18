@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.pholser.dulynoted.ClassHierarchies.breadthFirstHierarchyOf;
+import static com.pholser.dulynoted.ClassHierarchies.breadthFirstOverrideHierarchyOf;
 import static com.pholser.dulynoted.ClassHierarchies.depthFirstHierarchyOf;
+import static com.pholser.dulynoted.ClassHierarchies.depthFirstOverrideHierarchyOf;
 import static java.util.stream.Collectors.toList;
 
 public class AnnotatedPath {
@@ -136,6 +138,14 @@ public class AnnotatedPath {
         return new Class(m.getDeclaringClass(), elements);
       }
 
+      public Methods toDepthOverridden() {
+        return new Methods(depthFirstOverrideHierarchyOf(m), elements);
+      }
+
+      public Methods toBreadthOverridden() {
+        return new Methods(breadthFirstOverrideHierarchyOf(m), elements);
+      }
+
       public AnnotatedPath build() {
         return new AnnotatedPath(elements);
       }
@@ -238,10 +248,27 @@ public class AnnotatedPath {
       }
     }
 
+    public static class Methods {
+      private final List<java.lang.reflect.Method> methods;
+      private final List<AnnotatedElement> elements = new ArrayList<>();
+
+      Methods(
+        List<java.lang.reflect.Method> methods,
+        List<AnnotatedElement> history) {
+
+        this.methods = methods;
+        elements.addAll(history);
+        elements.addAll(methods);
+      }
+
+      public AnnotatedPath build() {
+        return new AnnotatedPath(elements);
+      }
+    }
+
     public static class Classes {
       private final List<java.lang.Class<?>> classes;
       private final List<AnnotatedElement> elements = new ArrayList<>();
-
 
       Classes(
         List<java.lang.Class<?>> classes,

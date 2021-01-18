@@ -21,4 +21,9 @@ public class AnnotationsGalore
     @Atom(8) class Local {
     }
   }
+
+  @Atom(20)
+  @Override public AnnotationsGalore self(int i, Object o) {
+    return this;
+  }
 }
