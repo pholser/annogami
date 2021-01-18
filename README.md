@@ -78,8 +78,8 @@ support these detector types.
   * [x] From class to superclass/interface hierarchy
     * [x] Depth-first superclasses, then depth-first interfaces
     * [x] Breadth-first: superclass, then interfaces, ...
-  * [ ] From method to methods it overrides
-    * [ ] Depth-first or breadth-first thru superclass/interfaces
+  * [x] From method to methods it overrides
+    * [x] Depth-first or breadth-first thru superclass/interfaces
   * [ ] For path-building stages that yield multiples (classes,
     methods), offer a way to go "then" to next elements for each
     (e.g. all these methods, *then* all their declaring classes),
@@ -92,9 +92,9 @@ support these detector types.
   distinguish between inward and outward `AnnotatedPath`s?
   * Answer: I'm going with "no".
 
-* empty class enclosure test
-* empty class hierarchy test
+* [ ] empty class enclosure test
+* [ ] empty class hierarchy test
+* [ ] empty method override test
 * [x] Is it ok for these to be empty, and extended if they are
   (with the "then" items as above)?
   * Answer: yes; test for these
-
