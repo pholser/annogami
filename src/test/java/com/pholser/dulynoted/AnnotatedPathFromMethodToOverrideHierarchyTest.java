@@ -2,12 +2,14 @@ package com.pholser.dulynoted;
 
 import com.pholser.dulynoted.annotated.AnnotationsGalore;
 import com.pholser.dulynoted.annotations.Atom;
+import com.pholser.dulynoted.annotations.Unit;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static com.pholser.dulynoted.Presences.DIRECT;
 import static com.pholser.dulynoted.Presences.DIRECT_OR_INDIRECT;
+import static com.pholser.dulynoted.Presences.PRESENT;
 import static com.pholser.dulynoted.annotations.Annotations.annoValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -82,5 +84,28 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
         annoValue(Atom.class, 24),
         annoValue(Atom.class, 28)),
       atoms);
+  }
+
+  @Test void findFirstOnEmptyMethodOverride() throws Exception {
+    AnnotatedPath path =
+      AnnotatedPath.fromMethod(
+        AnnotationsGalore.class.getDeclaredMethod("foo", int.class))
+          .toDepthOverridden()
+          .build();
+
+    path.findFirst(Unit.class, PRESENT)
+      .ifPresent(u -> fail("Should not have found " + u));
+  }
+
+  @Test void findAllOnEmptyMethodOverride() throws Exception {
+    AnnotatedPath path =
+      AnnotatedPath.fromMethod(
+        AnnotationsGalore.class.getDeclaredMethod("foo", int.class))
+          .toDepthOverridden()
+          .build();
+
+    List<Unit> units = path.findAll(Unit.class, DIRECT_OR_INDIRECT);
+
+    assertEquals(List.of(), units);
   }
 }

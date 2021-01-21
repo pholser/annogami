@@ -92,9 +92,18 @@ support these detector types.
   distinguish between inward and outward `AnnotatedPath`s?
   * Answer: I'm going with "no".
 
-* [ ] empty class enclosure test
-* [ ] empty class hierarchy test
-* [ ] empty method override test
+* [x] empty class enclosure test
+* [x] empty class hierarchy test
+* [x] empty method override test
 * [x] Is it ok for these to be empty, and extended if they are
   (with the "then" items as above)?
   * Answer: yes; test for these
+* [ ] empty class enclosure test with `then`
+* [ ] empty class hierarchy test with `then`
+* [ ] empty method override test with `then`
+
+
+
+TODO:
+* Inventory methods/classes
+* Enumerate operations yet to be defined/implemented

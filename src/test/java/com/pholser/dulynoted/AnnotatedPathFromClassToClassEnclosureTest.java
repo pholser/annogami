@@ -1,7 +1,9 @@
 package com.pholser.dulynoted;
 
+import com.pholser.dulynoted.annotated.ClassEnclosure;
 import com.pholser.dulynoted.annotated.ClassEnclosure.Enclosed1;
 import com.pholser.dulynoted.annotated.ClassEnclosure.Enclosed1.Enclosed2;
+import com.pholser.dulynoted.annotations.Atom;
 import com.pholser.dulynoted.annotations.Iota;
 import com.pholser.dulynoted.annotations.Unit;
 import org.junit.jupiter.api.Test;
@@ -71,6 +73,35 @@ class AnnotatedPathFromClassToClassEnclosureTest {
         annoValue(Unit.class, -5),
         annoValue(Unit.class, -7),
         annoValue(Unit.class, -3),
+        annoValue(Unit.class, -4),
+        annoValue(Unit.class, -9)),
+      units);
+  }
+
+  @Test void findFirstOnEmptyEnclosure() {
+    AnnotatedPath path =
+      AnnotatedPath.fromClass(ClassEnclosure.class)
+        .toClassEnclosure()
+        .build();
+
+    Atom a =
+      path.findFirst(Atom.class, DIRECT)
+        .orElseGet(() -> fail("Missing annotation"));
+
+    assertEquals(-3, a.value());
+  }
+
+  @Test void findAllOnEmptyEnclosure() {
+    AnnotatedPath path =
+      AnnotatedPath.fromClass(ClassEnclosure.class)
+        .toClassEnclosure()
+        .build();
+
+    List<Unit> units =
+      path.findAll(Unit.class, DIRECT_OR_INDIRECT);
+
+    assertEquals(
+      List.of(
         annoValue(Unit.class, -4),
         annoValue(Unit.class, -9)),
       units);
