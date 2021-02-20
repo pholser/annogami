@@ -53,6 +53,12 @@ public class AnnotatedPath {
       .findFirst();
   }
 
+  public List<Annotation> all(All detector) {
+    return elements.stream()
+      .flatMap(e -> detector.all(e).stream())
+      .collect(toList());
+  }
+
   public <A extends Annotation> List<A> findAll(
     Class<A> annoType,
     AllByType detector) {
