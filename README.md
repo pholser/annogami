@@ -154,7 +154,7 @@ on `element`:
     * [ ] corresponding merge operation along the path:
       give synthesized annotation, with attributes at
       front of path superseding attributes further back
-    * [ ] find all annotations along the path
+    * [x] find all annotations along the path
     * [ ] corresponding merge operation along the path:
       give synthesized annotations, with attributes at
       front of path superseding attributes further back
