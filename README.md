@@ -1,11 +1,11 @@
 # Duly Noted: Annotation-finding strategies for Java
 
-Duly Noted is a Java library that facilitates finding and manipulating
-Java annotations on program elements at runtime.
+Duly Noted is a Java library that facilitates finding Java annotations
+on program elements at runtime. It wraps the basic annotation-finding
+capabilities of the JDK and offers similar functionality to Spring's
+annotation utilities.
 
-Duly Noted wraps the basic annotation-finding facilities of the JDK and
-offers similar functionality to Spring's annotation utilities. Its main
-design elements are:
+## Design elements
 
 * *Presence levels* as a first-class concept. Rather than having
 to remember which method of
@@ -20,8 +20,9 @@ on the element.
 concept. An annotation is *meta-present* on an element if it is
 *presence-level* on the element, or *presence-level* on any annotations
 that are *presence-level* on the element, and so on up the annotation
-"hierarchy". A `MetaPresence` wraps another `Presence` to allow for
-finding meta-present annotations on program elements.
+"hierarchy". Meta-presence encourages creation of composed annotations.
+A `MetaPresence` wraps another `Presence` to allow for finding
+meta-present annotations on program elements.
 
 * *Annotated path*: a sequence of program elements along which
 Duly Noted looks for and merges annotations. Many Spring and JUnit 5
@@ -34,14 +35,109 @@ desired operations. The presence level implementations from `Presence`
 support these detector types.
 
 
+## How-To
+
+(*Note*: If only a single instance of a repeatable annotation of type `A`
+is declared on a program element, it is directly present on the element.
+If more than one such instance is declared on the element, those instances
+become indirectly present on the element, and an instance of its container
+element is directly present on the element.)
+
+* Find a single annotation of type `A` *directly present* on a program
+`element`:
+
+```java
+    Optional<A> a = Presences.DIRECT.find(A.class, element);
+```
+
+* Find all the annotations *directly present* on a program `element`:
+
+```java
+    List<Annotation> all = Presences.DIRECT.all(element);
+```
+
+* Find all the annotations of type `A` *directly or indirectly present*
+on a program `element`:
+
+```java
+    List<A> as = Presences.DIRECT_OR_INDIRECT.findAll(A.class, element);
+```
+
+* Find a single annotation of type `A` *present* on a program
+`element`:
+
+```java
+    Optional<A> a = Presences.PRESENT.find(A.class, element);
+```
+
+* Find all the annotations *present* on a program `element`:
+
+```java
+    List<Annotation> all = Presences.PRESENT.all(element);
+```
+
+* Find all the annotations of type `A` *associated* on a program `element`:
+
+```java
+    List<A> as = Presences.ASSOCIATED.findAll(A.class, element);
+```
+
+* Find the first annotation of type `A` either *directly present*
+on a program `element`, or declared recursively on any of the annotations
+that are *directly present* on `element:
+
+```java
+    Optional<A> a = Presences.META_DIRECT.find(A.class, element);
+```
+
+* Find all the annotations either *directly present* on a program
+`element`, or declared recursively on any of the annotations that are
+on a program `element`, or declared recursively on any of the annotations
+that are *directly present* on `element`:
+
+```java
+    List<Annotation> all = Presences.META_DIRECT.all(element);
+```
+
+* Find all the annotations of type `A` *directly or indirectly present*
+on a program `element`, or declared recursively on any of the annotations
+that are *directly or indirectly present* on `element`:
+
+```java
+    List<A> as = Presences.META_DIRECT_OR_INDIRECT.findAll(A.class, element);
+```
+
+* Find a single annotation of type `A` *present* on a program
+`element`, or declared recursively on any of the annotations that are
+*present* on `element`:
+
+```java
+    Optional<A> a = Presences.META_PRESENT.find(A.class, element);
+```
+
+* Find all the annotations *present* on a program `element`, or declared
+recursively on any of the annotations that are *present* on `element`:
+
+```java
+    List<Annotation> all = Presences.META_PRESENT.all(element);
+```
+
+* Find all the annotations of type `A` *associated* on a program `element`,
+or declared recursively on any of the annotations that are *associated*
+on `element`:
+
+```java
+    List<A> as = Presences.META_ASSOCIATED.findAll(A.class, element);
+```
+
 ## Capabilities to be added
 
 * [x] Direct presence, direct-or-indirect presence, presence, associated
   * [x] On non-classes and classes
 * [x] find-one by type, find-all by type, all: as appropriate for above
-* [x] Meta-presence: either <presence-level> on an element, or
-  recursively <presence-level> on one of the annotations that are
-  <presence-level> on the element (TODO: need more tests)
+* [x] Meta-presence: either *<presence-level>* on an element, or
+  recursively *<presence-level>* on one of the annotations that are
+  *<presence-level>* on the element (TODO: need more tests)
 
 * [x] Model `AnnotatedPath` as an abstraction over a sequence of
     `AnnotatedElements`
@@ -104,6 +200,6 @@ support these detector types.
 
 
 
-TODO:
+## TODO:
 * Inventory methods/classes
 * Enumerate operations yet to be defined/implemented
