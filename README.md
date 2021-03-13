@@ -197,9 +197,3 @@ on `element`:
 * [ ] empty class enclosure test with `then`
 * [ ] empty class hierarchy test with `then`
 * [ ] empty method override test with `then`
-
-
-
-## TODO:
-* Inventory methods/classes
-* Enumerate operations yet to be defined/implemented

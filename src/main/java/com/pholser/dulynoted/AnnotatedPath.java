@@ -1,6 +1,7 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Documented;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -8,13 +9,24 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 import static com.pholser.dulynoted.ClassHierarchies.breadthFirstHierarchyOf;
 import static com.pholser.dulynoted.ClassHierarchies.breadthFirstOverrideHierarchyOf;
 import static com.pholser.dulynoted.ClassHierarchies.depthFirstHierarchyOf;
 import static com.pholser.dulynoted.ClassHierarchies.depthFirstOverrideHierarchyOf;
+import static com.pholser.dulynoted.Reflection.attributes;
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
 
 public class AnnotatedPath {
@@ -51,6 +63,20 @@ public class AnnotatedPath {
     return elements.stream()
       .flatMap(e -> detector.find(annoType, e).stream())
       .findFirst();
+  }
+
+  public <A extends Annotation> A merge(
+    Class<A> annoType,
+    SingleByType detector) {
+
+    return elements.stream()
+      .flatMap(e -> detector.find(annoType, e).stream())
+      .collect(merged(annoType));
+  }
+
+  private <A extends Annotation>
+  Collector<A, Map<String, Object>, A> merged(Class<A> annoType) {
+    return new AnnotationMerger<>(annoType);
   }
 
   public List<Annotation> all(All detector) {
