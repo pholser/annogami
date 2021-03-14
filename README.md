@@ -31,7 +31,7 @@ annotations; if you want a separate path, find a separate method.
 Duly Noted takes the approach of allowing for building a search path
 for annotations, then calling methods on the path such as
 `find(Class, SingleByTypeDetector)` and `all(AllDetector)` to perform the
-desired operations. The presence level implementations from `Presence`
+desired operations. The presence level implementations from `Presences`
 support these detector types.
 
 
@@ -130,6 +130,22 @@ on `element`:
     List<A> as = Presences.META_ASSOCIATED.findAll(A.class, element);
 ```
 
+* Give an annotation of type `A` *meta-present* along a path of program
+elements `path` starting at a method parameter `p`, where attribute values
+of `A` found earlier in the path supersede attribute values of `A` found
+later (an explicit non-default value for an attribute always supersedes
+a default value):
+
+```java
+    AnnotatedPath path =
+      AnnotatedPath.fromParameter(p)
+        .toDeclaringMethod()
+        .toDeclaringClass()
+        .toDepthHierarchy()
+        .build();
+    A merged = path.merge(A.class, Presences.META_DIRECT);
+```
+
 ## Capabilities to be added
 
 * [x] Direct presence, direct-or-indirect presence, presence, associated
@@ -146,7 +162,7 @@ on `element`:
       along the path
     * [x] find every occurrence of a non-repeatable annotation
       along the path
-    * [ ] corresponding merge operation along the path:
+    * [x] corresponding merge operation along the path:
       give a synthesized annotation, with attributes at
       front of path superseding attributes further back
     * [x] find all occurrences of a repeatable annotation
