@@ -53,7 +53,7 @@ public class Annotations {
     return anno(containerType, Map.of("value", typedRepetitions));
   }
 
-  private static <A extends Annotation> A anno(
+  public static <A extends Annotation> A anno(
     Class<A> annoType,
     Map<String, Object> attributes) {
 

@@ -17,6 +17,7 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
+import java.util.Map;
 
 import static com.pholser.dulynoted.Presences.META_DIRECT;
 import static com.pholser.dulynoted.annotations.Annotations.anno;
@@ -94,7 +95,7 @@ class MetaDirectTest {
         annoValue(Target.class, new ElementType[] { ANNOTATION_TYPE }),
         annoValue(Retention.class, RUNTIME),
         annoValue(Target.class, new ElementType[] { ANNOTATION_TYPE }),
-        annoValue(Blue.class, 1),
+        anno(Blue.class, Map.of("value", 1, "stillAnotherValue", -93)),
         annoValue(Retention.class, RUNTIME),
         annoValue(Red.class, 2),
         annoValue(Green.class, 3),
