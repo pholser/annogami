@@ -1,8 +1,6 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,23 +57,7 @@ class AnnotationMerger<A extends Annotation>
         Proxy.newProxyInstance(
           annoType.getClassLoader(),
           new Class<?>[] { annoType },
-          annotationInvocationHandler(annoType, attrs)));
-  }
-
-  private InvocationHandler annotationInvocationHandler(
-    Class<A> annoType,
-    Map<String, Object> attrs) {
-
-    // TODO: write our own, do not rely on sun.* classes
-    try {
-      Constructor<?> ctor =
-        Class.forName("sun.reflect.annotation.AnnotationInvocationHandler")
-          .getDeclaredConstructor(Class.class, Map.class);
-      ctor.setAccessible(true);
-      return (InvocationHandler) ctor.newInstance(annoType, attrs);
-    } catch (ReflectiveOperationException e) {
-      throw new RuntimeException(e);
-    }
+          new AnnotationInvocationHandler<>(annoType, attrs)));
   }
 
   @Override public Set<Characteristics> characteristics() {
