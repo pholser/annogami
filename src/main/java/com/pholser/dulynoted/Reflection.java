@@ -36,8 +36,8 @@ final class Reflection {
       .collect(toMap(Method::getName, m -> invoke(m, instance)));
   }
 
-  static <A extends Annotation> Map<String, Object> defaultValues(
-    Class<A> annoType) {
+  static Map<String, Object> defaultValues(
+    Class<? extends Annotation> annoType) {
 
     return Arrays.stream(annoType.getDeclaredMethods())
       .map(m -> new SimpleEntry<>(m.getName(), m.getDefaultValue()))

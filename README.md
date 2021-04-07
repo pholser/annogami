@@ -167,11 +167,8 @@ a default value):
       front of path superseding attributes further back
     * [x] find all occurrences of a repeatable annotation
       along the path
-    * [ ] corresponding merge operation along the path:
-      give synthesized annotation, with attributes at
-      front of path superseding attributes further back
     * [x] find all annotations along the path
-    * [ ] corresponding merge operation along the path:
+    * [x] corresponding merge operation along the path:
       give synthesized annotations, with attributes at
       front of path superseding attributes further back
     * [ ] Figure out a way to handle merging of repeatable
