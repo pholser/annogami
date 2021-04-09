@@ -14,8 +14,7 @@ final class Direct implements SingleByType, All {
     Class<A> annoType,
     AnnotatedElement target) {
 
-    return Optional.ofNullable(
-      target.getDeclaredAnnotation(annoType));
+    return Optional.ofNullable(target.getDeclaredAnnotation(annoType));
   }
 
   @Override public List<Annotation> all(AnnotatedElement target) {

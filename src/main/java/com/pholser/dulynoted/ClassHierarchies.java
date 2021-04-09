@@ -27,14 +27,17 @@ final class ClassHierarchies {
     LinkedHashSet<Class<?>> hierarchy = new LinkedHashSet<>();
     while (!visitees.isEmpty()) {
       Class<?> next = visitees.pop();
-      if (next != k)
+      if (next != k) {
         hierarchy.add(next);
+      }
 
-      for (int i = next.getInterfaces().length - 1; i >= 0; --i)
+      for (int i = next.getInterfaces().length - 1; i >= 0; --i) {
         visitees.push(next.getInterfaces()[i]);
+      }
 
-      if (next.getSuperclass() != null)
+      if (next.getSuperclass() != null) {
         visitees.push(next.getSuperclass());
+      }
     }
 
     return new ArrayList<>(hierarchy);
@@ -47,11 +50,13 @@ final class ClassHierarchies {
     LinkedHashSet<Class<?>> hierarchy = new LinkedHashSet<>();
     while (!visitees.isEmpty()) {
       Class<?> next = visitees.remove();
-      if (next != k)
+      if (next != k) {
         hierarchy.add(next);
+      }
 
-      if (next.getSuperclass() != null)
+      if (next.getSuperclass() != null) {
         visitees.add(next.getSuperclass());
+      }
 
       visitees.addAll(Arrays.asList(next.getInterfaces()));
     }
@@ -61,8 +66,9 @@ final class ClassHierarchies {
 
   static List<Method> depthFirstOverrideHierarchyOf(Method m) {
     int mods = m.getModifiers();
-    if (isStatic(mods) || isPrivate(mods))
+    if (isStatic(mods) || isPrivate(mods)) {
       return List.of();
+    }
 
     return methodsOverriddenBy(
       m,
@@ -71,8 +77,9 @@ final class ClassHierarchies {
 
   static List<Method> breadthFirstOverrideHierarchyOf(Method m) {
     int mods = m.getModifiers();
-    if (isStatic(mods) || isPrivate(mods))
+    if (isStatic(mods) || isPrivate(mods)) {
       return List.of();
+    }
 
     return methodsOverriddenBy(
       m,
@@ -86,8 +93,7 @@ final class ClassHierarchies {
     return inClasses
       .stream()
       .flatMap(k ->
-        findMethod(k, m.getName(), m.getParameterTypes())
-          .stream())
+        findMethod(k, m.getName(), m.getParameterTypes()).stream())
       .filter(sigMatch ->
         sigMatch.getReturnType().isAssignableFrom(m.getReturnType()))
       .filter(sigMatch -> overrides(m, sigMatch))
@@ -98,8 +104,9 @@ final class ClassHierarchies {
    * see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.8.1">JLS</a>
    */
   private static boolean overrides(Method m, Method sigMatch) {
-    if (m.equals(sigMatch))
+    if (m.equals(sigMatch)) {
       return false;
+    }
 
     int sigMatchMods = sigMatch.getModifiers();
     return !(isStatic(sigMatchMods) || isPrivate(sigMatchMods));
