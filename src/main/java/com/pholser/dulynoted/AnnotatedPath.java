@@ -44,8 +44,8 @@ public class AnnotatedPath {
     return new Builder.Field(f);
   }
 
-  public static Builder.Class fromClass(Class<?> clazz) {
-    return new Builder.Class(clazz);
+  public static Builder.Class fromClass(Class<?> k) {
+    return new Builder.Class(k);
   }
 
   public <A extends Annotation> Optional<A> findFirst(

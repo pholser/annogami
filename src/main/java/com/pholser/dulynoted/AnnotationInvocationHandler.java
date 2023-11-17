@@ -271,8 +271,8 @@ class AnnotationInvocationHandler<A extends Annotation>
       && invocation instanceof AnnotationInvocationHandler) {
 
       return name -> {
-        AnnotationInvocationHandler otherHandler =
-          (AnnotationInvocationHandler) invocation;
+        AnnotationInvocationHandler<?> otherHandler =
+          (AnnotationInvocationHandler<?>) invocation;
         return otherHandler.attrs.get(name);
       };
     }
