@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import static com.pholser.dulynoted.ClassHierarchies.breadthFirstHierarchyOf;
 import static com.pholser.dulynoted.ClassHierarchies.breadthFirstOverrideHierarchyOf;
