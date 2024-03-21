@@ -129,15 +129,15 @@ public class AnnotatedPath {
     }
 
     public static class Constructor {
-      private final java.lang.reflect.Constructor ctor;
+      private final java.lang.reflect.Constructor<?> ctor;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
-      Constructor(java.lang.reflect.Constructor ctor) {
+      Constructor(java.lang.reflect.Constructor<?> ctor) {
         this(ctor, List.of());
       }
 
       Constructor(
-        java.lang.reflect.Constructor ctor,
+        java.lang.reflect.Constructor<?> ctor,
         List<AnnotatedElement> history) {
 
         this.ctor = ctor;

@@ -210,3 +210,4 @@ a default value):
 * [ ] empty class enclosure test with `then`
 * [ ] empty class hierarchy test with `then`
 * [ ] empty method override test with `then`
+* [ ] JPMS-modularize
