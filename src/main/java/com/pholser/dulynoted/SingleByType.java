@@ -8,7 +8,7 @@ import java.util.Optional;
  * Contract for an object that can ask for a non-repeated annotation
  * by its type on a program element. Implementers decide what "on" means.
  */
-interface SingleByType {
+public sealed interface SingleByType permits AbstractMeta, Direct, Present {
   /**
    * Gives a non-repeated annotation of the given type from the given
    * program element.

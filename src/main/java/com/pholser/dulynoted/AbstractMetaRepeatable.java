@@ -7,8 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-abstract class AbstractMetaRepeatable<P extends AllByType>
-  implements AllByType {
+sealed abstract class AbstractMetaRepeatable<P extends AllByType>
+  implements AllByType
+  permits MetaAssociated, MetaDirectOrIndirect {
 
   private final P presence;
   private final All all;

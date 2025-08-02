@@ -2,10 +2,14 @@ package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-final class Present implements SingleByType, All {
+public final class Present implements SingleByType, All {
+  Present() {
+  }
+
   @Override public <A extends Annotation> Optional<A> find(
     Class<A> annoType,
     AnnotatedElement target) {
@@ -14,6 +18,6 @@ final class Present implements SingleByType, All {
   }
 
   @Override public List<Annotation> all(AnnotatedElement target) {
-    return List.of(target.getAnnotations());
+    return Arrays.asList(target.getAnnotations());
   }
 }

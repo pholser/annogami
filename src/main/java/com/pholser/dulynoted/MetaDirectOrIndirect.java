@@ -1,9 +1,12 @@
 package com.pholser.dulynoted;
 
-final class MetaDirectOrIndirect
+import static com.pholser.dulynoted.Presences.DIRECT;
+import static com.pholser.dulynoted.Presences.DIRECT_OR_INDIRECT;
+
+public final class MetaDirectOrIndirect
   extends AbstractMetaRepeatable<DirectOrIndirect> {
 
   MetaDirectOrIndirect() {
-    super(Presences.DIRECT_OR_INDIRECT, Presences.DIRECT);
+    super(DIRECT_OR_INDIRECT, DIRECT);
   }
 }

@@ -14,6 +14,6 @@ public final class Presences {
     new MetaAssociated();
 
   private Presences() {
-    throw new UnsupportedOperationException();
+    throw new AssertionError();
   }
 }

@@ -35,8 +35,8 @@ public class AnnotatedPath {
     return new Builder.Method(m);
   }
 
-  public static Builder.Constructor fromConstructor(Constructor<?> ctor) {
-    return new Builder.Constructor(ctor);
+  public static Builder.Constructor fromConstructor(Constructor<?> c) {
+    return new Builder.Constructor(c);
   }
 
   public static Builder.Field fromField(Field f) {
@@ -111,42 +111,42 @@ public class AnnotatedPath {
 
       public Constructor toDeclaringConstructor() {
         Executable exec = p.getDeclaringExecutable();
-        if (!(exec instanceof java.lang.reflect.Constructor<?>)) {
+        if (!(exec instanceof java.lang.reflect.Constructor<?> c)) {
           throw new IllegalStateException(
             "Parameter " + p + " not declared on a constructor");
         }
-        return new Constructor((java.lang.reflect.Constructor) exec, elements);
+        return new Constructor(c, elements);
       }
 
       public Method toDeclaringMethod() {
         Executable exec = p.getDeclaringExecutable();
-        if (!(exec instanceof java.lang.reflect.Method)) {
+        if (!(exec instanceof java.lang.reflect.Method m)) {
           throw new IllegalStateException(
-              "Parameter " + p + " not declared on a method");
+            "Parameter " + p + " not declared on a method");
         }
-        return new Method((java.lang.reflect.Method) exec, elements);
+        return new Method(m, elements);
       }
     }
 
     public static class Constructor {
-      private final java.lang.reflect.Constructor<?> ctor;
+      private final java.lang.reflect.Constructor<?> c;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
-      Constructor(java.lang.reflect.Constructor<?> ctor) {
-        this(ctor, List.of());
+      Constructor(java.lang.reflect.Constructor<?> c) {
+        this(c, List.of());
       }
 
       Constructor(
-        java.lang.reflect.Constructor<?> ctor,
+        java.lang.reflect.Constructor<?> c,
         List<AnnotatedElement> history) {
 
-        this.ctor = ctor;
+        this.c = c;
         elements.addAll(history);
-        elements.add(ctor);
+        elements.add(c);
       }
 
       public Class toDeclaringClass() {
-        return new Class(ctor.getDeclaringClass(), elements);
+        return new Class(c.getDeclaringClass(), elements);
       }
 
       public AnnotatedPath build() {
@@ -246,8 +246,7 @@ public class AnnotatedPath {
       public Method toEnclosingMethod() {
         java.lang.reflect.Method enclosing = k.getEnclosingMethod();
         if (enclosing == null) {
-          throw new IllegalStateException(
-            k + " has no enclosing method");
+          throw new IllegalStateException(k + " has no enclosing method");
         }
 
         return new Method(enclosing, elements);
@@ -257,8 +256,7 @@ public class AnnotatedPath {
         java.lang.reflect.Constructor<?> enclosing =
           k.getEnclosingConstructor();
         if (enclosing == null) {
-          throw new IllegalStateException(
-            k + " has no enclosing constructor");
+          throw new IllegalStateException(k + " has no enclosing constructor");
         }
 
         return new Constructor(enclosing, elements);
@@ -286,15 +284,13 @@ public class AnnotatedPath {
     }
 
     public static class Methods {
-      private final List<java.lang.reflect.Method> methods;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Methods(
         List<java.lang.reflect.Method> methods,
         List<AnnotatedElement> history) {
 
-        this.methods = methods;
-        elements.addAll(history);
+          elements.addAll(history);
         elements.addAll(methods);
       }
 
@@ -304,15 +300,13 @@ public class AnnotatedPath {
     }
 
     public static class Classes {
-      private final List<java.lang.Class<?>> classes;
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Classes(
         List<java.lang.Class<?>> classes,
         List<AnnotatedElement> history) {
 
-        this.classes = classes;
-        elements.addAll(history);
+          elements.addAll(history);
         elements.addAll(classes);
       }
 
@@ -325,11 +319,11 @@ public class AnnotatedPath {
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Package(
-        java.lang.Package pkg,
+        java.lang.Package p,
         List<AnnotatedElement> history) {
 
         elements.addAll(history);
-        elements.add(pkg);
+        elements.add(p);
       }
 
       public AnnotatedPath build() {
@@ -341,11 +335,11 @@ public class AnnotatedPath {
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Module(
-        java.lang.Module mod,
+        java.lang.Module m,
         List<AnnotatedElement> history) {
 
         elements.addAll(history);
-        elements.add(mod);
+        elements.add(m);
       }
 
       public AnnotatedPath build() {

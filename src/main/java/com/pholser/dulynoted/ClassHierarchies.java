@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 
 final class ClassHierarchies {
   private ClassHierarchies() {
-    throw new UnsupportedOperationException();
+    throw new AssertionError();
   }
 
   static List<Class<?>> depthFirstHierarchyOf(Class<?> k) {

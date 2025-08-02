@@ -1,7 +1,10 @@
 package com.pholser.dulynoted;
 
-final class MetaAssociated extends AbstractMetaRepeatable<Associated> {
+import static com.pholser.dulynoted.Presences.ASSOCIATED;
+import static com.pholser.dulynoted.Presences.PRESENT;
+
+public final class MetaAssociated extends AbstractMetaRepeatable<Associated> {
   MetaAssociated() {
-    super(Presences.ASSOCIATED, Presences.PRESENT);
+    super(ASSOCIATED, PRESENT);
   }
 }

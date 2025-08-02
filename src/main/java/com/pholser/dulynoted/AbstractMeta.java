@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-abstract class AbstractMeta<P extends SingleByType & All>
-  implements SingleByType, All {
+sealed abstract class AbstractMeta<P extends SingleByType & All>
+  implements SingleByType, All
+  permits Meta, MetaDirect {
 
   private final P presence;
 

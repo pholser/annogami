@@ -1,7 +1,6 @@
 package com.pholser.dulynoted;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
@@ -13,7 +12,7 @@ import static java.util.stream.Collectors.toMap;
 
 final class Reflection {
   private Reflection() {
-    throw new UnsupportedOperationException();
+    throw new AssertionError();
   }
 
   static Optional<Method> findMethod(

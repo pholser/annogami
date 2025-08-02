@@ -1,7 +1,9 @@
 package com.pholser.dulynoted;
 
-final class Meta extends AbstractMeta<Present> {
+import static com.pholser.dulynoted.Presences.PRESENT;
+
+public final class Meta extends AbstractMeta<Present> {
   Meta() {
-    super(Presences.PRESENT);
+    super(PRESENT);
   }
 }

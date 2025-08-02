@@ -1,7 +1,9 @@
 package com.pholser.dulynoted;
 
-final class MetaDirect extends AbstractMeta<Direct> {
+import static com.pholser.dulynoted.Presences.DIRECT;
+
+public final class MetaDirect extends AbstractMeta<Direct> {
   MetaDirect() {
-    super(Presences.DIRECT);
+    super(DIRECT);
   }
 }

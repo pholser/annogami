@@ -32,25 +32,21 @@ class AnnotationInvocationHandler<A extends Annotation>
     this.attrs = attrs;
   }
 
-  @Override public Object invoke(
-    Object proxy,
-    Method method,
-    Object[] args) {
-
-    if (isEquals(method)) {
+  @Override public Object invoke(Object proxy, Method m, Object[] args) {
+    if (isEquals(m)) {
       return handleEquals(proxy, args[0]);
     }
-    if (isHashCode(method)) {
+    if (isHashCode(m)) {
       return handleHashCode();
     }
-    if (isAnnotationType(method)) {
+    if (isAnnotationType(m)) {
       return annoType;
     }
-    if (isToString(method)) {
+    if (isToString(m)) {
       return handleToString();
     }
 
-    return handleAttributeAccess(method);
+    return handleAttributeAccess(m);
   }
 
   private Object handleAttributeAccess(Method method) {
@@ -58,42 +54,43 @@ class AnnotationInvocationHandler<A extends Annotation>
     return maybeClone(value);
   }
 
-  private Object maybeClone(Object value) {
-    Class<?> valueType = value.getClass();
-    if (!valueType.isArray() || Array.getLength(value) == 0) {
-      return value;
+  private Object maybeClone(Object attrValue) {
+    Class<?> valueType = attrValue.getClass();
+    if (!valueType.isArray() || Array.getLength(attrValue) == 0) {
+      return attrValue;
     }
 
     if (boolean[].class.equals(valueType)) {
-      return ((boolean[]) value).clone();
+      return ((boolean[]) attrValue).clone();
     }
     if (byte[].class.equals(valueType)) {
-      return ((byte[]) value).clone();
+      return ((byte[]) attrValue).clone();
     }
     if (char[].class.equals(valueType)) {
-      return ((char[]) value).clone();
+      return ((char[]) attrValue).clone();
     }
     if (double[].class.equals(valueType)) {
-      return ((double[]) value).clone();
+      return ((double[]) attrValue).clone();
     }
     if (float[].class.equals(valueType)) {
-      return ((float[]) value).clone();
+      return ((float[]) attrValue).clone();
     }
     if (int[].class.equals(valueType)) {
-      return ((int[]) value).clone();
+      return ((int[]) attrValue).clone();
     }
     if (long[].class.equals(valueType)) {
-      return ((long[]) value).clone();
+      return ((long[]) attrValue).clone();
     }
     if (short[].class.equals(valueType)) {
-      return ((short[]) value).clone();
+      return ((short[]) attrValue).clone();
     }
 
-    return ((Object[]) value).clone();
+    return ((Object[]) attrValue).clone();
   }
 
   private boolean isEquals(Method method) {
     return "equals".equals(method.getName())
+      && boolean.class.equals(method.getReturnType())
       && method.getParameterCount() == 1
       && Object.class.equals(method.getParameterTypes()[0]);
   }
@@ -155,9 +152,10 @@ class AnnotationInvocationHandler<A extends Annotation>
     return Arrays.equals((Object[]) first, (Object[]) second);
   }
 
-  private boolean isHashCode(Method method) {
-    return "hashCode".equals(method.getName())
-      && method.getParameterCount() == 0;
+  private boolean isHashCode(Method m) {
+    return "hashCode".equals(m.getName())
+      && int.class.equals(m.getReturnType())
+      && m.getParameterCount() == 0;
   }
 
   private int handleHashCode() {
@@ -204,14 +202,16 @@ class AnnotationInvocationHandler<A extends Annotation>
     return Arrays.hashCode((Object[]) value);
   }
 
-  private boolean isAnnotationType(Method method) {
-    return "annotationType".equals(method.getName())
-      && method.getParameterCount() == 0;
+  private boolean isAnnotationType(Method m) {
+    return "annotationType".equals(m.getName())
+      && Class.class.equals(m.getReturnType())
+      && m.getParameterCount() == 0;
   }
 
-  private boolean isToString(Method method) {
-    return "toString".equals(method.getName())
-      && method.getParameterCount() == 0;
+  private boolean isToString(Method m) {
+    return "toString".equals(m.getName())
+      && String.class.equals(m.getReturnType())
+      && m.getParameterCount() == 0;
   }
 
   private String handleToString() {
@@ -268,13 +268,9 @@ class AnnotationInvocationHandler<A extends Annotation>
 
     InvocationHandler invocation = Proxy.getInvocationHandler(other);
     if (Proxy.isProxyClass(other.getClass())
-      && invocation instanceof AnnotationInvocationHandler) {
+      && invocation instanceof AnnotationInvocationHandler<?> handler) {
 
-      return name -> {
-        AnnotationInvocationHandler<?> otherHandler =
-          (AnnotationInvocationHandler<?>) invocation;
-        return otherHandler.attrs.get(name);
-      };
+      return handler.attrs::get;
     }
 
     return name -> Reflection.invoke(annoMethodsByName.get(name), other);

@@ -35,9 +35,9 @@ class AnnotationMerger<A extends Annotation>
     return (attrs, anno) ->
       attributes(annoType, anno)
         .forEach((name, value) -> {
-          Object defaultVal = defaultValues.get(name);
-          if (deepEquals(attrs.get(name), defaultVal)
-            && !deepEquals(value, defaultVal)) {
+          Object defaultValue = defaultValues.get(name);
+          if (deepEquals(attrs.get(name), defaultValue)
+            && !deepEquals(value, defaultValue)) {
 
             attrs.put(name, value);
           }

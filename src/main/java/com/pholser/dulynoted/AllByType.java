@@ -8,7 +8,9 @@ import java.util.List;
  * Contract for an object that can give the annotations of a given type
  * on a program element. Implementers decide what "on" means.
  */
-interface AllByType {
+public sealed interface AllByType
+  permits AbstractMetaRepeatable, Associated, DirectOrIndirect {
+
   /**
    * Gives all the annotations of a given type on the given program
    * element.
