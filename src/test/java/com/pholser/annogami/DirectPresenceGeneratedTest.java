@@ -13,9 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT;
@@ -118,7 +115,7 @@ public class DirectPresenceGeneratedTest {
    */
   @Test
   @DisplayName("Should find field annotations")
-  void findFieldAnnotations() throws NoSuchFieldException {
+  void findFieldAnnotations() throws Exception {
     FieldAnnotation a =
       DIRECT.find(
         FieldAnnotation.class,
