@@ -16,12 +16,11 @@ class AnnotatedPathFromParameterToDeclaringCtorTest {
   private AnnotatedPath path;
 
   @BeforeEach void setUp() throws Exception {
-    Parameter p =
-      AnnotationsGalore.class
-        .getConstructor(int.class)
-        .getParameters()[0];
     path =
-      AnnotatedPath.fromParameter(p)
+      AnnotatedPath.fromParameter(
+        AnnotationsGalore.class
+          .getConstructor(int.class)
+          .getParameters()[0])
         .toDeclaringConstructor()
         .build();
   }

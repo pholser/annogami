@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
+import java.util.Collections;
 import java.util.List;
 
 import static com.pholser.annogami.Presences.ASSOCIATED;
@@ -90,9 +91,8 @@ class AnnotatedPathFromClassToClassHierarchyTest {
         .toClassEnclosure()
         .build();
 
-    List<Retention> retentions =
-      path.findAll(Retention.class, ASSOCIATED);
+    List<Retention> retentions = path.findAll(Retention.class, ASSOCIATED);
 
-    assertEquals(List.of(), retentions);
+    assertEquals(Collections.emptyList(), retentions);
   }
 }

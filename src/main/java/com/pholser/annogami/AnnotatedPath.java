@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -133,7 +134,7 @@ public class AnnotatedPath {
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Constructor(java.lang.reflect.Constructor<?> c) {
-        this(c, List.of());
+        this(c, Collections.emptyList());
       }
 
       Constructor(
@@ -159,7 +160,7 @@ public class AnnotatedPath {
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Method(java.lang.reflect.Method m) {
-        this(m, List.of());
+        this(m, Collections.emptyList());
       }
 
       Method(
@@ -193,7 +194,7 @@ public class AnnotatedPath {
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Field(java.lang.reflect.Field f) {
-        this(f, List.of());
+        this(f, Collections.emptyList());
       }
 
       Field(
@@ -219,7 +220,7 @@ public class AnnotatedPath {
       private final List<AnnotatedElement> elements = new ArrayList<>();
 
       Class(java.lang.Class<?> k) {
-        this(k, List.of());
+        this(k, Collections.emptyList());
       }
 
       Class(
@@ -290,7 +291,7 @@ public class AnnotatedPath {
         List<java.lang.reflect.Method> methods,
         List<AnnotatedElement> history) {
 
-          elements.addAll(history);
+        elements.addAll(history);
         elements.addAll(methods);
       }
 

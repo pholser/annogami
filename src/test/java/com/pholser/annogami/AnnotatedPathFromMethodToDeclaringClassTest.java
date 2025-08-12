@@ -16,9 +16,9 @@ class AnnotatedPathFromMethodToDeclaringClassTest {
   private AnnotatedPath path;
 
   @BeforeEach void setUp() throws Exception {
-    Method m = AnnotationsGalore.class.getMethod("foo", int.class);
     path =
-      AnnotatedPath.fromMethod(m)
+      AnnotatedPath.fromMethod(
+        AnnotationsGalore.class.getMethod("foo", int.class))
         .toDeclaringClass()
         .build();
   }

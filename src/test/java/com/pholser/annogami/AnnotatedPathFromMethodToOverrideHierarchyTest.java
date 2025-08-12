@@ -5,6 +5,7 @@ import com.pholser.annogami.annotations.Atom;
 import com.pholser.annogami.annotations.Unit;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT;
@@ -106,6 +107,6 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
 
     List<Unit> units = path.findAll(Unit.class, DIRECT_OR_INDIRECT);
 
-    assertEquals(List.of(), units);
+    assertEquals(Collections.emptyList(), units);
   }
 }

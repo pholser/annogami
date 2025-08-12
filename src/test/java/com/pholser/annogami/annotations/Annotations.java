@@ -5,6 +5,7 @@ import io.leangen.geantyref.TypeFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.util.Collections;
 import java.util.Map;
 
 public class Annotations {
@@ -16,7 +17,7 @@ public class Annotations {
    * Make an annotation of the given type, assumed to have no attributes.
    */
   public static <A extends Annotation> A anno(Class<A> annoType) {
-    return anno(annoType, Map.of());
+    return anno(annoType, Collections.emptyMap());
   }
 
   /*

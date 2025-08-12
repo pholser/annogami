@@ -16,12 +16,11 @@ class AnnotatedPathFromParameterToDeclaringMethodTest {
   private AnnotatedPath path;
 
   @BeforeEach void setUp() throws Exception {
-    Parameter p =
-      AnnotationsGalore.class
-        .getMethod("foo", int.class)
-        .getParameters()[0];
     path =
-      AnnotatedPath.fromParameter(p)
+      AnnotatedPath.fromParameter(
+        AnnotationsGalore.class
+          .getMethod("foo", int.class)
+          .getParameters()[0])
         .toDeclaringMethod()
         .build();
   }

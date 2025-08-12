@@ -65,8 +65,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
         .toClassEnclosure()
         .build();
 
-    List<Unit> units =
-      path.findAll(Unit.class, DIRECT_OR_INDIRECT);
+    List<Unit> units = path.findAll(Unit.class, DIRECT_OR_INDIRECT);
 
     assertEquals(
       List.of(
@@ -97,8 +96,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
         .toClassEnclosure()
         .build();
 
-    List<Unit> units =
-      path.findAll(Unit.class, DIRECT_OR_INDIRECT);
+    List<Unit> units = path.findAll(Unit.class, DIRECT_OR_INDIRECT);
 
     assertEquals(
       List.of(

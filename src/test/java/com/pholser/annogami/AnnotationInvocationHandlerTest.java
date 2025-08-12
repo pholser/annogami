@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Proxy;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Large
@@ -27,8 +28,9 @@ class AnnotationInvocationHandlerTest {
   }
 
   @Test void eq() {
-    assertEquals(anno, proxied);
-    assertEquals(proxied, anno);
+    assertAll(
+      () -> assertEquals(anno, proxied),
+      () -> assertEquals(proxied, anno));
   }
 
   @Test void hash() {

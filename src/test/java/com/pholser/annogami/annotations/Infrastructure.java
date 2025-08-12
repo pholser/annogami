@@ -1,11 +1,15 @@
 package com.pholser.annogami.annotations;
 
-import java.lang.annotation.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
@@ -295,22 +299,4 @@ public final class Infrastructure {
   public static final int PARENT_PRIORITY = 2;
   public static final int CHILD_PRIORITY = 3;
   public static final int META_CONFIG_PRIORITY = 5; // From MetaConfigAnnotation default
-
-  public static Method getMethod(Class<?> k, String name, Class<?>... paramTypes)
-    throws Exception {
-
-    return k.getMethod(name, paramTypes);
-  }
-
-  public static Field getField(Class<?> k, String name) throws Exception {
-    return k.getDeclaredField(name);
-  }
-
-  public static Parameter getParameter(Method m, int index) {
-    return m.getParameters()[index];
-  }
-
-  public static Object createInstance(Class<?> k) throws Exception {
-    return k.getDeclaredConstructor().newInstance();
-  }
 }

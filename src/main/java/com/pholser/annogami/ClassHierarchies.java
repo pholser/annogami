@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -67,7 +68,7 @@ final class ClassHierarchies {
   static List<Method> depthFirstOverrideHierarchyOf(Method m) {
     int mods = m.getModifiers();
     if (isStatic(mods) || isPrivate(mods)) {
-      return List.of();
+      return Collections.emptyList();
     }
 
     return methodsOverriddenBy(
@@ -78,7 +79,7 @@ final class ClassHierarchies {
   static List<Method> breadthFirstOverrideHierarchyOf(Method m) {
     int mods = m.getModifiers();
     if (isStatic(mods) || isPrivate(mods)) {
-      return List.of();
+      return Collections.emptyList();
     }
 
     return methodsOverriddenBy(

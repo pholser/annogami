@@ -7,8 +7,7 @@ import com.pholser.annogami.annotations.Unit;
 @Atom(3) @Iota(3) @Unit(6)
 public class AnnotationsGalore
   extends SuperAnnotationsGalore
-  implements IAnnotationsGalore1,
-    IAnnotationsGalore2 {
+  implements IAnnotationsGalore1, IAnnotationsGalore2 {
 
   @Atom(7) private int i;
 

@@ -97,8 +97,7 @@ class DirectPresenceTest {
       DIRECT.find(Bs.class, ManyBHaver.class)
         .orElseGet(() -> fail("missing annotation"));
 
-    B[] value = bs.value();
-    assertEquals(2, value.length);
+    assertEquals(2, bs.value().length);
   }
 
   @Test void singleInstanceOfRepeatableContainer() {
@@ -106,8 +105,7 @@ class DirectPresenceTest {
       DIRECT.find(Bs.class, BsHaver.class)
         .orElseGet(() -> fail("Missing annotation"));
 
-    B[] value = bs.value();
-    assertEquals(2, value.length);
+    assertEquals(2, bs.value().length);
   }
 
   @Test void containerOfSingleRepeatableContainer() {
@@ -125,7 +123,6 @@ class DirectPresenceTest {
       DIRECT.find(Cs.class, ManyBsHaver.class)
         .orElseGet(() -> fail("Missing annotation"));
 
-    Bs[] value = cs.value();
-    assertEquals(2, value.length);
+    assertEquals(2, cs.value().length);
   }
 }

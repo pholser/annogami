@@ -16,9 +16,9 @@ class AnnotatedPathFromFieldToDeclaringClassTest {
   private AnnotatedPath path;
 
   @BeforeEach void setUp() throws Exception {
-    Field f = AnnotationsGalore.class.getDeclaredField("i");
     path =
-      AnnotatedPath.fromField(f)
+      AnnotatedPath.fromField(
+        AnnotationsGalore.class.getDeclaredField("i"))
         .toDeclaringClass()
         .build();
   }

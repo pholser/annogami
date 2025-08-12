@@ -16,19 +16,19 @@ import static java.util.stream.Collectors.toMap;
 class AnnotationInvocationHandler<A extends Annotation>
   implements InvocationHandler {
 
-  private final Class<A> annoType;
+  private final Class<A> k;
   private final Map<String, Object> attrs;
 
-  AnnotationInvocationHandler(Class<A> annoType, Map<String, Object> attrs) {
-    if (!annoType.isAnnotation()
-      || annoType.getInterfaces().length != 1
-      || !Annotation.class.equals(annoType.getInterfaces()[0])) {
+  AnnotationInvocationHandler(Class<A> k, Map<String, Object> attrs) {
+    if (!k.isAnnotation()
+      || k.getInterfaces().length != 1
+      || !Annotation.class.equals(k.getInterfaces()[0])) {
 
       throw new IllegalArgumentException(
-        annoType + " is not a well-formed annotation type");
+        k + " is not a well-formed annotation type");
     }
 
-    this.annoType = annoType;
+    this.k = k;
     this.attrs = attrs;
   }
 
@@ -40,7 +40,7 @@ class AnnotationInvocationHandler<A extends Annotation>
       return handleHashCode();
     }
     if (isAnnotationType(m)) {
-      return annoType;
+      return k;
     }
     if (isToString(m)) {
       return handleToString();
@@ -49,8 +49,8 @@ class AnnotationInvocationHandler<A extends Annotation>
     return handleAttributeAccess(m);
   }
 
-  private Object handleAttributeAccess(Method method) {
-    Object value = attrs.get(method.getName());
+  private Object handleAttributeAccess(Method m) {
+    Object value = attrs.get(m.getName());
     return maybeClone(value);
   }
 
@@ -88,22 +88,22 @@ class AnnotationInvocationHandler<A extends Annotation>
     return ((Object[]) attrValue).clone();
   }
 
-  private boolean isEquals(Method method) {
-    return "equals".equals(method.getName())
-      && boolean.class.equals(method.getReturnType())
-      && method.getParameterCount() == 1
-      && Object.class.equals(method.getParameterTypes()[0]);
+  private boolean isEquals(Method m) {
+    return "equals".equals(m.getName())
+      && boolean.class.equals(m.getReturnType())
+      && m.getParameterCount() == 1
+      && Object.class.equals(m.getParameterTypes()[0]);
   }
 
   private boolean handleEquals(Object proxy, Object other) {
     if (proxy == other) {
       return true;
     }
-    if (!annoType.isInstance(other)) {
+    if (!k.isInstance(other)) {
       return false;
     }
 
-    Method[] annoMethods = annoType.getDeclaredMethods();
+    Method[] annoMethods = k.getDeclaredMethods();
     Map<String, Method> annoMethodsByName =
       Arrays.stream(annoMethods)
         .collect(toMap(Method::getName, identity()));
@@ -216,7 +216,7 @@ class AnnotationInvocationHandler<A extends Annotation>
 
   private String handleToString() {
     return "merged "
-      + annoType.getName()
+      + k.getName()
       + '['
       + attrs.entrySet().stream()
           .map(e -> attrString(e.getKey(), e.getValue()))
