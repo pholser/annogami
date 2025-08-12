@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Proxy;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.startsWith;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Large
@@ -37,9 +36,8 @@ class AnnotationInvocationHandlerTest {
   }
 
   @Test void stringValue() {
-    assertThat(
-      proxied.toString(),
-      startsWith("merged " + Large.class.getName()));
+    assertThat(proxied.toString())
+      .startsWith("merged " + Large.class.getName());
   }
 
   @Test void annoType() {

@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.List;
 
 import static com.pholser.annogami.Presences.ASSOCIATED;
 import static com.pholser.annogami.Presences.DIRECT;
@@ -19,10 +18,8 @@ import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.Presences.PRESENT;
 import static com.pholser.annogami.annotations.Annotations.annoValue;
 import static com.pholser.annogami.annotations.Annotations.containerAnno;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -43,11 +40,10 @@ class RepeatableAnnotationsDeclaredOnClassTest {
       DIRECT.find(Compound.class, target)
         .orElseGet(() -> fail("Missing annotation"));
 
-    assertThat(
-      asList(c.value()),
-      containsInAnyOrder(
+    assertThat(c.value())
+      .containsExactlyInAnyOrder(
         annoValue(Particle.class, -1),
-        annoValue(Particle.class, -2)));
+        annoValue(Particle.class, -2));
   }
 
   @Test void findAnotherKindDirect() {
@@ -65,40 +61,36 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   }
 
   @Test void allDirect() {
-    assertThat(
-      DIRECT.all(target),
-      containsInAnyOrder(
+    assertThat(DIRECT.all(target))
+      .containsExactlyInAnyOrder(
         containerAnno(
           Compound.class,
           Particle.class,
           annoValue(Particle.class, -1),
           annoValue(Particle.class, -2)),
-        annoValue(Unit.class, -3)));
+        annoValue(Unit.class, -3));
   }
 
   @Test void findAllOneKindDirectOrIndirect() {
-    assertThat(
-      DIRECT_OR_INDIRECT.findAll(Particle.class, target),
-      containsInAnyOrder(
+    assertThat(DIRECT_OR_INDIRECT.findAll(Particle.class, target))
+      .containsExactlyInAnyOrder(
         annoValue(Particle.class, -1),
-        annoValue(Particle.class, -2)));
+        annoValue(Particle.class, -2));
   }
 
   @Test void findAllOneContainerKindDirectOrIndirect() {
-    assertThat(
-      DIRECT_OR_INDIRECT.findAll(Compound.class, target),
-      containsInAnyOrder(
+    assertThat(DIRECT_OR_INDIRECT.findAll(Compound.class, target))
+      .containsExactlyInAnyOrder(
         containerAnno(
           Compound.class,
           Particle.class,
           annoValue(Particle.class, -1),
-          annoValue(Particle.class, -2))));
+          annoValue(Particle.class, -2)));
   }
 
   @Test void findAllAnotherKindDirectOrIndirect() {
-    assertThat(
-      DIRECT_OR_INDIRECT.findAll(Unit.class, target),
-      containsInAnyOrder(annoValue(Unit.class, -3)));
+    assertThat(DIRECT_OR_INDIRECT.findAll(Unit.class, target))
+      .containsExactlyInAnyOrder(annoValue(Unit.class, -3));
   }
 
   @Test void findAllAnotherContainerKindDirectOrIndirect() {
@@ -120,11 +112,10 @@ class RepeatableAnnotationsDeclaredOnClassTest {
       PRESENT.find(Compound.class, target)
         .orElseGet(() -> fail("Missing annotation"));
 
-    assertThat(
-      asList(c.value()),
-      containsInAnyOrder(
+    assertThat(c.value())
+      .containsExactlyInAnyOrder(
         annoValue(Particle.class, -1),
-        annoValue(Particle.class, -2)));
+        annoValue(Particle.class, -2));
   }
 
   @Test void findAnotherKindPresent() {
@@ -140,17 +131,15 @@ class RepeatableAnnotationsDeclaredOnClassTest {
       PRESENT.find(Aggregate.class, target)
         .orElseGet(() -> fail("Missing annotation"));
 
-    assertThat(
-      asList(a.value()),
-      containsInAnyOrder(
+    assertThat(a.value())
+      .containsExactlyInAnyOrder(
         annoValue(Unit.class, -4),
-        annoValue(Unit.class, -5)));
+        annoValue(Unit.class, -5));
   }
 
   @Test void allPresent() {
-    assertThat(
-      PRESENT.all(target),
-      containsInAnyOrder(
+    assertThat(PRESENT.all(target))
+      .containsExactlyInAnyOrder(
         containerAnno(
           Compound.class,
           Particle.class,
@@ -167,56 +156,40 @@ class RepeatableAnnotationsDeclaredOnClassTest {
           Many.class,
           Single.class,
           annoValue(Single.class, -7),
-          annoValue(Single.class, -8))));
+          annoValue(Single.class, -8)));
   }
 
   @Test void findAllOneKindAssociated() {
-    List<Particle> all =
-      ASSOCIATED.findAll(Particle.class, target);
-
-    assertThat(
-      all,
-      containsInAnyOrder(
+    assertThat(ASSOCIATED.findAll(Particle.class, target))
+      .containsExactlyInAnyOrder(
         annoValue(Particle.class, -1),
-        annoValue(Particle.class, -2)));
+        annoValue(Particle.class, -2));
   }
 
   @Test void findAllOneContainerKindAssociated() {
-    List<Compound> all =
-      ASSOCIATED.findAll(Compound.class, target);
-
-    assertThat(
-      all,
-      containsInAnyOrder(
+    assertThat(ASSOCIATED.findAll(Compound.class, target))
+      .containsExactlyInAnyOrder(
         containerAnno(
           Compound.class,
           Particle.class,
           annoValue(Particle.class, -1),
-          annoValue(Particle.class, -2))));
+          annoValue(Particle.class, -2)));
   }
 
   @Test void findAllAnotherKindAssociated() {
-    List<Single> all =
-      ASSOCIATED.findAll(Single.class, target);
-
-    assertThat(
-      all,
-      containsInAnyOrder(
+    assertThat(ASSOCIATED.findAll(Single.class, target))
+      .containsExactlyInAnyOrder(
         annoValue(Single.class, -7),
-        annoValue(Single.class, -8)));
+        annoValue(Single.class, -8));
   }
 
   @Test void findAllAnotherContainerKindAssociated() {
-    List<Many> all =
-      ASSOCIATED.findAll(Many.class, target);
-
-    assertThat(
-      all,
-      containsInAnyOrder(
+    assertThat(ASSOCIATED.findAll(Many.class, target))
+      .containsExactlyInAnyOrder(
         containerAnno(
           Many.class,
           Single.class,
           annoValue(Single.class, -7),
-          annoValue(Single.class, -8))));
+          annoValue(Single.class, -8)));
   }
 }

@@ -12,8 +12,7 @@ import static com.pholser.annogami.Presences.DIRECT;
 import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.Presences.PRESENT;
 import static com.pholser.annogami.annotations.Annotations.annoValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -33,15 +32,13 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
   }
 
   @Test void allDirect() {
-    assertThat(
-      DIRECT.all(target),
-      containsInAnyOrder(annoValue(Atom.class, 1)));
+    assertThat(DIRECT.all(target))
+      .containsExactlyInAnyOrder(annoValue(Atom.class, 1));
   }
 
   @Test void findAllDirectOrIndirect() {
-    assertThat(
-      DIRECT_OR_INDIRECT.findAll(Atom.class, target),
-      containsInAnyOrder(annoValue(Atom.class, 1)));
+    assertThat(DIRECT_OR_INDIRECT.findAll(Atom.class, target))
+      .containsExactlyInAnyOrder(annoValue(Atom.class, 1));
   }
 
   @Test void findPresent() {
@@ -53,14 +50,12 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
   }
 
   @Test void allPresent() {
-    assertThat(
-      PRESENT.all(target),
-      containsInAnyOrder(annoValue(Atom.class, 1)));
+    assertThat(PRESENT.all(target))
+      .containsExactlyInAnyOrder(annoValue(Atom.class, 1));
   }
 
   @Test void findAllAssociated() {
-    assertThat(
-      ASSOCIATED.findAll(Atom.class, target),
-      containsInAnyOrder(annoValue(Atom.class, 1)));
+    assertThat(ASSOCIATED.findAll(Atom.class, target))
+      .containsExactlyInAnyOrder(annoValue(Atom.class, 1));
   }
 }

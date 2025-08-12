@@ -14,8 +14,7 @@ import static com.pholser.annogami.Presences.DIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT;
 import static com.pholser.annogami.annotations.Annotations.anno;
 import static com.pholser.annogami.annotations.Annotations.annoValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MergeAlongAnnotatedPathTest {
@@ -57,13 +56,12 @@ class MergeAlongAnnotatedPathTest {
 
     List<Annotation> merged = path.mergeAll(DIRECT);
 
-    assertThat(
-      merged,
-      containsInAnyOrder(
+    assertThat(merged)
+      .containsExactlyInAnyOrder(
         anno(Atom.class, Map.of("value", 2, "otherValue", -1)),
         annoValue(Iota.class, 3),
         anno(
           Blue.class,
-          Map.of("value", -94, "otherValue", -2, "stillAnotherValue", -3))));
+          Map.of("value", -94, "otherValue", -2, "stillAnotherValue", -3)));
   }
 }
