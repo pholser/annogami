@@ -3,13 +3,13 @@ package com.pholser.annogami;
 import com.pholser.annogami.annotated.AnnotationsGalore;
 import com.pholser.annogami.annotations.Atom;
 import com.pholser.annogami.annotations.Iota;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.pholser.annogami.Presences.DIRECT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class AnnotatedPathFromLocalClassToEnclosingConstructorTest {
   private AnnotatedPath path;
@@ -25,7 +25,7 @@ class AnnotatedPathFromLocalClassToEnclosingConstructorTest {
   @Test void findFirstOnLocalClass() {
     Atom a =
       path.findFirst(Atom.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(2, a.value());
   }
@@ -33,7 +33,7 @@ class AnnotatedPathFromLocalClassToEnclosingConstructorTest {
   @Test void findFirstOnEnclosingCtorOfLocalClass() {
     Iota i =
       path.findFirst(Iota.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(9, i.value());
   }

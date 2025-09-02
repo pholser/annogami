@@ -3,14 +3,12 @@ package com.pholser.annogami;
 import com.pholser.annogami.annotated.AnnotationsGalore;
 import com.pholser.annogami.annotations.Atom;
 import com.pholser.annogami.annotations.Iota;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Parameter;
-
 import static com.pholser.annogami.Presences.DIRECT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class AnnotatedPathFromParameterToDeclaringMethodTest {
   private AnnotatedPath path;
@@ -28,7 +26,7 @@ class AnnotatedPathFromParameterToDeclaringMethodTest {
   @Test void findFirstOnParameter() {
     Atom a =
       path.findFirst(Atom.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(4, a.value());
   }
@@ -36,7 +34,7 @@ class AnnotatedPathFromParameterToDeclaringMethodTest {
   @Test void findFirstOnMethodOfParameter() {
     Iota i =
       path.findFirst(Iota.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(5, i.value());
   }

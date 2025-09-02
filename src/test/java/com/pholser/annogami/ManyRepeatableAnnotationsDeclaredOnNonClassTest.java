@@ -5,6 +5,7 @@ import com.pholser.annogami.annotations.Aggregate;
 import com.pholser.annogami.annotations.Compound;
 import com.pholser.annogami.annotations.Particle;
 import com.pholser.annogami.annotations.Unit;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   @Test void findOneContainerKindDirect() {
     Compound c =
       DIRECT.find(Compound.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertThat(c.value())
       .containsExactlyInAnyOrder(
@@ -45,13 +46,13 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
 
   @Test void findAnotherKindDirect() {
     DIRECT.find(Unit.class, target)
-      .ifPresent(u -> fail("Unit should not be directly present here"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void findAnotherContainerKindDirect() {
     Aggregate a =
       DIRECT.find(Aggregate.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertThat(a.value())
       .containsExactlyInAnyOrder(
@@ -110,13 +111,13 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
 
   @Test void findOneKindPresent() {
     PRESENT.find(Particle.class, target)
-      .ifPresent(p -> fail("Single Particle should not be found"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void findOneContainerKindPresent() {
     Compound c =
       PRESENT.find(Compound.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertThat(c.value())
       .containsExactlyInAnyOrder(
@@ -126,13 +127,13 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
 
   @Test void findAnotherKindPresent() {
     PRESENT.find(Unit.class, target)
-      .ifPresent(u -> fail("Single Unit should not be found"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void findAnotherContainerKindPresent() {
     Aggregate a =
       PRESENT.find(Aggregate.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertThat(a.value())
       .containsExactlyInAnyOrder(

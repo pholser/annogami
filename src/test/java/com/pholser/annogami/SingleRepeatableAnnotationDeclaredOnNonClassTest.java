@@ -2,6 +2,7 @@ package com.pholser.annogami;
 
 import com.pholser.annogami.annotated.X;
 import com.pholser.annogami.annotations.Particle;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,6 @@ import static com.pholser.annogami.Presences.PRESENT;
 import static com.pholser.annogami.annotations.Annotations.annoValue;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   private AnnotatedElement target;
@@ -26,7 +26,7 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   @Test void findDirect() {
     Particle p =
       DIRECT.find(Particle.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(4, p.value());
   }
@@ -44,7 +44,7 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   @Test void findPresent() {
     Particle p =
       PRESENT.find(Particle.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(4, p.value());
   }

@@ -20,7 +20,7 @@ dependencies {
 }
 
 base {
-  archivesName = 'duly-noted'
+  archivesName = 'annogami'
 }
 
 jar {

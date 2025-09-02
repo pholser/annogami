@@ -1,5 +1,6 @@
 package com.pholser.annogami;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -8,7 +9,6 @@ import java.lang.annotation.Retention;
 import static com.pholser.annogami.Presences.DIRECT;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class DirectPresenceTest {
   @Retention(RUNTIME)
@@ -69,7 +69,7 @@ class DirectPresenceTest {
   @Test void singleNonRepeatable() {
     A a =
       DIRECT.find(A.class, AHaver.class)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(3, a.value());
   }
@@ -77,25 +77,25 @@ class DirectPresenceTest {
   @Test void singleRepeatable() {
     B b =
       DIRECT.find(B.class, SingleBHaver.class)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals("1", b.value());
   }
 
   @Test void singleRepeatableContainer() {
     DIRECT.find(Bs.class, SingleBHaver.class)
-      .ifPresent(bs -> fail("Should not have a Bs element"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void manyRepeatable() {
     DIRECT.find(B.class, ManyBHaver.class)
-      .ifPresent(bs -> fail("Should not have a single B element"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void manyRepeatableContainer() {
     Bs bs =
       DIRECT.find(Bs.class, ManyBHaver.class)
-        .orElseGet(() -> fail("missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(2, bs.value().length);
   }
@@ -103,25 +103,25 @@ class DirectPresenceTest {
   @Test void singleInstanceOfRepeatableContainer() {
     Bs bs =
       DIRECT.find(Bs.class, BsHaver.class)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(2, bs.value().length);
   }
 
   @Test void containerOfSingleRepeatableContainer() {
     DIRECT.find(Cs.class, BsHaver.class)
-      .ifPresent(cs -> fail("Should not have a Cs element"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void manyRepeatableContainers() {
     DIRECT.find(Bs.class, ManyBsHaver.class)
-      .ifPresent(cs -> fail("Should not have a Bs element"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void containerOfManyRepeatableContainers() {
     Cs cs =
       DIRECT.find(Cs.class, ManyBsHaver.class)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(2, cs.value().length);
   }

@@ -2,10 +2,10 @@ package com.pholser.annogami.paths;
 
 import com.pholser.annogami.AnnotatedPath;
 import com.pholser.annogami.fixtures.A;
-import com.pholser.annogami.fixtures.InterfacesAndEnclosures;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.ImplementsAandB;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.ImplementsI1ThenI2;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.OverridesMethodButUnannotated;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -24,7 +24,8 @@ class InterfacesPathTest {
         .toDeclaringClass()
         .toBreadthHierarchy()
         .build()
-        .merge(A.class, META_DIRECT);
+        .merge(A.class, META_DIRECT)
+        .orElseGet(Assertions::fail);
 
     assertEquals("ifaceTypeA", merged.value());
   }
@@ -38,7 +39,8 @@ class InterfacesPathTest {
       AnnotatedPath.fromMethod(m)
         .toBreadthOverridden()
         .build()
-        .merge(A.class, META_DIRECT);
+        .merge(A.class, META_DIRECT)
+        .orElseGet(Assertions::fail);
 
     assertEquals("ifaceMethodA", merged.value());
   }
@@ -48,7 +50,8 @@ class InterfacesPathTest {
       AnnotatedPath.fromClass(ImplementsI1ThenI2.class)
         .toBreadthHierarchy()
         .build()
-        .merge(A.class, META_DIRECT);
+        .merge(A.class, META_DIRECT)
+        .orElseGet(Assertions::fail);
 
     assertEquals("i1", merged.value());
   }

@@ -10,6 +10,7 @@ import com.pholser.annogami.fixtures.InterfacesAndEnclosures.Outer.InnerNoOwnA;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.Outer2;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.Outer2.Middle;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.Outer2.Middle.Leaf;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -28,7 +29,8 @@ class EnclosingTypesPathTest {
         .toDeclaringClass()
         .toClassEnclosure()
         .build()
-        .merge(A.class, META_DIRECT);
+        .merge(A.class, META_DIRECT)
+        .orElseGet(Assertions::fail);
 
     assertEquals("outer", merged.value());
   }
@@ -43,7 +45,8 @@ class EnclosingTypesPathTest {
         .toDeclaringClass()
         .toClassEnclosure()
         .build()
-        .merge(A.class, META_DIRECT);
+        .merge(A.class, META_DIRECT)
+        .orElseGet(Assertions::fail);
 
     assertEquals("middle", merged.value());
   }
@@ -59,7 +62,8 @@ class EnclosingTypesPathTest {
         .toDeclaringClass()
         .toClassEnclosure()
         .build()
-        .merge(A.class, META_DIRECT);
+        .merge(A.class, META_DIRECT)
+        .orElseGet(Assertions::fail);
 
     assertEquals("grandOuter", merged.value());
   }

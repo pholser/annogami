@@ -3,6 +3,7 @@ package com.pholser.annogami;
 import com.pholser.annogami.annotated.X;
 import com.pholser.annogami.annotations.Atom;
 import com.pholser.annogami.annotations.Iota;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,6 @@ import static com.pholser.annogami.annotations.Annotations.annoValue;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class NonRepeatableAnnotationsDeclaredOnClassTest {
   private AnnotatedElement target;
@@ -28,14 +28,14 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneKindDirect() {
     Atom a =
       DIRECT.find(Atom.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(9, a.value());
   }
 
   @Test void findAnotherKindDirect() {
     DIRECT.find(Iota.class, target)
-      .ifPresent(i -> fail("Iota should not be directly present here"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void allDirect() {
@@ -57,7 +57,7 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneKindPresent() {
     Atom a =
       PRESENT.find(Atom.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(9, a.value());
   }
@@ -65,7 +65,7 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
   @Test void findAnotherKindPresent() {
     Iota i =
       PRESENT.find(Iota.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(10, i.value());
   }

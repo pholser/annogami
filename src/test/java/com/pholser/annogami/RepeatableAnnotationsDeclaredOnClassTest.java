@@ -7,6 +7,7 @@ import com.pholser.annogami.annotations.Many;
 import com.pholser.annogami.annotations.Particle;
 import com.pholser.annogami.annotations.Single;
 import com.pholser.annogami.annotations.Unit;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,13 +33,13 @@ class RepeatableAnnotationsDeclaredOnClassTest {
 
   @Test void findOneKindDirect() {
     DIRECT.find(Particle.class, target)
-      .ifPresent(p -> fail("Single Particle should not be found"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void findOneContainerKindDirect() {
     Compound c =
       DIRECT.find(Compound.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertThat(c.value())
       .containsExactlyInAnyOrder(
@@ -49,7 +50,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findAnotherKindDirect() {
     Unit u =
       DIRECT.find(Unit.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(-3, u.value());
   }
@@ -102,7 +103,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneKindPresent() {
     Particle p =
       PRESENT.find(Particle.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(-6, p.value());
   }
@@ -110,7 +111,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findOneContainerKindPresent() {
     Compound c =
       PRESENT.find(Compound.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertThat(c.value())
       .containsExactlyInAnyOrder(
@@ -121,7 +122,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findAnotherKindPresent() {
     Unit u =
       PRESENT.find(Unit.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(-3, u.value());
   }
@@ -129,7 +130,7 @@ class RepeatableAnnotationsDeclaredOnClassTest {
   @Test void findAnotherContainerKindPresent() {
     Aggregate a =
       PRESENT.find(Aggregate.class, target)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertThat(a.value())
       .containsExactlyInAnyOrder(

@@ -4,6 +4,8 @@ import com.pholser.annogami.annotated.Blue;
 import com.pholser.annogami.annotated.X;
 import com.pholser.annogami.annotations.Atom;
 import com.pholser.annogami.annotations.Iota;
+import com.pholser.annogami.annotations.Particle;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -18,6 +20,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MergeAlongAnnotatedPathTest {
+  @Test void mergeEmptyResult() throws Exception {
+    AnnotatedPath path =
+      AnnotatedPath.fromField(X.class.getDeclaredField("i"))
+        .toDeclaringClass()
+        .toDepthHierarchy()
+        .build();
+
+    path.merge(Particle.class, DIRECT)
+      .ifPresent(AnnotationAssertions::falseFind);
+  }
+
   @Test void methodToDeclarerToClassAncestrySingleDirect() throws Exception {
     AnnotatedPath path =
       AnnotatedPath.fromMethod(X.class.getDeclaredMethod("foo"))
@@ -25,7 +38,9 @@ class MergeAlongAnnotatedPathTest {
         .toDepthHierarchy()
         .build();
 
-    Atom merged = path.merge(Atom.class, DIRECT);
+    Atom merged =
+      path.merge(Atom.class, DIRECT)
+        .orElseGet(Assertions::fail);
 
     assertEquals(2, merged.value());
     assertEquals(-1, merged.otherValue());
@@ -40,7 +55,9 @@ class MergeAlongAnnotatedPathTest {
         .toDeclaringPackage()
         .build();
 
-    Blue blue = path.merge(Blue.class, META_DIRECT);
+    Blue blue =
+      path.merge(Blue.class, META_DIRECT)
+        .orElseGet(Assertions::fail);
 
     assertEquals(1, blue.value());
     assertEquals(-2, blue.otherValue());

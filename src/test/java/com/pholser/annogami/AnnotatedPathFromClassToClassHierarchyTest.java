@@ -2,6 +2,7 @@ package com.pholser.annogami;
 
 import com.pholser.annogami.annotated.AnnotationsGalore;
 import com.pholser.annogami.annotations.Iota;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Documented;
@@ -15,7 +16,6 @@ import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.Presences.PRESENT;
 import static com.pholser.annogami.annotations.Annotations.annoValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class AnnotatedPathFromClassToClassHierarchyTest {
   @Test void findFirstDirectFromClassThruDepthHierarchy() {
@@ -26,7 +26,7 @@ class AnnotatedPathFromClassToClassHierarchyTest {
 
     Iota i =
       path.findFirst(Iota.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(3, i.value());
   }
@@ -82,7 +82,7 @@ class AnnotatedPathFromClassToClassHierarchyTest {
         .build();
 
     path.findFirst(Documented.class, PRESENT)
-      .ifPresent(d -> fail("Should not have found " + d));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void findAllOnEmptyHierarchy() {

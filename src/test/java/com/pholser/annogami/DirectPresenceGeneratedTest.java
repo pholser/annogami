@@ -9,6 +9,7 @@ import com.pholser.annogami.annotations.Infrastructure.GrandChildClass;
 import com.pholser.annogami.annotations.Infrastructure.MethodAnnotation;
 import com.pholser.annogami.annotations.Infrastructure.ParameterAnnotation;
 import com.pholser.annogami.annotations.Infrastructure.PlainClass;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,6 @@ import static com.pholser.annogami.Presences.DIRECT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @DisplayName("Direct Presence Tests")
 public class DirectPresenceGeneratedTest {
@@ -32,7 +32,7 @@ public class DirectPresenceGeneratedTest {
   void findDirectClassAnnotation() {
     ClassAnnotation a =
       DIRECT.find(ClassAnnotation.class, ChildClass.class)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals("child", a.value());
   }
@@ -45,7 +45,7 @@ public class DirectPresenceGeneratedTest {
   @DisplayName("Should not find inherited class annotation with DIRECT")
   void shouldNotFindInheritedClassAnnotation() {
     DIRECT.find(ClassAnnotation.class, GrandChildClass.class)
-      .ifPresent(a -> fail("Should not have found annotation"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   /**
@@ -59,7 +59,7 @@ public class DirectPresenceGeneratedTest {
       DIRECT.find(
         MethodAnnotation.class,
         ChildClass.class.getMethod("rootMethod", String.class))
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals("child-method", a.value());
   }
@@ -88,7 +88,7 @@ public class DirectPresenceGeneratedTest {
   @DisplayName("Should return empty for non-directly-present annotation")
   void returnEmptyForNonDirectAnnotation() {
     DIRECT.find(ClassAnnotation.class, PlainClass.class)
-      .ifPresent(a -> fail("Should not have found annotation"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   /**
@@ -104,7 +104,7 @@ public class DirectPresenceGeneratedTest {
         ChildClass.class
           .getMethod("rootMethod", String.class)
           .getParameters()[0])
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals("child-param", a.value());
   }
@@ -120,7 +120,7 @@ public class DirectPresenceGeneratedTest {
       DIRECT.find(
         FieldAnnotation.class,
         ChildClass.class.getDeclaredField("childField"))
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals("child-field", a.value());
   }

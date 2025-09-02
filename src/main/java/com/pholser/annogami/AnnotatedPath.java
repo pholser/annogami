@@ -19,7 +19,6 @@ import static com.pholser.annogami.ClassHierarchies.breadthFirstOverrideHierarch
 import static com.pholser.annogami.ClassHierarchies.depthFirstHierarchyOf;
 import static com.pholser.annogami.ClassHierarchies.depthFirstOverrideHierarchyOf;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 public class AnnotatedPath {
   private final List<AnnotatedElement> elements;
@@ -57,19 +56,23 @@ public class AnnotatedPath {
       .findFirst();
   }
 
-  public <A extends Annotation> A merge(
+  public <A extends Annotation> Optional<A> merge(
     Class<A> annoType,
     SingleByType detector) {
 
-    return elements.stream()
-      .flatMap(e -> detector.find(annoType, e).stream())
-      .collect(merged(annoType));
+    List<A> targets =
+      elements.stream()
+        .flatMap(e -> detector.find(annoType, e).stream())
+        .toList();
+    return targets.isEmpty()
+      ? Optional.empty()
+      : Optional.of(targets.stream().collect(merged(annoType)));
   }
 
   public List<Annotation> all(All detector) {
     return elements.stream()
       .flatMap(e -> detector.all(e).stream())
-      .collect(toList());
+      .toList();
   }
 
   public List<Annotation> mergeAll(All detector) {
@@ -83,7 +86,7 @@ public class AnnotatedPath {
         Class<Annotation> keyType = (Class<Annotation>) e.getKey();
 
         return e.getValue().stream().collect(merged(keyType));
-      }).collect(toList());
+      }).toList();
   }
 
   public <A extends Annotation> List<A> findAll(
@@ -92,7 +95,7 @@ public class AnnotatedPath {
 
     return elements.stream()
       .flatMap(e -> detector.findAll(annoType, e).stream())
-      .collect(toList());
+      .toList();
   }
 
   private <A extends Annotation>

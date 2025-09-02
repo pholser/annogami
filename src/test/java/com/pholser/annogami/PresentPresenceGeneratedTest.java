@@ -7,17 +7,19 @@ import com.pholser.annogami.annotations.Infrastructure.GrandChildClass;
 import com.pholser.annogami.annotations.Infrastructure.ImplementingClass;
 import com.pholser.annogami.annotations.Infrastructure.MethodAnnotation;
 import com.pholser.annogami.annotations.Infrastructure.NonInheritedClassAnnotation;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-
-import static com.pholser.annogami.Presences.PRESENT;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static com.pholser.annogami.Presences.PRESENT;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
- * Tests for PRESENT presence level in duly-noted.
+ * Tests for PRESENT presence level.
  * <p/>
  * Maps to Spring's AnnotationUtils.findAnnotation() methods that search inheritance hierarchies
  * and JUnit's AnnotationSupport methods that traverse class hierarchies.
@@ -35,7 +37,7 @@ public class PresentPresenceGeneratedTest {
   void findInheritedClassAnnotation() {
     ClassAnnotation a =
       PRESENT.find(ClassAnnotation.class, GrandChildClass.class)
-          .orElseGet(() -> fail("Missing annotation"));
+          .orElseGet(Assertions::fail);
 
     assertEquals("child", a.value());
   }
@@ -67,7 +69,7 @@ public class PresentPresenceGeneratedTest {
   void respectInheritanceOrder() {
     ConfigAnnotation a =
       PRESENT.find(ConfigAnnotation.class, GrandChildClass.class)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals("grandchild", a.name());
   }
@@ -80,7 +82,7 @@ public class PresentPresenceGeneratedTest {
   @DisplayName("Should find annotations on implemented interfaces")
   void findInterfaceAnnotations() {
     PRESENT.find(ClassAnnotation.class, ImplementingClass.class)
-      .orElseGet(() -> fail("Missing annotation"));
+      .orElseGet(Assertions::fail);
 
     // Should find both class and interface annotations.
     // Which wins is implementation-dependent.
@@ -100,7 +102,7 @@ public class PresentPresenceGeneratedTest {
     PRESENT.find(
       MethodAnnotation.class,
       GrandChildClass.class.getMethod("rootMethod", String.class))
-      .ifPresent(a -> fail("Should not have found annotation"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   /**
@@ -114,7 +116,7 @@ public class PresentPresenceGeneratedTest {
       PRESENT.find(
         MethodAnnotation.class,
         ImplementingClass.class.getMethod("interfaceMethod"))
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals("extended-interface-method", a.value());
   }
@@ -127,6 +129,6 @@ public class PresentPresenceGeneratedTest {
   @DisplayName("Should handle package annotations")
   void handlePackageAnnotations() {
     PRESENT.find(ClassAnnotation.class, Infrastructure.class.getPackage())
-      .ifPresent(a -> fail("Should not have found annotation"));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 }

@@ -6,6 +6,7 @@ import com.pholser.annogami.annotated.ClassEnclosure.Enclosed1.Enclosed2;
 import com.pholser.annogami.annotations.Atom;
 import com.pholser.annogami.annotations.Iota;
 import com.pholser.annogami.annotations.Unit;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -14,7 +15,6 @@ import static com.pholser.annogami.Presences.DIRECT;
 import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.annotations.Annotations.annoValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class AnnotatedPathFromClassToClassEnclosureTest {
   @Test void findFirstDirectEnclosed2() {
@@ -25,7 +25,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
     Unit u =
       path.findFirst(Unit.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(-7, u.value());
   }
@@ -39,7 +39,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
     Unit u =
       path.findFirst(Unit.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(-1, u.value());
   }
@@ -53,7 +53,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
     Iota i =
       path.findFirst(Iota.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(-3, i.value());
   }
@@ -85,7 +85,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
     Atom a =
       path.findFirst(Atom.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(-3, a.value());
   }

@@ -7,6 +7,7 @@ import com.pholser.annogami.annotated.X;
 import com.pholser.annogami.annotations.Atom;
 import com.pholser.annogami.annotations.Compound;
 import com.pholser.annogami.annotations.Particle;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -31,7 +32,7 @@ class MetaDirectTest {
   @Test void atomOnField() throws Exception {
     Atom a =
       META_DIRECT.find(Atom.class, X.class.getDeclaredField("i"))
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(1, a.value());
   }
@@ -39,30 +40,30 @@ class MetaDirectTest {
   @Test void retentionOnFieldMeta() throws Exception {
     Retention r =
       META_DIRECT.find(Retention.class, X.class.getDeclaredField("i"))
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(RUNTIME, r.value());
   }
 
   @Test void inheritedOnFieldMeta() throws Exception {
     META_DIRECT.find(Inherited.class, X.class.getDeclaredField("i"))
-      .orElseGet(() -> fail("Missing annotation"));
+      .orElseGet(Assertions::fail);
   }
 
   @Test void documentedOnFieldMeta() throws Exception {
     META_DIRECT.find(Documented.class, X.class.getDeclaredField("i"))
-      .orElseGet(() -> fail("Missing annotation"));
+      .orElseGet(Assertions::fail);
   }
 
   @Test void overrideOnFieldMeta() throws Exception {
     META_DIRECT.find(Override.class, X.class.getDeclaredField("i"))
-      .ifPresent(d -> fail("Should not have found annotation " + d));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void particleOnField() throws Exception {
     Particle p =
       META_DIRECT.find(Particle.class, X.class.getDeclaredField("s"))
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(4, p.value());
   }
@@ -70,7 +71,7 @@ class MetaDirectTest {
   @Test void repeatableOnField() throws Exception {
     Repeatable r =
       META_DIRECT.find(Repeatable.class, X.class.getDeclaredField("s"))
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(Compound.class, r.value());
   }

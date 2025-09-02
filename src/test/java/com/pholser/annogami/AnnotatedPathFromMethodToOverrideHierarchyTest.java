@@ -3,6 +3,7 @@ package com.pholser.annogami;
 import com.pholser.annogami.annotated.AnnotationsGalore;
 import com.pholser.annogami.annotations.Atom;
 import com.pholser.annogami.annotations.Unit;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -13,7 +14,6 @@ import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.Presences.PRESENT;
 import static com.pholser.annogami.annotations.Annotations.annoValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class AnnotatedPathFromMethodToOverrideHierarchyTest {
   @Test void findFirstDepthFirstDirect() throws Exception {
@@ -28,7 +28,7 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
 
     Atom a =
       path.findFirst(Atom.class, DIRECT)
-        .orElseGet(() -> fail("Missing annotation"));
+        .orElseGet(Assertions::fail);
 
     assertEquals(20, a.value());
   }
@@ -95,7 +95,7 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
           .build();
 
     path.findFirst(Unit.class, PRESENT)
-      .ifPresent(u -> fail("Should not have found " + u));
+      .ifPresent(AnnotationAssertions::falseFind);
   }
 
   @Test void findAllOnEmptyMethodOverride() throws Exception {
