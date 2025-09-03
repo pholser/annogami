@@ -23,17 +23,19 @@ base {
   archivesName = 'annogami'
 }
 
-jar {
-  version = '0.1-SNAPSHOT'
-}
-
 java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(23)
+  }
+  // These are redundant when toolchain is set, but fine to keep explicit:
   sourceCompatibility = JavaVersion.VERSION_21
   targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks.withType(JavaCompile).configureEach {
   options.release = 21
+  // Gradle will automatically put module builds on the module path when it
+  // sees module-info.java; no extra flags required.
 }
 
 test {
@@ -41,4 +43,9 @@ test {
   testLogging {
     events 'passed', 'skipped', 'failed'
   }
+}
+
+jar {
+  version = '0.1-SNAPSHOT'
+  // No need for Automatic-Module-Name when you ship a real module-info.class
 }
