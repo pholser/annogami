@@ -7,15 +7,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-sealed abstract class AbstractMetaRepeatable<P extends AllByType>
+sealed abstract class AbstractMetaRepeatable<D extends AllByType>
   implements AllByType
   permits MetaAssociated, MetaDirectOrIndirect {
 
-  private final P presence;
+  private final D detector;
   private final All all;
 
-  AbstractMetaRepeatable(P presence, All all) {
-    this.presence = presence;
+  AbstractMetaRepeatable(D detector, All all) {
+    this.detector = detector;
     this.all = all;
   }
 
@@ -41,7 +41,7 @@ sealed abstract class AbstractMetaRepeatable<P extends AllByType>
     List<A> accumulation,
     Set<Class<? extends Annotation>> seen) {
 
-    List<A> allByType = presence.findAll(annoType, target);
+    List<A> allByType = detector.findAll(annoType, target);
     accumulation.addAll(allByType);
 
     all.all(target)

@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-sealed abstract class AbstractMeta<P extends SingleByType & All>
+sealed abstract class AbstractMeta<D extends SingleByType & All>
   implements SingleByType, All
   permits Meta, MetaDirect {
 
-  private final P presence;
+  private final D detector;
 
-  AbstractMeta(P presence) {
-    this.presence = presence;
+  AbstractMeta(D detector) {
+    this.detector = detector;
   }
 
   /**
@@ -37,9 +37,9 @@ sealed abstract class AbstractMeta<P extends SingleByType & All>
     AnnotatedElement target,
     Set<Class<? extends Annotation>> seen) {
 
-    return presence.find(annoType, target)
+    return detector.find(annoType, target)
       .or(() ->
-        presence.all(target)
+        detector.all(target)
           .stream()
           .map(Annotation::annotationType)
           .filter(t -> !seen.contains(t))
@@ -66,7 +66,7 @@ sealed abstract class AbstractMeta<P extends SingleByType & All>
     Set<Class<? extends Annotation>> seen,
     List<Annotation> accumulation) {
 
-    presence.all(target)
+    detector.all(target)
       .forEach(a -> {
         accumulation.add(a);
 

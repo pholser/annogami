@@ -101,7 +101,7 @@ jreleaser {
   }
   deploy {
     maven {
-      // mavenCentral is a CONTAINER -> add a NAMED INSTANCE (e.g., "app")
+      // mavenCentral is a CONTAINER -> add a NAMED INSTANCE
       mavenCentral {
         app {
           active = 'ALWAYS'
