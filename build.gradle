@@ -1,6 +1,12 @@
 plugins {
-  id 'java'
+  id 'java-library'
+  id 'maven-publish'
+  id 'signing'
+  id 'org.jreleaser' version '1.20.0'
 }
+
+group = 'com.pholser'
+version = '0.1'
 
 repositories {
   mavenCentral()
@@ -27,6 +33,10 @@ java {
   toolchain {
     languageVersion = JavaLanguageVersion.of(23)
   }
+
+  withSourcesJar()
+  withJavadocJar()
+
   // These are redundant when toolchain is set, but fine to keep explicit:
   sourceCompatibility = JavaVersion.VERSION_21
   targetCompatibility = JavaVersion.VERSION_21
@@ -47,5 +57,65 @@ test {
 
 jar {
   version = '0.1-SNAPSHOT'
-  // No need for Automatic-Module-Name when you ship a real module-info.class
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      pom {
+        name = 'annogami'
+        description = 'Annotation presence & paths library'
+        url = 'https://github.com/pholser/duly-noted'
+        licenses {
+          license {
+            name = 'MIT License'
+            url = 'https://opensource.org/licenses/MIT'
+          }
+        }
+        scm {
+          url = 'https://github.com/pholser/duly-noted'
+          connection = 'scm:git:https://github.com/pholser/duly-noted.git'
+          developerConnection = 'scm:git:ssh://git@github.com/pholser/duly-noted.git'
+        }
+        developers {
+          developer {
+            id = 'pholser'
+            name = 'Paul Holser'
+          }
+        }
+      }
+    }
+  }
+}
+
+signing {
+  useInMemoryPgpKeys(System.getenv('GPG_PRIVATE_KEY'), System.getenv('GPG_PASSPHRASE'))
+  sign publishing.publications.mavenJava
+}
+
+jreleaser {
+  signing {
+    active = 'ALWAYS'
+    armored = true
+  }
+  deploy {
+    maven {
+      // mavenCentral is a CONTAINER -> add a NAMED INSTANCE (e.g., "app")
+      mavenCentral {
+        app {
+          active = 'ALWAYS'
+          // Central Publisher Portal endpoint (can also be supplied via env/system props)
+          url = 'https://central.sonatype.com/api/v1/publisher'
+          // Optional but recommended so the Portal shows your verified namespace
+          namespace = 'com.pholser'
+
+          // Auth: prefer env vars; leave these lines out if you export the envs below
+          // authorization = 'BEARER'           // default
+          // username = System.getenv('CENTRAL_PORTAL_USERNAME')
+          // password = System.getenv('CENTRAL_PORTAL_PASSWORD')
+        }
+      }
+    }
+  }
 }
