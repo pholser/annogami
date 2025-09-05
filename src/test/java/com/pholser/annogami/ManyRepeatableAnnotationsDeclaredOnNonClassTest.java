@@ -76,14 +76,14 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   }
 
   @Test void findAllOneKindDirectOrIndirect() {
-    assertThat(DIRECT_OR_INDIRECT.findAll(Particle.class, target))
+    assertThat(DIRECT_OR_INDIRECT.find(Particle.class, target))
       .containsExactlyInAnyOrder(
         annoValue(Particle.class, 5),
         annoValue(Particle.class, 6));
   }
 
   @Test void findAllOneContainerKindDirectOrIndirect() {
-    assertThat(DIRECT_OR_INDIRECT.findAll(Compound.class, target))
+    assertThat(DIRECT_OR_INDIRECT.find(Compound.class, target))
       .containsExactlyInAnyOrder(
         containerAnno(
           Compound.class,
@@ -93,14 +93,14 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   }
 
   @Test void findAllAnotherKindDirectOrIndirect() {
-    assertThat(DIRECT_OR_INDIRECT.findAll(Unit.class, target))
+    assertThat(DIRECT_OR_INDIRECT.find(Unit.class, target))
       .containsExactlyInAnyOrder(
         annoValue(Unit.class, 7),
         annoValue(Unit.class, 8));
   }
 
   @Test void findAllAnotherContainerKindDirectOrIndirect() {
-    assertThat(DIRECT_OR_INDIRECT.findAll(Aggregate.class, target))
+    assertThat(DIRECT_OR_INDIRECT.find(Aggregate.class, target))
       .containsExactlyInAnyOrder(
         containerAnno(
           Aggregate.class,
@@ -157,14 +157,14 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   }
 
   @Test void findAllOneKindAssociated() {
-    assertThat(ASSOCIATED.findAll(Particle.class, target))
+    assertThat(ASSOCIATED.find(Particle.class, target))
       .containsExactlyInAnyOrder(
         annoValue(Particle.class, 5),
         annoValue(Particle.class, 6));
   }
 
   @Test void findAllOneContainerKindAssociated() {
-    assertThat(ASSOCIATED.findAll(Compound.class, target))
+    assertThat(ASSOCIATED.find(Compound.class, target))
       .containsExactlyInAnyOrder(
         containerAnno(
           Compound.class,
@@ -174,14 +174,14 @@ class ManyRepeatableAnnotationsDeclaredOnNonClassTest {
   }
 
   @Test void findAllAnotherKindAssociated() {
-    assertThat(ASSOCIATED.findAll(Unit.class, target))
+    assertThat(ASSOCIATED.find(Unit.class, target))
       .containsExactlyInAnyOrder(
         annoValue(Unit.class, 7),
         annoValue(Unit.class, 8));
   }
 
   @Test void findAllAnotherContainerKindAssociated() {
-    assertThat(ASSOCIATED.findAll(Aggregate.class, target))
+    assertThat(ASSOCIATED.find(Aggregate.class, target))
       .containsExactlyInAnyOrder(
         containerAnno(
           Aggregate.class,

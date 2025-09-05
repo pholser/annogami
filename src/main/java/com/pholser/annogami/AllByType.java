@@ -21,5 +21,5 @@ public sealed interface AllByType
    * @return the found annotations; may be empty
    */
   <A extends Annotation>
-  List<A> findAll(Class<A> annoType, AnnotatedElement target);
+  List<A> find(Class<A> annoType, AnnotatedElement target);
 }

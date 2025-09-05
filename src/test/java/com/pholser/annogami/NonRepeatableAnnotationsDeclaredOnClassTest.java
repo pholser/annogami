@@ -44,14 +44,14 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
   }
 
   @Test void findAllOneKindDirectOrIndirect() {
-    assertThat(DIRECT_OR_INDIRECT.findAll(Atom.class, target))
+    assertThat(DIRECT_OR_INDIRECT.find(Atom.class, target))
       .containsExactlyInAnyOrder(annoValue(Atom.class, 9));
   }
 
   @Test void findAllAnotherKindDirectOrIndirect() {
     assertEquals(
       emptyList(),
-      DIRECT_OR_INDIRECT.findAll(Iota.class, target));
+      DIRECT_OR_INDIRECT.find(Iota.class, target));
   }
 
   @Test void findOneKindPresent() {
@@ -78,12 +78,12 @@ class NonRepeatableAnnotationsDeclaredOnClassTest {
   }
 
   @Test void findAllOneKindAssociated() {
-    assertThat(ASSOCIATED.findAll(Atom.class, target))
+    assertThat(ASSOCIATED.find(Atom.class, target))
       .containsExactlyInAnyOrder(annoValue(Atom.class, 9));
   }
 
   @Test void findAllAnotherKindAssociated() {
-    assertThat(ASSOCIATED.findAll(Iota.class, target))
+    assertThat(ASSOCIATED.find(Iota.class, target))
       .containsExactlyInAnyOrder(annoValue(Iota.class, 10));
   }
 }

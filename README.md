@@ -1,39 +1,35 @@
-# Duly Noted: Annotation-finding strategies for Java
+# Annogami: Annotation-finding strategies for Java
 
-Duly Noted is a Java library that facilitates finding Java annotations
-on program elements at runtime. It wraps the basic annotation-finding
-capabilities of the JDK and offers similar functionality to Spring's
-annotation utilities.
+Annogami is a Java library that facilitates finding Java annotations on program
+elements at runtime. It wraps the basic annotation-finding capabilities of the
+JDK and offers similar functionality to
+[Spring](https://spring.io/projects/spring-framework)'s and
+[JUnit](https://junit.org/)'s annotation utilities.
 
 ## Design elements
 
-* *Presence levels* as a first-class concept. Rather than having
-to remember which method of
-[AnnotatedElement](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/AnnotatedElement.html)
-corresponds to which presence level, or which of the Spring or JUnit
-utility methods bake in certain levels of presence, instead you can use
-methods like `find()`, `findAll()`, and `all()` from a clearly-named
-implementation of a presence level on `Presences` to perform the operation
-on the element.
+* *Presence levels* as a first-class concept. Rather than having to remember
+which method of
+[AnnotatedElement](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/AnnotatedElement.html)
+corresponds to which presence level, or which of the Spring or JUnit utility
+methods bake in certain levels of presence, instead you can use methods
+`find` and `all` from a clearly-named implementation of a presence level on
+class `Presences` to perform the operation on the element.
 
-* *Meta-presence*, as exploited in Spring and JUnit 5, as a first-class
-concept. An annotation is *meta-present* on an element if it is
-*presence-level* on the element, or *presence-level* on any annotations
-that are *presence-level* on the element, and so on up the annotation
-"hierarchy". Meta-presence encourages creation of composed annotations.
-A `MetaPresence` wraps another `Presence` to allow for finding
-meta-present annotations on program elements.
+* *Meta-presence*, as exploited in Spring and JUnit, as a first-class concept.
+An annotation is *meta-present* on an element if it is *presence-level* on the
+element, or *presence-level* on any annotations that are *presence-level* on
+the element, and so on up the annotation "hierarchy". Meta-presence encourages
+creation of composed annotations. There are meta-presences on class
+`Presences` along with the usual presence levels.
 
-* *Annotated path*: a sequence of program elements along which
-Duly Noted looks for and merges annotations. Many Spring and JUnit 5
-annotation helper methods prescribe a search path for the desired
-annotations; if you want a separate path, find a separate method.
-Duly Noted takes the approach of allowing for building a search path
-for annotations, then calling methods on the path such as
-`find(Class, SingleByTypeDetector)` and `all(AllDetector)` to perform the
-desired operations. The presence level implementations from `Presences`
-support these detector types.
-
+* *Annotated path*: a sequence of program elements along which Annogami looks
+for and merges annotations. Many Spring and JUnit utility methods prescribe a
+search path for the desired annotations; if you want a separate path, find a
+separate method. Annogami takes the approach of allowing for building a search
+path for annotations, then calling methods `find` or `all` on the path using
+a presence level implementation from `Presences` to perform the desired
+operations.
 
 ## How-To
 
@@ -204,10 +200,10 @@ a default value):
 * [x] empty class enclosure test
 * [x] empty class hierarchy test
 * [x] empty method override test
-* [x] Is it ok for these to be empty, and extended if they are
+* [ ] Is it ok for these to be empty, and extended if they are
   (with the "then" items as above)?
   * Answer: yes; test for these
 * [ ] empty class enclosure test with `then`
 * [ ] empty class hierarchy test with `then`
 * [ ] empty method override test with `then`
-* [ ] JPMS-modularize
+* [x] JPMS-modularize

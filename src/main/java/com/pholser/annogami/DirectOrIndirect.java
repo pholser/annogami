@@ -13,7 +13,7 @@ public final class DirectOrIndirect implements AllByType {
   DirectOrIndirect() {
   }
 
-  @Override public <A extends Annotation> List<A> findAll(
+  @Override public <A extends Annotation> List<A> find(
     Class<A> annoType,
     AnnotatedElement target) {
 

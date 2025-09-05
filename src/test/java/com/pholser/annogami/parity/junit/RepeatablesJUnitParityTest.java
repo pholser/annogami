@@ -21,14 +21,14 @@ class RepeatablesJUnitParityTest {
   }
 
   @Test void repeatablesCount() {
-    assertEquals(3, DIRECT_OR_INDIRECT.findAll(Tag.class, m).size());
+    assertEquals(3, DIRECT_OR_INDIRECT.find(Tag.class, m).size());
   }
 
   @Test
   void repeatablesCountEqualsJUnit() {
     assertEquals(
       junitValues().size(),
-      DIRECT_OR_INDIRECT.findAll(Tag.class, m).size());
+      DIRECT_OR_INDIRECT.find(Tag.class, m).size());
   }
 
   @Test void repeatablesValuesContents() {
@@ -47,7 +47,7 @@ class RepeatablesJUnitParityTest {
   }
 
   private List<String> annogamiValues() {
-    return DIRECT_OR_INDIRECT.findAll(Tag.class, m)
+    return DIRECT_OR_INDIRECT.find(Tag.class, m)
       .stream().map(Tag::value).toList();
   }
 }

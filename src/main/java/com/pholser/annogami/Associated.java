@@ -9,7 +9,7 @@ public final class Associated implements AllByType {
   Associated() {
   }
 
-  @Override public <A extends Annotation> List<A> findAll(
+  @Override public <A extends Annotation> List<A> find(
     Class<A> annoType,
     AnnotatedElement target) {
 

@@ -66,7 +66,7 @@ publishing {
       pom {
         name = 'annogami'
         description = 'Annotation presence & paths library'
-        url = 'https://github.com/pholser/duly-noted'
+        url = 'https://github.com/pholser/annogami'
         licenses {
           license {
             name = 'MIT License'
@@ -74,9 +74,9 @@ publishing {
           }
         }
         scm {
-          url = 'https://github.com/pholser/duly-noted'
-          connection = 'scm:git:https://github.com/pholser/duly-noted.git'
-          developerConnection = 'scm:git:ssh://git@github.com/pholser/duly-noted.git'
+          url = 'https://github.com/pholser/annogami'
+          connection = 'scm:git:https://github.com/pholser/annogami'
+          developerConnection = 'scm:git:ssh://git@github.com/pholser/annogami.git'
         }
         developers {
           developer {

@@ -26,7 +26,7 @@ sealed abstract class AbstractMetaRepeatable<D extends AllByType>
    * then recursively search the annotations (depth-first) that are present
    * for more instances of the annotation type.
    */
-  @Override public <A extends Annotation> List<A> findAll(
+  @Override public <A extends Annotation> List<A> find(
     Class<A> annoType,
     AnnotatedElement target) {
 
@@ -41,7 +41,7 @@ sealed abstract class AbstractMetaRepeatable<D extends AllByType>
     List<A> accumulation,
     Set<Class<? extends Annotation>> seen) {
 
-    List<A> allByType = detector.findAll(annoType, target);
+    List<A> allByType = detector.find(annoType, target);
     accumulation.addAll(allByType);
 
     all.all(target)

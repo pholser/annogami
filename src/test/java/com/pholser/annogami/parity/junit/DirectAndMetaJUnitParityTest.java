@@ -84,7 +84,7 @@ class DirectAndMetaJUnitParityTest {
   }
 
   @Test
-  void metaPresent_yieldsFromB_whenNoDirectA_DulyValue() throws Exception {
+  void metaPresentYieldsFromBWhenNoDirectAAnnogamiValue() throws Exception {
     Method n = Samples.OnlyB.class.getDeclaredMethod("n");
 
     assertEquals(

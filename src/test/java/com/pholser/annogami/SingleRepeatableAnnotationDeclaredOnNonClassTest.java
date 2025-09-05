@@ -37,7 +37,7 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   }
 
   @Test void findAllDirectOrIndirect() {
-    assertThat(DIRECT_OR_INDIRECT.findAll(Particle.class, target))
+    assertThat(DIRECT_OR_INDIRECT.find(Particle.class, target))
       .containsExactlyInAnyOrder(annoValue(Particle.class, 4));
   }
 
@@ -55,7 +55,7 @@ class SingleRepeatableAnnotationDeclaredOnNonClassTest {
   }
 
   @Test void findAllAssociated() {
-    assertThat(ASSOCIATED.findAll(Particle.class, target))
+    assertThat(ASSOCIATED.find(Particle.class, target))
       .containsExactlyInAnyOrder(annoValue(Particle.class, 4));
   }
 }

@@ -94,7 +94,7 @@ public class AnnotatedPath {
     AllByType detector) {
 
     return elements.stream()
-      .flatMap(e -> detector.findAll(annoType, e).stream())
+      .flatMap(e -> detector.find(annoType, e).stream())
       .toList();
   }
 

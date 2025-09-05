@@ -37,7 +37,7 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
   }
 
   @Test void findAllDirectOrIndirect() {
-    assertThat(DIRECT_OR_INDIRECT.findAll(Atom.class, target))
+    assertThat(DIRECT_OR_INDIRECT.find(Atom.class, target))
       .containsExactlyInAnyOrder(annoValue(Atom.class, 1));
   }
 
@@ -55,7 +55,7 @@ class SingleNonRepeatableAnnotationDeclaredOnNonClassTest {
   }
 
   @Test void findAllAssociated() {
-    assertThat(ASSOCIATED.findAll(Atom.class, target))
+    assertThat(ASSOCIATED.find(Atom.class, target))
       .containsExactlyInAnyOrder(annoValue(Atom.class, 1));
   }
 }
