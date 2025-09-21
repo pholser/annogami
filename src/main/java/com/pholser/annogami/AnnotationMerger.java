@@ -16,7 +16,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Objects.deepEquals;
 
 // Intended for sequential collections only.
-class AnnotationMerger<A extends Annotation>
+final class AnnotationMerger<A extends Annotation>
   implements Collector<A, Map<String, Object>, A> {
 
   private final Class<A> annoType;

@@ -16,7 +16,7 @@ class AnnotatedPathFromLocalClassToEnclosingMethodTest {
 
   @BeforeEach void setUp() throws Exception {
     path =
-      AnnotatedPath.fromClass(
+      AnnotatedPathBuilder.fromClass(
         Class.forName(AnnotationsGalore.class.getName() + "$2Local"))
         .toEnclosingMethod()
         .build();
@@ -42,7 +42,7 @@ class AnnotatedPathFromLocalClassToEnclosingMethodTest {
     assertThrows(
       IllegalStateException.class,
       () ->
-        AnnotatedPath.fromClass(AnnotationsGalore.class)
+        AnnotatedPathBuilder.fromClass(AnnotationsGalore.class)
           .toEnclosingMethod());
   }
 }

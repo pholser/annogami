@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AnnotatedPathFromClassToClassEnclosureTest {
   @Test void findFirstDirectEnclosed2() {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(Enclosed2.class)
+      AnnotatedPathBuilder.fromClass(Enclosed2.class)
         .toClassEnclosure()
         .build();
 
@@ -32,7 +32,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
   @Test void findFirstDirectEnclosed1A() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(
+      AnnotatedPathBuilder.fromClass(
         Class.forName(Enclosed1.class.getName() + "$1A"))
         .toClassEnclosure()
         .build();
@@ -46,7 +46,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
   @Test void findFirstDirectOnEnclosureOfEnclosed1A() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(
+      AnnotatedPathBuilder.fromClass(
         Class.forName(Enclosed1.class.getName() + "$1A"))
         .toClassEnclosure()
         .build();
@@ -60,12 +60,12 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
   @Test void findAllDirectOrIndirectEnclosed2B() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(
+      AnnotatedPathBuilder.fromClass(
         Class.forName(Enclosed2.class.getName() + "$1B"))
         .toClassEnclosure()
         .build();
 
-    List<Unit> units = path.findAll(Unit.class, DIRECT_OR_INDIRECT);
+    List<Unit> units = path.find(Unit.class, DIRECT_OR_INDIRECT);
 
     assertEquals(
       List.of(
@@ -79,7 +79,7 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
   @Test void findFirstOnEmptyEnclosure() {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(ClassEnclosure.class)
+      AnnotatedPathBuilder.fromClass(ClassEnclosure.class)
         .toClassEnclosure()
         .build();
 
@@ -92,11 +92,11 @@ class AnnotatedPathFromClassToClassEnclosureTest {
 
   @Test void findAllOnEmptyEnclosure() {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(ClassEnclosure.class)
+      AnnotatedPathBuilder.fromClass(ClassEnclosure.class)
         .toClassEnclosure()
         .build();
 
-    List<Unit> units = path.findAll(Unit.class, DIRECT_OR_INDIRECT);
+    List<Unit> units = path.find(Unit.class, DIRECT_OR_INDIRECT);
 
     assertEquals(
       List.of(

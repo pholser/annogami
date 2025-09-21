@@ -1,6 +1,6 @@
 package com.pholser.annogami.paths;
 
-import com.pholser.annogami.AnnotatedPath;
+import com.pholser.annogami.AnnotatedPathBuilder;
 import com.pholser.annogami.AnnotationAssertions;
 import com.pholser.annogami.fixtures.A;
 import com.pholser.annogami.fixtures.Samples.Parents.Base;
@@ -26,7 +26,7 @@ class HierarchyPathTest {
     Method derived = Derived.class.getMethod("m", String.class);
 
     A merged =
-      AnnotatedPath.fromParameter(derived.getParameters()[0])
+      AnnotatedPathBuilder.fromParameter(derived.getParameters()[0])
         .toDeclaringMethod()
         .toDeclaringClass()
         .toDepthHierarchy()
@@ -41,7 +41,7 @@ class HierarchyPathTest {
     Method base = Base.class.getMethod("m", String.class);
 
     A merged =
-      AnnotatedPath.fromParameter(base.getParameters()[0]) // no @A here
+      AnnotatedPathBuilder.fromParameter(base.getParameters()[0]) // no @A here
         .toDeclaringMethod()
         .toDeclaringClass()
         .toDepthHierarchy()

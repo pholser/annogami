@@ -5,15 +5,14 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
 /**
- * Contract for an object that can give the annotations of a given type
- * on a program element. Implementers decide what "on" means.
+ * Contract for an object that can give the annotations of a given type on a
+ * program element. Implementers decide what "on" means.
  */
 public sealed interface AllByType
   permits AbstractMetaRepeatable, Associated, DirectOrIndirect {
 
   /**
-   * Gives all the annotations of a given type on the given program
-   * element.
+   * Gives all the annotations of a given type on the given program element.
    *
    * @param annoType class representing type of annotation to find
    * @param target the element to perform the search on

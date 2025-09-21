@@ -13,7 +13,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 
-class AnnotationInvocationHandler<A extends Annotation>
+final class AnnotationInvocationHandler<A extends Annotation>
   implements InvocationHandler {
 
   private final Class<A> k;

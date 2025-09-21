@@ -2,9 +2,12 @@ package com.pholser.annogami;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toCollection;
 
 /**
  * An object that can find annotations that are "directly present" on a
@@ -22,6 +25,7 @@ public final class Direct implements SingleByType, All {
   }
 
   @Override public List<Annotation> all(AnnotatedElement target) {
-    return Arrays.asList(target.getDeclaredAnnotations());
+    return Arrays.stream(target.getDeclaredAnnotations())
+      .collect(toCollection(ArrayList::new));
   }
 }

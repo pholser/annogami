@@ -1,6 +1,6 @@
 package com.pholser.annogami.paths;
 
-import com.pholser.annogami.AnnotatedPath;
+import com.pholser.annogami.AnnotatedPathBuilder;
 import com.pholser.annogami.AnnotationAssertions;
 import com.pholser.annogami.fixtures.A;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +21,7 @@ class ClassInheritanceTest {
 
   @Test void pathMergeCanPickParentFromChildMethod() throws Exception {
     A merged =
-      AnnotatedPath.fromMethod(Child.class.getDeclaredMethod("k"))
+      AnnotatedPathBuilder.fromMethod(Child.class.getDeclaredMethod("k"))
         .toDeclaringClass()
         .toDepthHierarchy()
         .build()

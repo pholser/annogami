@@ -16,7 +16,7 @@ class AnnotatedPathFromLocalClassToEnclosingConstructorTest {
 
   @BeforeEach void setUp() throws Exception {
     path =
-      AnnotatedPath.fromClass(
+      AnnotatedPathBuilder.fromClass(
         Class.forName(AnnotationsGalore.class.getName() + "$1Local"))
         .toEnclosingConstructor()
         .build();
@@ -42,7 +42,7 @@ class AnnotatedPathFromLocalClassToEnclosingConstructorTest {
     assertThrows(
       IllegalStateException.class,
       () ->
-        AnnotatedPath.fromClass(AnnotationsGalore.class)
+        AnnotatedPathBuilder.fromClass(AnnotationsGalore.class)
           .toEnclosingConstructor());
   }
 }

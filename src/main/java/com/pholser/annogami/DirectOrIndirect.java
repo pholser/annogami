@@ -2,8 +2,11 @@ package com.pholser.annogami;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.util.stream.Collectors.toCollection;
 
 /**
  * An object that can find annotations that are "directly present" or
@@ -17,6 +20,7 @@ public final class DirectOrIndirect implements AllByType {
     Class<A> annoType,
     AnnotatedElement target) {
 
-    return Arrays.asList(target.getDeclaredAnnotationsByType(annoType));
+    return Arrays.stream(target.getDeclaredAnnotationsByType(annoType))
+      .collect(toCollection(ArrayList::new));
   }
 }

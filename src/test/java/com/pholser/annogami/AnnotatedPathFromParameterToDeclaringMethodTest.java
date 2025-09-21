@@ -15,7 +15,7 @@ class AnnotatedPathFromParameterToDeclaringMethodTest {
 
   @BeforeEach void setUp() throws Exception {
     path =
-      AnnotatedPath.fromParameter(
+      AnnotatedPathBuilder.fromParameter(
         AnnotationsGalore.class
           .getMethod("foo", int.class)
           .getParameters()[0])

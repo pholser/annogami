@@ -15,7 +15,7 @@ class AnnotatedPathFromCtorToDeclaringClassTest {
 
   @BeforeEach void setUp() throws Exception {
     path =
-      AnnotatedPath.fromConstructor(
+      AnnotatedPathBuilder.fromConstructor(
         AnnotationsGalore.class.getConstructor(int.class))
         .toDeclaringClass()
         .build();

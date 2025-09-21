@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AnnotatedPathFromClassToClassHierarchyTest {
   @Test void findFirstDirectFromClassThruDepthHierarchy() {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(AnnotationsGalore.class)
+      AnnotatedPathBuilder.fromClass(AnnotationsGalore.class)
         .toDepthHierarchy()
         .build();
 
@@ -33,11 +33,11 @@ class AnnotatedPathFromClassToClassHierarchyTest {
 
   @Test void findAllByTypeDirectIndirectFromClassThruDepthHierarchy() {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(AnnotationsGalore.class)
+      AnnotatedPathBuilder.fromClass(AnnotationsGalore.class)
         .toDepthHierarchy()
         .build();
 
-    List<Iota> iotas = path.findAll(Iota.class, DIRECT_OR_INDIRECT);
+    List<Iota> iotas = path.find(Iota.class, DIRECT_OR_INDIRECT);
 
     assertEquals(
       List.of(
@@ -55,11 +55,11 @@ class AnnotatedPathFromClassToClassHierarchyTest {
 
   @Test void findAllByTypeDirectIndirectFromClassThruBreadthHierarchy() {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(AnnotationsGalore.class)
+      AnnotatedPathBuilder.fromClass(AnnotationsGalore.class)
         .toBreadthHierarchy()
         .build();
 
-    List<Iota> iotas = path.findAll(Iota.class, DIRECT_OR_INDIRECT);
+    List<Iota> iotas = path.find(Iota.class, DIRECT_OR_INDIRECT);
 
     assertEquals(
       List.of(
@@ -77,7 +77,7 @@ class AnnotatedPathFromClassToClassHierarchyTest {
 
   @Test void findFirstOnEmptyHierarchy() {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(Object.class)
+      AnnotatedPathBuilder.fromClass(Object.class)
         .toClassEnclosure()
         .build();
 
@@ -87,11 +87,11 @@ class AnnotatedPathFromClassToClassHierarchyTest {
 
   @Test void findAllOnEmptyHierarchy() {
     AnnotatedPath path =
-      AnnotatedPath.fromClass(Object.class)
+      AnnotatedPathBuilder.fromClass(Object.class)
         .toClassEnclosure()
         .build();
 
-    List<Retention> retentions = path.findAll(Retention.class, ASSOCIATED);
+    List<Retention> retentions = path.find(Retention.class, ASSOCIATED);
 
     assertEquals(Collections.emptyList(), retentions);
   }

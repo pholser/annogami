@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MergeAlongAnnotatedPathTest {
   @Test void mergeEmptyResult() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromField(X.class.getDeclaredField("i"))
+      AnnotatedPathBuilder.fromField(X.class.getDeclaredField("i"))
         .toDeclaringClass()
         .toDepthHierarchy()
         .build();
@@ -33,7 +33,7 @@ class MergeAlongAnnotatedPathTest {
 
   @Test void methodToDeclarerToClassAncestrySingleDirect() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromMethod(X.class.getDeclaredMethod("foo"))
+      AnnotatedPathBuilder.fromMethod(X.class.getDeclaredMethod("foo"))
         .toDeclaringClass()
         .toDepthHierarchy()
         .build();
@@ -50,7 +50,7 @@ class MergeAlongAnnotatedPathTest {
     throws Exception {
 
     AnnotatedPath path =
-      AnnotatedPath.fromMethod(X.class.getDeclaredMethod("baz"))
+      AnnotatedPathBuilder.fromMethod(X.class.getDeclaredMethod("baz"))
         .toDeclaringClass()
         .toDeclaringPackage()
         .build();
@@ -66,7 +66,7 @@ class MergeAlongAnnotatedPathTest {
 
   @Test void methodToDeclarerToClassAncestryAllDirect() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromMethod(X.class.getDeclaredMethod("foo"))
+      AnnotatedPathBuilder.fromMethod(X.class.getDeclaredMethod("foo"))
         .toDeclaringClass()
         .toDepthHierarchy()
         .build();

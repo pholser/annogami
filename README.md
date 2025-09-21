@@ -134,7 +134,7 @@ a default value):
 
 ```java
     AnnotatedPath path =
-      AnnotatedPath.fromParameter(p)
+      AnnotatedPathBuilder.fromParameter(p)
         .toDeclaringMethod()
         .toDeclaringClass()
         .toDepthHierarchy()

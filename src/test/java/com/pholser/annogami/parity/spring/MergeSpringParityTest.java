@@ -1,6 +1,6 @@
 package com.pholser.annogami.parity.spring;
 
-import com.pholser.annogami.AnnotatedPath;
+import com.pholser.annogami.AnnotatedPathBuilder;
 import com.pholser.annogami.fixtures.A;
 import com.pholser.annogami.fixtures.Samples;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +26,7 @@ class MergeSpringParityTest {
         .get(A.class)
         .getString("value");
     String annogami =
-      AnnotatedPath.fromMethod(m)
+      AnnotatedPathBuilder.fromMethod(m)
         .build()
         .merge(A.class, META_PRESENT)
         .map(A::value)

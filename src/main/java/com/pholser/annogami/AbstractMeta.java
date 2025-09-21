@@ -21,9 +21,9 @@ sealed abstract class AbstractMeta<D extends SingleByType & All>
   /**
    * {@inheritDoc}
    *
-   * Look for presence of the annotation type on the target;
-   * if not found there, recursively search the annotations (depth-first)
-   * that are present.
+   * Use our detector to look for an annotation of the given type on the
+   * target; if not found there, recursively use our detector (depth-first) on
+   * the annotations that the detector finds on the target.
    */
   @Override public <A extends Annotation> Optional<A> find(
     Class<A> annoType,
@@ -53,7 +53,8 @@ sealed abstract class AbstractMeta<D extends SingleByType & All>
   /**
    * {@inheritDoc}
    *
-   * Depth-first list of the annotations present on the target, recursively.
+   * Recursively use our detector to produce a depth-first list of annotations
+   * that the detector finds.
    */
   @Override public List<Annotation> all(AnnotatedElement target) {
     List<Annotation> accumulation = new ArrayList<>();

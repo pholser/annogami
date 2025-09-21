@@ -2,51 +2,39 @@ package com.pholser.annogami;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collector;
 
-import static com.pholser.annogami.ClassHierarchies.breadthFirstHierarchyOf;
-import static com.pholser.annogami.ClassHierarchies.breadthFirstOverrideHierarchyOf;
-import static com.pholser.annogami.ClassHierarchies.depthFirstHierarchyOf;
-import static com.pholser.annogami.ClassHierarchies.depthFirstOverrideHierarchyOf;
 import static java.util.stream.Collectors.groupingBy;
 
-public class AnnotatedPath {
+/**
+ * A sequence of annotated program elements, along which to find and merge
+ * annotations.
+ */
+public final class AnnotatedPath {
   private final List<AnnotatedElement> elements;
 
-  private AnnotatedPath(List<AnnotatedElement> elements) {
-    this.elements = elements;
+  /**
+   * Make an annotated path from a sequence of annotated elements.
+   *
+   * @param elements the annotated element sequence
+   */
+  public AnnotatedPath(List<AnnotatedElement> elements) {
+    this.elements = List.copyOf(elements);
   }
 
-  public static Builder.Parameter fromParameter(Parameter p) {
-    return new Builder.Parameter(p);
-  }
-
-  public static Builder.Method fromMethod(Method m) {
-    return new Builder.Method(m);
-  }
-
-  public static Builder.Constructor fromConstructor(Constructor<?> c) {
-    return new Builder.Constructor(c);
-  }
-
-  public static Builder.Field fromField(Field f) {
-    return new Builder.Field(f);
-  }
-
-  public static Builder.Class fromClass(Class<?> k) {
-    return new Builder.Class(k);
-  }
-
+  /**
+   * Finds the first annotation of the given type along the path, using the
+   * given detector.
+   *
+   * @param <A> represents the desired annotation type
+   * @param annoType class representing type of annotation to find
+   * @param detector annotation detector to use
+   * @return an optional representing the found annotation, or empty if it was
+   * not found
+   */
   public <A extends Annotation> Optional<A> findFirst(
     Class<A> annoType,
     SingleByType detector) {
@@ -56,6 +44,18 @@ public class AnnotatedPath {
       .findFirst();
   }
 
+  /**
+   * Finds all the annotations of the given type along the path, using the
+   * given detector, and merges them together into a single annotation
+   * with attributes from annotations earlier in the path taking precedence
+   * over attributes from annotations later in the path.
+   *
+   * @param <A> represents the desired annotation type
+   * @param annoType class representing type of annotation to find
+   * @param detector annotation detector to use
+   * @return an optional representing the merged annotation, or empty if it
+   * was not found
+   */
   public <A extends Annotation> Optional<A> merge(
     Class<A> annoType,
     SingleByType detector) {
@@ -69,12 +69,28 @@ public class AnnotatedPath {
       : Optional.of(targets.stream().collect(merged(annoType)));
   }
 
+  /**
+   * Finds and gives all annotations of any type along the path, using the given
+   * detector, in order of encounter.
+   *
+   * @param detector annotation detector to use
+   * @return a list of the found annotations
+   */
   public List<Annotation> all(All detector) {
     return elements.stream()
       .flatMap(e -> detector.all(e).stream())
       .toList();
   }
 
+  /**
+   * Finds all annotations of any type along the path, using the given
+   * detector, and merges them together into single annotations of each found
+   * type, with attributes from annotations earlier in the path taking
+   * precedence over attributes from annotations later in the path.
+   *
+   * @param detector annotation detector to use
+   * @return a list of the merged annotations
+   */
   public List<Annotation> mergeAll(All detector) {
     Map<Class<? extends Annotation>, List<Annotation>> byAnnoType =
       elements.stream()
@@ -89,7 +105,16 @@ public class AnnotatedPath {
       }).toList();
   }
 
-  public <A extends Annotation> List<A> findAll(
+  /**
+   * Finds and gives all the annotations of the given type along the path,
+   * using the given detector, in order of encounter.
+   *
+   * @param <A> represents the desired annotation type
+   * @param annoType class representing type of annotation to find
+   * @param detector annotation detector to use
+   * @return a list of the found annotations
+   */
+  public <A extends Annotation> List<A> find(
     Class<A> annoType,
     AllByType detector) {
 
@@ -103,252 +128,33 @@ public class AnnotatedPath {
     return new AnnotationMerger<>(annoType);
   }
 
-  public static class Builder {
-    public static class Parameter {
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-      private final java.lang.reflect.Parameter p;
-
-      Parameter(java.lang.reflect.Parameter p) {
-        this.p = p;
-        elements.add(p);
-      }
-
-      public Constructor toDeclaringConstructor() {
-        Executable exec = p.getDeclaringExecutable();
-        if (!(exec instanceof java.lang.reflect.Constructor<?> c)) {
-          throw new IllegalStateException(
-            "Parameter " + p + " not declared on a constructor");
-        }
-        return new Constructor(c, elements);
-      }
-
-      public Method toDeclaringMethod() {
-        Executable exec = p.getDeclaringExecutable();
-        if (!(exec instanceof java.lang.reflect.Method m)) {
-          throw new IllegalStateException(
-            "Parameter " + p + " not declared on a method");
-        }
-        return new Method(m, elements);
-      }
+  /**
+   * Abstract class for annotated path segment builders. Builders may structure
+   * themselves however they wish; but ultimately must provide a sequence of
+   * annotated elements from which another segment may continue the path.
+   */
+  public static abstract class SegmentBuilder {
+    /**
+     * Make a new path builder.
+     */
+    protected SegmentBuilder() {
     }
 
-    public static class Constructor {
-      private final java.lang.reflect.Constructor<?> c;
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Constructor(java.lang.reflect.Constructor<?> c) {
-        this(c, Collections.emptyList());
-      }
-
-      Constructor(
-        java.lang.reflect.Constructor<?> c,
-        List<AnnotatedElement> history) {
-
-        this.c = c;
-        elements.addAll(history);
-        elements.add(c);
-      }
-
-      public Class toDeclaringClass() {
-        return new Class(c.getDeclaringClass(), elements);
-      }
-
-      public AnnotatedPath build() {
-        return new AnnotatedPath(elements);
-      }
+    /**
+     * Complete an in-progress path.
+     *
+     * @return a complete path
+     */
+    public final AnnotatedPath build() {
+      return new AnnotatedPath(predecessors());
     }
 
-    public static class Method {
-      private final java.lang.reflect.Method m;
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Method(java.lang.reflect.Method m) {
-        this(m, Collections.emptyList());
-      }
-
-      Method(
-        java.lang.reflect.Method m,
-        List<AnnotatedElement> history) {
-
-        this.m = m;
-        elements.addAll(history);
-        elements.add(m);
-      }
-
-      public Class toDeclaringClass() {
-        return new Class(m.getDeclaringClass(), elements);
-      }
-
-      public Methods toDepthOverridden() {
-        return new Methods(depthFirstOverrideHierarchyOf(m), elements);
-      }
-
-      public Methods toBreadthOverridden() {
-        return new Methods(breadthFirstOverrideHierarchyOf(m), elements);
-      }
-
-      public AnnotatedPath build() {
-        return new AnnotatedPath(elements);
-      }
-    }
-
-    public static class Field {
-      private final java.lang.reflect.Field f;
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Field(java.lang.reflect.Field f) {
-        this(f, Collections.emptyList());
-      }
-
-      Field(
-        java.lang.reflect.Field f,
-        List<AnnotatedElement> history) {
-
-        this.f = f;
-        elements.addAll(history);
-        elements.add(f);
-      }
-
-      public Class toDeclaringClass() {
-        return new Class(f.getDeclaringClass(), elements);
-      }
-
-      public AnnotatedPath build() {
-        return new AnnotatedPath(elements);
-      }
-    }
-
-    public static class Class {
-      private final java.lang.Class<?> k;
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Class(java.lang.Class<?> k) {
-        this(k, Collections.emptyList());
-      }
-
-      Class(
-        java.lang.Class<?> k,
-        List<AnnotatedElement> history) {
-
-        this.k = k;
-        elements.addAll(history);
-        elements.add(k);
-      }
-
-      public AnnotatedPath build() {
-        return new AnnotatedPath(elements);
-      }
-
-      public Package toDeclaringPackage() {
-        return new Package(k.getPackage(), elements);
-      }
-
-      public Module toDeclaringModule() {
-        return new Module(k.getModule(), elements);
-      }
-
-      public Method toEnclosingMethod() {
-        java.lang.reflect.Method enclosing = k.getEnclosingMethod();
-        if (enclosing == null) {
-          throw new IllegalStateException(k + " has no enclosing method");
-        }
-
-        return new Method(enclosing, elements);
-      }
-
-      public Constructor toEnclosingConstructor() {
-        java.lang.reflect.Constructor<?> enclosing =
-          k.getEnclosingConstructor();
-        if (enclosing == null) {
-          throw new IllegalStateException(k + " has no enclosing constructor");
-        }
-
-        return new Constructor(enclosing, elements);
-      }
-
-      public Classes toClassEnclosure() {
-        List<java.lang.Class<?>> enclosure = new ArrayList<>();
-        for (java.lang.Class<?> c = k.getEnclosingClass();
-          c != null;
-          c = c.getEnclosingClass()) {
-
-          enclosure.add(c);
-        }
-
-        return new Classes(enclosure, elements);
-      }
-
-      public Classes toDepthHierarchy() {
-        return new Classes(depthFirstHierarchyOf(k), elements);
-      }
-
-      public Classes toBreadthHierarchy() {
-        return new Classes(breadthFirstHierarchyOf(k), elements);
-      }
-    }
-
-    public static class Methods {
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Methods(
-        List<java.lang.reflect.Method> methods,
-        List<AnnotatedElement> history) {
-
-        elements.addAll(history);
-        elements.addAll(methods);
-      }
-
-      public AnnotatedPath build() {
-        return new AnnotatedPath(elements);
-      }
-    }
-
-    public static class Classes {
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Classes(
-        List<java.lang.Class<?>> classes,
-        List<AnnotatedElement> history) {
-
-          elements.addAll(history);
-        elements.addAll(classes);
-      }
-
-      public AnnotatedPath build() {
-        return new AnnotatedPath(elements);
-      }
-    }
-
-    public static class Package {
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Package(
-        java.lang.Package p,
-        List<AnnotatedElement> history) {
-
-        elements.addAll(history);
-        elements.add(p);
-      }
-
-      public AnnotatedPath build() {
-        return new AnnotatedPath(elements);
-      }
-    }
-
-    public static class Module {
-      private final List<AnnotatedElement> elements = new ArrayList<>();
-
-      Module(
-        java.lang.Module m,
-        List<AnnotatedElement> history) {
-
-        elements.addAll(history);
-        elements.add(m);
-      }
-
-      public AnnotatedPath build() {
-        return new AnnotatedPath(elements);
-      }
-    }
+    /**
+     * Gives a sequence of "predecessor" annotated elements for an annotated
+     * path builder as it continues a path.
+     *
+     * @return predecessor elements in sequence
+     */
+    protected abstract List<AnnotatedElement> predecessors();
   }
 }

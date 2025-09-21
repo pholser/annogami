@@ -1,6 +1,6 @@
 package com.pholser.annogami.paths;
 
-import com.pholser.annogami.AnnotatedPath;
+import com.pholser.annogami.AnnotatedPathBuilder;
 import com.pholser.annogami.fixtures.A;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.GrandOuter;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.GrandOuter.Middle2;
@@ -25,7 +25,7 @@ class EnclosingTypesPathTest {
     Method m = inner.getClass().getMethod("m");
 
     A merged =
-      AnnotatedPath.fromMethod(m)
+      AnnotatedPathBuilder.fromMethod(m)
         .toDeclaringClass()
         .toClassEnclosure()
         .build()
@@ -41,7 +41,7 @@ class EnclosingTypesPathTest {
     Method m = leaf.getClass().getMethod("m");
 
     A merged =
-      AnnotatedPath.fromMethod(m)
+      AnnotatedPathBuilder.fromMethod(m)
         .toDeclaringClass()
         .toClassEnclosure()
         .build()
@@ -58,7 +58,7 @@ class EnclosingTypesPathTest {
     Method m = leaf.getClass().getMethod("m");
 
     A merged =
-      AnnotatedPath.fromMethod(m)
+      AnnotatedPathBuilder.fromMethod(m)
         .toDeclaringClass()
         .toClassEnclosure()
         .build()

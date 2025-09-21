@@ -1,6 +1,6 @@
 package com.pholser.annogami.paths;
 
-import com.pholser.annogami.AnnotatedPath;
+import com.pholser.annogami.AnnotatedPathBuilder;
 import com.pholser.annogami.fixtures.A;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.ImplementsAandB;
 import com.pholser.annogami.fixtures.InterfacesAndEnclosures.ImplementsI1ThenI2;
@@ -20,7 +20,7 @@ class InterfacesPathTest {
     Method m = ImplementsAandB.class.getMethod("m");
 
     A merged =
-      AnnotatedPath.fromMethod(m)
+      AnnotatedPathBuilder.fromMethod(m)
         .toDeclaringClass()
         .toBreadthHierarchy()
         .build()
@@ -36,7 +36,7 @@ class InterfacesPathTest {
     Method m = OverridesMethodButUnannotated.class.getMethod("m");
 
     A merged =
-      AnnotatedPath.fromMethod(m)
+      AnnotatedPathBuilder.fromMethod(m)
         .toBreadthOverridden()
         .build()
         .merge(A.class, META_DIRECT)
@@ -47,7 +47,7 @@ class InterfacesPathTest {
 
   @Test void multipleInterfacesBreadthFirstPrefersFirstDeclared() {
     A merged =
-      AnnotatedPath.fromClass(ImplementsI1ThenI2.class)
+      AnnotatedPathBuilder.fromClass(ImplementsI1ThenI2.class)
         .toBreadthHierarchy()
         .build()
         .merge(A.class, META_DIRECT)

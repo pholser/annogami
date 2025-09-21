@@ -14,7 +14,7 @@ class AnnotatedPathFromClassToDeclaringPackageTest {
 
   @BeforeEach void setUp() {
     path =
-      AnnotatedPath.fromClass(AnnotationsGalore.class)
+      AnnotatedPathBuilder.fromClass(AnnotationsGalore.class)
         .toDeclaringPackage()
         .build();
   }

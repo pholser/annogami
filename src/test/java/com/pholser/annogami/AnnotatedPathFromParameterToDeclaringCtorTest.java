@@ -15,7 +15,7 @@ class AnnotatedPathFromParameterToDeclaringCtorTest {
 
   @BeforeEach void setUp() throws Exception {
     path =
-      AnnotatedPath.fromParameter(
+      AnnotatedPathBuilder.fromParameter(
         AnnotationsGalore.class
           .getConstructor(int.class)
           .getParameters()[0])

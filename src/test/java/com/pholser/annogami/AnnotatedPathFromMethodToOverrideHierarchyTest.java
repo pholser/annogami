@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AnnotatedPathFromMethodToOverrideHierarchyTest {
   @Test void findFirstDepthFirstDirect() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromMethod(
+      AnnotatedPathBuilder.fromMethod(
         AnnotationsGalore.class.getDeclaredMethod(
           "self",
           int.class,
@@ -35,7 +35,7 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
 
   @Test void findAllDepthFirstDirectOrIndirect() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromMethod(
+      AnnotatedPathBuilder.fromMethod(
         AnnotationsGalore.class.getDeclaredMethod(
           "self",
           int.class,
@@ -44,7 +44,7 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
         .build();
 
     List<Atom> atoms =
-      path.findAll(Atom.class, DIRECT_OR_INDIRECT);
+      path.find(Atom.class, DIRECT_OR_INDIRECT);
 
     assertEquals(
       List.of(
@@ -62,7 +62,7 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
 
   @Test void findAllBreadthFirstDirectOrIndirect() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromMethod(
+      AnnotatedPathBuilder.fromMethod(
         AnnotationsGalore.class.getDeclaredMethod(
           "self",
           int.class,
@@ -71,7 +71,7 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
         .build();
 
     List<Atom> atoms =
-      path.findAll(Atom.class, DIRECT_OR_INDIRECT);
+      path.find(Atom.class, DIRECT_OR_INDIRECT);
 
     assertEquals(
       List.of(
@@ -89,7 +89,7 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
 
   @Test void findFirstOnEmptyMethodOverride() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromMethod(
+      AnnotatedPathBuilder.fromMethod(
         AnnotationsGalore.class.getDeclaredMethod("foo", int.class))
           .toDepthOverridden()
           .build();
@@ -100,12 +100,12 @@ class AnnotatedPathFromMethodToOverrideHierarchyTest {
 
   @Test void findAllOnEmptyMethodOverride() throws Exception {
     AnnotatedPath path =
-      AnnotatedPath.fromMethod(
+      AnnotatedPathBuilder.fromMethod(
         AnnotationsGalore.class.getDeclaredMethod("foo", int.class))
           .toDepthOverridden()
           .build();
 
-    List<Unit> units = path.findAll(Unit.class, DIRECT_OR_INDIRECT);
+    List<Unit> units = path.find(Unit.class, DIRECT_OR_INDIRECT);
 
     assertEquals(Collections.emptyList(), units);
   }
