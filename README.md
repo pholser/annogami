@@ -56,7 +56,7 @@ element is directly present on the element.)
 on a program `element`:
 
 ```java
-    List<A> as = Presences.DIRECT_OR_INDIRECT.findAll(A.class, element);
+    List<A> as = Presences.DIRECT_OR_INDIRECT.find(A.class, element);
 ```
 
 * Find a single annotation of type `A` *present* on a program
@@ -75,7 +75,7 @@ on a program `element`:
 * Find all the annotations of type `A` *associated* on a program `element`:
 
 ```java
-    List<A> as = Presences.ASSOCIATED.findAll(A.class, element);
+    List<A> as = Presences.ASSOCIATED.find(A.class, element);
 ```
 
 * Find the first annotation of type `A` either *directly present*
@@ -100,7 +100,7 @@ on a program `element`, or declared recursively on any of the annotations
 that are *directly or indirectly present* on `element`:
 
 ```java
-    List<A> as = Presences.META_DIRECT_OR_INDIRECT.findAll(A.class, element);
+    List<A> as = Presences.META_DIRECT_OR_INDIRECT.find(A.class, element);
 ```
 
 * Find a single annotation of type `A` *present* on a program
@@ -123,7 +123,7 @@ or declared recursively on any of the annotations that are *associated*
 on `element`:
 
 ```java
-    List<A> as = Presences.META_ASSOCIATED.findAll(A.class, element);
+    List<A> as = Presences.META_ASSOCIATED.find(A.class, element);
 ```
 
 * Give an annotation of type `A` *meta-present* along a path of program
