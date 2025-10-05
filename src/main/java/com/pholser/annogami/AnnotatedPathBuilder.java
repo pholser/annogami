@@ -17,6 +17,7 @@ import static com.pholser.annogami.ClassHierarchies.depthFirstOverrideHierarchyO
 public sealed class AnnotatedPathBuilder
   extends AnnotatedPath.SegmentBuilder
   permits AnnotatedPathBuilder.Parameter,
+    AnnotatedPathBuilder.RecordComponent,
     AnnotatedPathBuilder.Field,
     AnnotatedPathBuilder.Constructor,
     AnnotatedPathBuilder.Method,
@@ -82,6 +83,19 @@ public sealed class AnnotatedPathBuilder
    */
   public static Field fromField(java.lang.reflect.Field f) {
     return new Field(f);
+  }
+
+  /**
+   * Initiates an annotated path at the given record component.
+   *
+   * @param r a record component
+   * @return a builder object that can extend the path from the record
+   * component
+   */
+  public static RecordComponent fromRecordComponent(
+    java.lang.reflect.RecordComponent r) {
+
+    return new RecordComponent(r);
   }
 
   /**
@@ -237,16 +251,8 @@ public sealed class AnnotatedPathBuilder
     private final java.lang.reflect.Field f;
 
     Field(java.lang.reflect.Field f) {
-      this(f, Collections.emptyList());
-    }
-
-    Field(
-      java.lang.reflect.Field f,
-      List<AnnotatedElement> predecessors) {
-
       this.f = f;
-      this.predecessors.addAll(predecessors);
-      this.predecessors.add(f);
+      predecessors.add(f);
     }
 
     /**
@@ -257,6 +263,31 @@ public sealed class AnnotatedPathBuilder
      */
     public Class toDeclaringClass() {
       return new Class(f.getDeclaringClass(), predecessors);
+    }
+  }
+
+  /**
+   * Builder segment that can extend the in-progress path from a given record
+   * component.
+   */
+  public static final class RecordComponent
+    extends AnnotatedPathBuilder {
+
+    private final java.lang.reflect.RecordComponent r;
+
+    RecordComponent(java.lang.reflect.RecordComponent r) {
+      this.r = r;
+      predecessors.add(r);
+    }
+
+    /**
+     * Extends the in-progress path from this segment's record component to
+     * that record component's declaring class.
+     *
+     * @return builder segment focused at that class
+     */
+    public Class toDeclaringRecord() {
+      return new Class(r.getDeclaringRecord(), predecessors);
     }
   }
 
