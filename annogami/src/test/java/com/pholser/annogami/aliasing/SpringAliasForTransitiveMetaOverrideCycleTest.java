@@ -17,18 +17,15 @@ class SpringAliasForTransitiveMetaOverrideCycleTest {
   }
 
   @Retention(RUNTIME) @Base @interface Level1 {
-    // Level1.x is intended to alias into Base.value, but Level1 also has a cycle.
     @AliasFor(annotation = Base.class, attribute = "value")
     String x() default "";
 
-    // Cycle: x <-> y (both within Level1)
-    @AliasFor("y") String xAlias() default "";
-
-    @AliasFor("xAlias") String y() default "";
+    // Cross-annotation cycle: Level1.xAlias <-> Composed.z
+    @AliasFor(annotation = Composed.class, attribute = "z")
+    String xAlias() default "";
   }
 
   @Retention(RUNTIME) @Level1 @interface Composed {
-    // Composed.z aliases into Level1.xAlias (which participates in the cycle)
     @AliasFor(annotation = Level1.class, attribute = "xAlias")
     String z() default "";
   }

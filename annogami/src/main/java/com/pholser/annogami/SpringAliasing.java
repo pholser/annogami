@@ -120,6 +120,10 @@ final class SpringAliasing implements Aliasing {
               targetAnnoRaw,
               metaContext);
 
+          if (targetAnno == declaring) {
+            continue;
+          }
+
           Node from = new Node(declaring, m.getName());
           Node to = new Node(targetAnno, targetAttr);
 
