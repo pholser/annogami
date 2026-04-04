@@ -35,4 +35,12 @@ public final class Present implements Single, All {
   public List<Annotation> all(AnnotatedElement target) {
     return List.of(Sources.PRESENT.all(target));
   }
+
+  @Override
+  public List<Annotation> all(AnnotatedElement target, Aliasing aliasing) {
+    Objects.requireNonNull(target, "target");
+    Objects.requireNonNull(aliasing, "aliasing");
+    return SegmentResolver.withSeedSource(Sources.PRESENT)
+      .all(target, all(target), aliasing);
+  }
 }
