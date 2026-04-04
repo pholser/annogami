@@ -66,7 +66,7 @@ final class SpringAliasing implements Aliasing {
 
           if (!Objects.deepEquals(actual, def)) {
             Node start = new Node(metaType, attr.getName());
-            Node terminal = followToTerminal(edges, start);
+            Node terminal = followToTerminal(edges, start, annoType);
 
             if (terminal.annoType() == annoType) {
               mergeFirstWins(
@@ -207,7 +207,11 @@ final class SpringAliasing implements Aliasing {
     }
   }
 
-  private static Node followToTerminal(Map<Node, Node> edges, Node start) {
+  private static Node followToTerminal(
+    Map<Node, Node> edges,
+    Node start,
+    Class<? extends Annotation> targetAnno) {
+
     Node current = start;
     Set<Node> seen = new HashSet<>();
 
@@ -220,6 +224,9 @@ final class SpringAliasing implements Aliasing {
       Node next = edges.get(current);
       if (next == null) {
         return current;
+      }
+      if (next.annoType() == targetAnno) {
+        return next;
       }
 
       current = next;
