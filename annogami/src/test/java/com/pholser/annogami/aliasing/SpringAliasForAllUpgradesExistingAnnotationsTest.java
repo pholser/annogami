@@ -30,6 +30,15 @@ class SpringAliasForAllUpgradesExistingAnnotationsTest {
   @Test void allWithAliasingUpgradesReturnedAnnotationInstance() {
     List<Annotation> all = META_DIRECT.all(Subject.class, Aliasing.spring());
 
+    Composed composed =
+      all.stream()
+        .filter(a -> a.annotationType() == Composed.class)
+        .map(Composed.class::cast)
+        .findFirst()
+        .orElseGet(Assertions::fail);
+
+    assertThat(composed.path()).isEqualTo("p");
+
     Base base =
       all.stream()
         .filter(a -> a.annotationType() == Base.class)

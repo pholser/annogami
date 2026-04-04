@@ -27,6 +27,15 @@ class SpringAliasForAllMetaOverrideDefaultsToValueTest {
   @Test void aliasForAnnotationOnlyDefaultsToTargetValue() {
     List<Annotation> all = META_DIRECT.all(Target.class, Aliasing.spring());
 
+    Composed composed =
+      all.stream()
+        .filter(a -> a.annotationType() == Composed.class)
+        .map(Composed.class::cast)
+        .findFirst()
+        .orElseGet(Assertions::fail);
+
+    assertThat(composed.name()).isEqualTo("hello");
+
     Base base =
       all.stream()
         .filter(a -> a.annotationType() == Base.class)

@@ -70,6 +70,16 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
   @Test void metaViewAlsoSeesTheResolvedValue() {
     List<Annotation> all = META_DIRECT.all(TargetNameOnly.class, Aliasing.spring());
 
+    Composed c =
+      all.stream()
+        .filter(a -> a.annotationType() == Composed.class)
+        .map(Composed.class::cast)
+        .findFirst()
+        .orElseGet(Assertions::fail);
+
+    assertThat(c.name()).isEqualTo("hello");
+    assertThat(c.value()).isEqualTo("hello");
+
     Base b =
       all.stream()
         .filter(a -> a.annotationType() == Base.class)
