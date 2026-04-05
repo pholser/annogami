@@ -15,6 +15,7 @@ public sealed interface Single
     AnnotatedElement target,
     Aliasing aliasing) {
 
-    return SegmentResolver.defaults().findFirst(annoType, target, this, aliasing);
+    return SegmentResolver.defaults()
+      .findFirst(annoType, target, this, aliasing);
   }
 }

@@ -29,7 +29,8 @@ class SpringAliasForAllByTypeMetaOverrideNonValueAttributeTest {
 
   @Test void metaAliasForNonValueAttributeIsApplied() {
     List<Base> found =
-      META_DIRECT_OR_INDIRECT.find(Base.class, Subject.class, Aliasing.spring());
+      META_DIRECT_OR_INDIRECT.find(
+        Base.class, Subject.class, Aliasing.spring());
 
     Base base = found.stream().findFirst().orElseGet(Assertions::fail);
 

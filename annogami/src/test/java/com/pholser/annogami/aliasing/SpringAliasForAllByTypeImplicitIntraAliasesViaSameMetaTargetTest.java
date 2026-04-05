@@ -37,7 +37,8 @@ class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
     List<Composed> found =
-      DIRECT_OR_INDIRECT.find(Composed.class, TargetNameOnly.class, Aliasing.spring());
+      DIRECT_OR_INDIRECT.find(
+        Composed.class, TargetNameOnly.class, Aliasing.spring());
 
     Composed c = found.stream().findFirst().orElseGet(Assertions::fail);
 
@@ -47,7 +48,8 @@ class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
     List<Composed> found =
-      DIRECT_OR_INDIRECT.find(Composed.class, TargetValueOnly.class, Aliasing.spring());
+      DIRECT_OR_INDIRECT.find(
+        Composed.class, TargetValueOnly.class, Aliasing.spring());
 
     Composed c = found.stream().findFirst().orElseGet(Assertions::fail);
 
@@ -57,13 +59,15 @@ class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test void conflictingExplicitValuesOnImplicitAliasesFailFast() {
     assertThatThrownBy(
-      () -> DIRECT_OR_INDIRECT.find(Composed.class, TargetConflict.class, Aliasing.spring()))
+      () -> DIRECT_OR_INDIRECT.find(
+        Composed.class, TargetConflict.class, Aliasing.spring()))
       .isInstanceOf(IllegalStateException.class);
   }
 
   @Test void metaViewAlsoSeesTheResolvedValue() {
     List<Base> found =
-      META_DIRECT_OR_INDIRECT.find(Base.class, TargetNameOnly.class, Aliasing.spring());
+      META_DIRECT_OR_INDIRECT.find(
+        Base.class, TargetNameOnly.class, Aliasing.spring());
 
     Base b = found.stream().findFirst().orElseGet(Assertions::fail);
 

@@ -102,7 +102,8 @@ final class ClassHierarchies {
   }
 
   /*
-   * see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.8.1">JLS</a>
+   * see JLS 8.4.8.1:
+   * https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.8.1
    */
   private static boolean overrides(Method m, Method sigMatch) {
     if (m.equals(sigMatch)) {

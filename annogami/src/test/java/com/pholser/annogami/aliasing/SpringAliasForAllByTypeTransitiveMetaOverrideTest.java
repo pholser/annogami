@@ -33,14 +33,17 @@ class SpringAliasForAllByTypeTransitiveMetaOverrideTest {
 
   @Test void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
     List<Level1> level1Found =
-      META_DIRECT_OR_INDIRECT.find(Level1.class, Subject.class, Aliasing.spring());
+      META_DIRECT_OR_INDIRECT.find(
+        Level1.class, Subject.class, Aliasing.spring());
 
-    Level1 level1 = level1Found.stream().findFirst().orElseGet(Assertions::fail);
+    Level1 level1 =
+      level1Found.stream().findFirst().orElseGet(Assertions::fail);
 
     assertThat(level1.x()).isEqualTo("hello");
 
     List<Base> baseFound =
-      META_DIRECT_OR_INDIRECT.find(Base.class, Subject.class, Aliasing.spring());
+      META_DIRECT_OR_INDIRECT.find(
+        Base.class, Subject.class, Aliasing.spring());
 
     Base base = baseFound.stream().findFirst().orElseGet(Assertions::fail);
 

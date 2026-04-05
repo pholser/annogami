@@ -7,7 +7,8 @@ import java.util.Map;
 final class SynthesizedAnnotations {
   private SynthesizedAnnotations() {}
 
-  static <A extends Annotation> A of(Class<A> annoType, Map<String, Object> overrides) {
+  static <A extends Annotation> A of(
+    Class<A> annoType, Map<String, Object> overrides) {
     return annoType.cast(Proxy.newProxyInstance(
       annoType.getClassLoader(),
       new Class<?>[] { annoType },

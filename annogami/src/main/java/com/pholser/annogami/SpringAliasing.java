@@ -174,7 +174,8 @@ final class SpringAliasing implements Aliasing {
     return matches.get(0);
   }
 
-  private static List<Class<? extends Annotation>> implicitMetaTargetsFromContext(
+  private static List<Class<? extends Annotation>>
+    implicitMetaTargetsFromContext(
     Class<? extends Annotation> declaring,
     String targetAttr,
     List<Annotation> metaContext) {

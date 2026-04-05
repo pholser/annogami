@@ -22,7 +22,8 @@ class SpringAliasForAllInheritedSeedTest {
   }
 
   @Retention(RUNTIME) @Target(TYPE) @Inherited @Base @interface Composed {
-    @AliasFor(annotation = Base.class, attribute = "value") String name() default "";
+    @AliasFor(annotation = Base.class, attribute = "value")
+    String name() default "";
   }
 
   @Composed(name = "hello") static class InhBase {}
@@ -30,7 +31,8 @@ class SpringAliasForAllInheritedSeedTest {
   static class InhDerived extends InhBase {}
 
   @Test void allWithAliasingUpgradesMetaAnnotationFromInheritedSeed() {
-    List<Annotation> all = META_PRESENT.all(InhDerived.class, Aliasing.spring());
+    List<Annotation> all =
+      META_PRESENT.all(InhDerived.class, Aliasing.spring());
 
     Composed composed =
       all.stream()

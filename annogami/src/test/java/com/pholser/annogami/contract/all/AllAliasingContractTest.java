@@ -33,7 +33,8 @@ abstract class AllAliasingContractTest {
   static class InhDerived extends InhBase {}
 
   @Test final void intraAliasedValuePropagatesOnDirectlyDeclaredAnnotation() {
-    List<Annotation> all = subject().all(HasDirectIntra.class, Aliasing.spring());
+    List<Annotation> all =
+      subject().all(HasDirectIntra.class, Aliasing.spring());
 
     Intra intra = all.stream()
       .filter(a -> a.annotationType() == Intra.class)

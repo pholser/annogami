@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.pholser.annogami.ClassHierarchies.breadthFirstHierarchyOf;
-import static com.pholser.annogami.ClassHierarchies.breadthFirstOverrideHierarchyOf;
-import static com.pholser.annogami.ClassHierarchies.depthFirstHierarchyOf;
-import static com.pholser.annogami.ClassHierarchies.depthFirstOverrideHierarchyOf;
+import static com.pholser.annogami.ClassHierarchies.*;
 
 /**
  * Annotated path builder; builds and retains a sequence of annotated elements.

@@ -54,6 +54,7 @@ class BreadthFirstMetaWalkerMaxDepthTest {
     assertThat(types)
       .extracting(v -> ((Class<?>) v.element()).getName())
       .contains(HasA.class.getName())
-      .doesNotContain(A.class.getName()); // depth 2 would be required to reach @A
+      // depth 2 would be required to reach @A
+      .doesNotContain(A.class.getName());
   }
 }

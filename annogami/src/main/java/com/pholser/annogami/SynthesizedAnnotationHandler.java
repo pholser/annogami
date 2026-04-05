@@ -50,7 +50,8 @@ final class SynthesizedAnnotationHandler implements InvocationHandler {
         return handleToString();
       }
 
-      throw new UnsupportedOperationException("Unsupported Object method: " + m);
+      throw new UnsupportedOperationException(
+        "Unsupported Object method: " + m);
     }
 
     return valueOf(m);

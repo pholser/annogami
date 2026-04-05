@@ -27,7 +27,8 @@ class SpringAliasForAllByTypeFindUpgradesExistingAnnotationsTest {
 
   @Test void findWithAliasingUpgradesReturnedAnnotationInstance() {
     List<Base> found =
-      META_DIRECT_OR_INDIRECT.find(Base.class, Subject.class, Aliasing.spring());
+      META_DIRECT_OR_INDIRECT.find(
+        Base.class, Subject.class, Aliasing.spring());
 
     assertThat(found).hasSize(1);
     assertThat(found.get(0).value()).isEqualTo("p");

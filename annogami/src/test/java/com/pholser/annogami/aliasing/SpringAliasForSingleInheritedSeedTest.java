@@ -20,7 +20,8 @@ class SpringAliasForSingleInheritedSeedTest {
   }
 
   @Retention(RUNTIME) @Target(TYPE) @Inherited @Base @interface Composed {
-    @AliasFor(annotation = Base.class, attribute = "value") String name() default "";
+    @AliasFor(annotation = Base.class, attribute = "value")
+    String name() default "";
   }
 
   @Composed(name = "hello") static class InhBase {}

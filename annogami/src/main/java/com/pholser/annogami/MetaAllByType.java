@@ -44,6 +44,7 @@ abstract sealed class MetaAllByType
     Objects.requireNonNull(target, "target");
     Objects.requireNonNull(aliasing, "aliasing");
 
-    return resolver.allByType(annoType, target, find(annoType, target), aliasing);
+    return resolver
+      .allByType(annoType, target, find(annoType, target), aliasing);
   }
 }

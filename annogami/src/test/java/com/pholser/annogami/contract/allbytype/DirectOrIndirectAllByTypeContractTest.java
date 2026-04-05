@@ -4,7 +4,8 @@ import com.pholser.annogami.AllByType;
 
 import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 
-final class DirectOrIndirectAllByTypeContractTest extends AllByTypeContractTest {
+final class DirectOrIndirectAllByTypeContractTest
+  extends AllByTypeContractTest {
   @Override protected AllByType subject() {
     return DIRECT_OR_INDIRECT;
   }

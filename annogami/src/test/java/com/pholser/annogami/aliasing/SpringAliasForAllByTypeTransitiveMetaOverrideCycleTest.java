@@ -35,7 +35,8 @@ class SpringAliasForAllByTypeTransitiveMetaOverrideCycleTest {
 
   @Test void cycleInAliasGraphIsDetectedAndFailsFast() {
     assertThatThrownBy(
-      () -> META_DIRECT_OR_INDIRECT.find(Base.class, Subject.class, Aliasing.spring()))
+      () -> META_DIRECT_OR_INDIRECT.find(
+        Base.class, Subject.class, Aliasing.spring()))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("cycle");
   }

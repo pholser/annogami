@@ -63,12 +63,14 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
   }
 
   @Test void conflictingExplicitValuesOnImplicitAliasesFailFast() {
-    assertThatThrownBy(() -> DIRECT.all(TargetConflict.class, Aliasing.spring()))
+    assertThatThrownBy(
+      () -> DIRECT.all(TargetConflict.class, Aliasing.spring()))
       .isInstanceOf(IllegalStateException.class);
   }
 
   @Test void metaViewAlsoSeesTheResolvedValue() {
-    List<Annotation> all = META_DIRECT.all(TargetNameOnly.class, Aliasing.spring());
+    List<Annotation> all =
+      META_DIRECT.all(TargetNameOnly.class, Aliasing.spring());
 
     Composed c =
       all.stream()

@@ -4,7 +4,8 @@ import com.pholser.annogami.AllByType;
 
 import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
 
-final class MetaDirectOrIndirectAllByTypeContractTest extends AllByTypeContractTest {
+final class MetaDirectOrIndirectAllByTypeContractTest
+  extends AllByTypeContractTest {
   @Override protected AllByType subject() {
     return META_DIRECT_OR_INDIRECT;
   }
