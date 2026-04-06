@@ -29,7 +29,9 @@ public final class AnnotatedPath {
     Class<A> annoType,
     AllByType detector) {
 
-    return List.of();
+    return elements.stream()
+      .flatMap(e -> detector.find(annoType, e).stream())
+      .toList();
   }
 
   /**
