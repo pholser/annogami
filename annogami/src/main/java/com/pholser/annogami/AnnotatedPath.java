@@ -2,7 +2,6 @@ package com.pholser.annogami;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +20,16 @@ public final class AnnotatedPath {
   }
 
   public List<Annotation> all(All detector) {
-    return Collections.emptyList();
+    return elements.stream()
+      .flatMap(e -> detector.all(e).stream())
+      .toList();
   }
 
   public <A extends Annotation> List<A> find(
     Class<A> annoType,
     AllByType detector) {
 
-    return Collections.emptyList();
+    return List.of();
   }
 
   /**
