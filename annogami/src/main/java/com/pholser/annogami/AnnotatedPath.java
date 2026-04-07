@@ -21,9 +21,25 @@ public final class AnnotatedPath {
       .findFirst();
   }
 
+  public <A extends Annotation> Optional<A> findFirst(
+    Class<A> annoType,
+    Single detector,
+    Aliasing aliasing) {
+
+    return elements.stream()
+      .flatMap(e -> detector.find(annoType, e, aliasing).stream())
+      .findFirst();
+  }
+
   public List<Annotation> all(All detector) {
     return elements.stream()
       .flatMap(e -> detector.all(e).stream())
+      .toList();
+  }
+
+  public List<Annotation> all(All detector, Aliasing aliasing) {
+    return elements.stream()
+      .flatMap(e -> detector.all(e, aliasing).stream())
       .toList();
   }
 
@@ -33,6 +49,16 @@ public final class AnnotatedPath {
 
     return elements.stream()
       .flatMap(e -> detector.find(annoType, e).stream())
+      .toList();
+  }
+
+  public <A extends Annotation> List<A> find(
+    Class<A> annoType,
+    AllByType detector,
+    Aliasing aliasing) {
+
+    return elements.stream()
+      .flatMap(e -> detector.find(annoType, e, aliasing).stream())
       .toList();
   }
 
