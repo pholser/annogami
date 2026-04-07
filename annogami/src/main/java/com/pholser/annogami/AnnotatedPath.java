@@ -16,7 +16,9 @@ public final class AnnotatedPath {
     Class<A> annoType,
     Single detector) {
 
-    return Optional.empty();
+    return elements.stream()
+      .flatMap(e -> detector.find(annoType, e).stream())
+      .findFirst();
   }
 
   public List<Annotation> all(All detector) {
