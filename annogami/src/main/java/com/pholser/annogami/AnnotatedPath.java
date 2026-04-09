@@ -2,7 +2,11 @@ package com.pholser.annogami;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public final class AnnotatedPath {
@@ -29,6 +33,54 @@ public final class AnnotatedPath {
     return elements.stream()
       .flatMap(e -> detector.find(annoType, e, aliasing).stream())
       .findFirst();
+  }
+
+  public <A extends Annotation> Optional<A> merge(
+    Class<A> annoType,
+    Single detector) {
+
+    return mergeInstances(annoType, elements.stream()
+      .flatMap(e -> detector.find(annoType, e).stream())
+      .toList());
+  }
+
+  public <A extends Annotation> Optional<A> merge(
+    Class<A> annoType,
+    Single detector,
+    Aliasing aliasing) {
+
+    return mergeInstances(annoType, elements.stream()
+      .flatMap(e -> detector.find(annoType, e, aliasing).stream())
+      .toList());
+  }
+
+  private <A extends Annotation> Optional<A> mergeInstances(
+    Class<A> annoType,
+    List<A> instances) {
+
+    if (instances.isEmpty()) {
+      return Optional.empty();
+    }
+
+    Map<String, Object> overrides = new LinkedHashMap<>();
+
+    for (Method attr : annoType.getDeclaredMethods()) {
+      Object defaultVal = attr.getDefaultValue();
+      for (A instance : instances) {
+        try {
+          Object val = attr.invoke(instance);
+          if (!Objects.deepEquals(val, defaultVal)) {
+            overrides.put(attr.getName(), val);
+            break;
+          }
+        } catch (ReflectiveOperationException e) {
+          throw new IllegalStateException(
+            "Cannot read attribute " + attr, e);
+        }
+      }
+    }
+
+    return Optional.of(SynthesizedAnnotations.of(annoType, overrides));
   }
 
   public List<Annotation> all(All detector) {
