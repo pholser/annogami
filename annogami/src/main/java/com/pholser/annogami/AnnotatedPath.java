@@ -65,6 +65,7 @@ public final class AnnotatedPath {
     Map<String, Object> overrides = new LinkedHashMap<>();
 
     for (Method attr : annoType.getDeclaredMethods()) {
+      attr.setAccessible(true);
       Object defaultVal = attr.getDefaultValue();
       for (A instance : instances) {
         try {
