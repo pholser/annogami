@@ -9,7 +9,8 @@ import static com.pholser.annogami.Presences.DIRECT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnPackageTest {
-  @Test void findsDirectlyPresent() {
+  @Test
+  void findsDirectlyPresent() {
     Package pkg =
       getClass().getClassLoader().getDefinedPackage(
         "com.pholser.annogami.pkg");
@@ -19,7 +20,8 @@ class DirectPresenceOnPackageTest {
     assertThat(a.value()).isEqualTo(42);
   }
 
-  @Test void missesNotDeclared() {
+  @Test
+  void missesNotDeclared() {
     DIRECT.find(A.class, getClass().getPackage())
       .ifPresent(AnnotationAssertions::falseFind);
   }

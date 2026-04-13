@@ -9,16 +9,16 @@ two differ in behavior.
 
 ## Quick reference: choosing a presence
 
-| Constant | Interface(s) | Scans | Meta-chain |
-|---|---|---|---|
-| `DIRECT` | `Single`, `All` | declared only | no |
-| `PRESENT` | `Single`, `All` | declared + `@Inherited` | no |
-| `META_DIRECT` | `Single`, `All` | declared only | yes |
-| `META_PRESENT` | `Single`, `All` | declared + `@Inherited` | yes |
-| `DIRECT_OR_INDIRECT` | `AllByType` | declared only | yes |
-| `ASSOCIATED` | `AllByType` | declared + `@Inherited` | yes |
-| `META_DIRECT_OR_INDIRECT` | `AllByType` | declared only | yes |
-| `META_ASSOCIATED` | `AllByType` | declared + `@Inherited` | yes |
+| Constant                  | Interface(s)    | Scans                   | Meta-chain |
+|---------------------------|-----------------|-------------------------|------------|
+| `DIRECT`                  | `Single`, `All` | declared only           | no         |
+| `PRESENT`                 | `Single`, `All` | declared + `@Inherited` | no         |
+| `META_DIRECT`             | `Single`, `All` | declared only           | yes        |
+| `META_PRESENT`            | `Single`, `All` | declared + `@Inherited` | yes        |
+| `DIRECT_OR_INDIRECT`      | `AllByType`     | declared only           | yes        |
+| `ASSOCIATED`              | `AllByType`     | declared + `@Inherited` | yes        |
+| `META_DIRECT_OR_INDIRECT` | `AllByType`     | declared only           | yes        |
+| `META_ASSOCIATED`         | `AllByType`     | declared + `@Inherited` | yes        |
 
 `Single` returns `Optional<A>`; `All` returns `List<Annotation>`; `AllByType`
 returns `List<A>`.
@@ -33,12 +33,14 @@ returns `List<A>`.
 meta-annotated with `@Component`.
 
 **Spring (`AnnotatedElementUtils`):**
+
 ```java
 boolean isComponent =
   AnnotatedElementUtils.hasAnnotation(MyService.class, Component.class);
 ```
 
 **Spring (`MergedAnnotations`, 5.2+):**
+
 ```java
 boolean isComponent =
   MergedAnnotations.from(MyService.class, SearchStrategy.TYPE_HIERARCHY)
@@ -46,6 +48,7 @@ boolean isComponent =
 ```
 
 **annogami:**
+
 ```java
 // declared annotations only — no superclass inheritance
 boolean isComponent =
@@ -71,6 +74,7 @@ time.
 via `@AliasFor`.
 
 **Spring (`AnnotatedElementUtils`):**
+
 ```java
 // returns null if not found; synthesized proxy if found
 RequestMapping rm =
@@ -78,6 +82,7 @@ RequestMapping rm =
 ```
 
 **Spring (`MergedAnnotations`, 5.2+):**
+
 ```java
 // throws NoSuchElementException if not present
 RequestMapping rm =
@@ -89,12 +94,15 @@ RequestMapping rm =
 MergedAnnotation<RequestMapping> merged =
   MergedAnnotations.from(method)
     .get(RequestMapping.class);
-if (merged.isPresent()) {
-  RequestMapping rm = merged.synthesize();
+if(merged.
+
+isPresent()){
+RequestMapping rm = merged.synthesize();
 }
 ```
 
 **annogami:**
+
 ```java
 // META_DIRECT is Single — Optional, never null
 Optional<RequestMapping> rm =
@@ -116,6 +124,7 @@ synthesizes eagerly when `find` is called.
 ### Method-level `@Transactional` wins, class fills in defaults
 
 **Spring (`AnnotatedElementUtils`):**
+
 ```java
 // finds nearest whole @Transactional: method first,
 // then declaring class, then hierarchy — returns it as-is,
@@ -125,6 +134,7 @@ Transactional tx =
 ```
 
 **annogami:**
+
 ```java
 Method method = OrderService.class.getMethod("placeOrder");
 
@@ -157,6 +167,7 @@ rather than implicit in a search strategy.
 ### `@Transactional` through the type hierarchy
 
 **Spring (`AnnotatedElementUtils`):**
+
 ```java
 // searches method, then declaring class, then hierarchy;
 // returns the first (nearest) match
@@ -166,6 +177,7 @@ Transactional tx =
 ```
 
 **annogami:**
+
 ```java
 // returns all matches in discovery order
 List<Transactional> txList =
@@ -183,6 +195,7 @@ Use `META_ASSOCIATED.find(...).stream().findFirst()` to replicate Spring's
 ### All annotations on an element, meta-chain included
 
 **Spring (`MergedAnnotations`, 5.2+):**
+
 ```java
 List<Annotation> all =
   MergedAnnotations
@@ -194,6 +207,7 @@ List<Annotation> all =
 ```
 
 **annogami:**
+
 ```java
 // declared annotations only, meta-chain traversed
 List<Annotation> all =
@@ -215,6 +229,7 @@ JUnit's `@ExtendWith` is commonly buried inside composed annotations.
 `@ExtendWith(SpringExtension.class)`.
 
 **JUnit 5 (`AnnotationSupport`):**
+
 ```java
 // finds a single @ExtendWith, following composed annotations
 Optional<ExtendWith> ext =
@@ -226,6 +241,7 @@ List<ExtendWith> exts =
 ```
 
 **annogami:**
+
 ```java
 // declared annotations on the class only
 List<ExtendWith> exts =
@@ -246,14 +262,18 @@ but via a different mechanism.
 ### Composed test annotations
 
 ```java
-@Target(METHOD) @Retention(RUNTIME)
+
+@Target(METHOD)
+@Retention(RUNTIME)
 @Test
 @Tag("fast")
 @Tag("unit")
-public @interface FastUnitTest {}
+public @interface FastUnitTest {
+}
 ```
 
 **JUnit 5 (`AnnotationSupport`):**
+
 ```java
 // follows composed annotations for presence check
 boolean isTest =
@@ -265,6 +285,7 @@ List<Tag> tags =
 ```
 
 **annogami:**
+
 ```java
 boolean isTest =
   !META_DIRECT_OR_INDIRECT.find(Test.class, method).isEmpty();
@@ -286,6 +307,7 @@ JUnit 5 discovers `@BeforeEach` on superclass methods automatically during test
 execution, but its public API operates at the class level.
 
 **JUnit 5 (`AnnotationSupport`):**
+
 ```java
 // finds all @BeforeEach methods across the class hierarchy;
 // no direct API to query a specific method's override chain
@@ -297,6 +319,7 @@ List<Method> setupMethods =
 ```
 
 **annogami:**
+
 ```java
 Method method = MyTest.class.getMethod("setUp");
 
@@ -327,6 +350,7 @@ Spring's utilities operate on a single element at a time; replicating this
 requires manual iteration over the override chain.
 
 **annogami:**
+
 ```java
 Method method = MyController.class.getMethod("handleRequest");
 

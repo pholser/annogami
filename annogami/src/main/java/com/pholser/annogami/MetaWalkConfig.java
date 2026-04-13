@@ -17,6 +17,7 @@ record MetaWalkConfig(
     Objects.requireNonNull(metaSource);
     Objects.requireNonNull(shouldDescendInto);
     Objects.requireNonNull(shouldIncludeInResults);
+
     if (maxDepth < 0) {
       throw new IllegalArgumentException(
         "maxDepth must be >= 0, was " + maxDepth);

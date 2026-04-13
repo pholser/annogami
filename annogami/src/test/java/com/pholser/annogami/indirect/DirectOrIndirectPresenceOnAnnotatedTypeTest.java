@@ -17,28 +17,39 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectOrIndirectPresenceOnAnnotatedTypeTest {
-  @Retention(RUNTIME) @Target(TYPE_USE) @interface A {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @Target(TYPE_USE) @interface Bs {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Target(TYPE_USE) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
   static class Holder {
     int @A(1) [] array;
     int @B(2) @B(3) [] repeatArray;
-    @A(4) List<String> param;
-    @B(5) @B(6) List<String> repeatParam;
+    @A(4)
+    List<String> param;
+    @B(5)
+    @B(6)
+    List<String> repeatParam;
     List<@A(7) String> annotatedArg;
     List<String> plain;
   }
 
-  @Test void findsOnAnnotatedArrayType() throws Exception {
+  @Test
+  void findsOnAnnotatedArrayType() throws Exception {
     List<A> as =
       DIRECT_OR_INDIRECT.find(
         A.class,
@@ -49,7 +60,8 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
     assertThat(a.value()).isEqualTo(1);
   }
 
-  @Test void findsRepeatableOnAnnotatedArrayType() throws Exception {
+  @Test
+  void findsRepeatableOnAnnotatedArrayType() throws Exception {
     List<B> bs =
       DIRECT_OR_INDIRECT.find(
         B.class,
@@ -60,7 +72,8 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
       .containsExactlyInAnyOrder(2, 3);
   }
 
-  @Test void findsContainerOnAnnotatedArrayType() throws Exception {
+  @Test
+  void findsContainerOnAnnotatedArrayType() throws Exception {
     List<Bs> containers =
       DIRECT_OR_INDIRECT.find(
         Bs.class,
@@ -73,7 +86,8 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
       .containsExactlyInAnyOrder(2, 3);
   }
 
-  @Test void findsOnAnnotatedParameterizedType() throws Exception {
+  @Test
+  void findsOnAnnotatedParameterizedType() throws Exception {
     List<A> as =
       DIRECT_OR_INDIRECT.find(
         A.class,
@@ -84,7 +98,8 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
     assertThat(a.value()).isEqualTo(4);
   }
 
-  @Test void findsRepeatableOnAnnotatedParameterizedType() throws Exception {
+  @Test
+  void findsRepeatableOnAnnotatedParameterizedType() throws Exception {
     List<B> bs =
       DIRECT_OR_INDIRECT.find(
         B.class,
@@ -95,7 +110,8 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
       .containsExactlyInAnyOrder(5, 6);
   }
 
-  @Test void findsContainerOnAnnotatedParameterizedType() throws Exception {
+  @Test
+  void findsContainerOnAnnotatedParameterizedType() throws Exception {
     List<Bs> containers =
       DIRECT_OR_INDIRECT.find(
         Bs.class,
@@ -108,7 +124,8 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
       .containsExactlyInAnyOrder(5, 6);
   }
 
-  @Test void findsOnAnnotatedTypeArg() throws Exception {
+  @Test
+  void findsOnAnnotatedTypeArg() throws Exception {
     Field f = Holder.class.getDeclaredField("annotatedArg");
     AnnotatedParameterizedType paramType =
       (AnnotatedParameterizedType) f.getAnnotatedType();
@@ -121,7 +138,8 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
     assertThat(a.value()).isEqualTo(7);
   }
 
-  @Test void missesOnPlainAnnotatedType() throws Exception {
+  @Test
+  void missesOnPlainAnnotatedType() throws Exception {
     List<A> as =
       DIRECT_OR_INDIRECT.find(
         A.class,

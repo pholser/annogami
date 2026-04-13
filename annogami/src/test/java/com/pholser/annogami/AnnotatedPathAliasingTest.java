@@ -15,37 +15,47 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnnotatedPathAliasingTest {
-  @Retention(RUNTIME) @interface Base {
+  @Retention(RUNTIME)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Base
+  @interface Composed {
     @AliasFor(annotation = Base.class, attribute = "value")
     String name() default "";
   }
 
-  @Composed(name = "alpha") static class Alpha {}
+  @Composed(name = "alpha")
+  static class Alpha {
+  }
 
-  @Composed(name = "beta") static class Beta {}
+  @Composed(name = "beta")
+  static class Beta {
+  }
 
-  @Test void allWithAliasingAppliesAliasesToEachElement() {
+  @Test
+  void allWithAliasingAppliesAliasesToEachElement() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
     List<Annotation> all =
       path.all(DIRECT, Aliasing.spring());
 
-    List<Composed> composed = all.stream()
-      .filter(a -> a.annotationType() == Composed.class)
-      .map(Composed.class::cast)
-      .toList();
+    List<Composed> composed =
+      all.stream()
+        .filter(a -> a.annotationType() == Composed.class)
+        .map(Composed.class::cast)
+        .toList();
 
     assertThat(composed).hasSize(2);
     assertThat(composed.get(0).name()).isEqualTo("alpha");
     assertThat(composed.get(1).name()).isEqualTo("beta");
   }
 
-  @Test void findWithAliasingAppliesAliasesToEachElement() {
+  @Test
+  void findWithAliasingAppliesAliasesToEachElement() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
@@ -57,7 +67,8 @@ class AnnotatedPathAliasingTest {
     assertThat(found.get(1).value()).isEqualTo("beta");
   }
 
-  @Test void findFirstWithAliasingReturnsFirstSynthesizedMatch() {
+  @Test
+  void findFirstWithAliasingReturnsFirstSynthesizedMatch() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 

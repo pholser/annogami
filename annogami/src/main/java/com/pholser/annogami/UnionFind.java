@@ -8,6 +8,7 @@ final class UnionFind {
 
   String find(String s) {
     parent.putIfAbsent(s, s);
+
     String p = parent.get(s);
     if (p.equals(s)) {
       return s;

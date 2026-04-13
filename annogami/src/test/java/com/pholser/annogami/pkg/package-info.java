@@ -1,1 +1,2 @@
-@A(42) package com.pholser.annogami.pkg;
+@A(42)
+package com.pholser.annogami.pkg;

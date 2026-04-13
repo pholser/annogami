@@ -13,48 +13,78 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AssociatedOnClassTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @A(3) static class AHaver {}
+  @A(3)
+  static class AHaver {
+  }
 
-  @Retention(RUNTIME) @Inherited @interface C {
+  @Retention(RUNTIME)
+  @Inherited
+  @interface C {
     int value();
   }
 
-  @C(6) static class CBase {}
-  static class CDerived extends CBase {}
+  @C(6)
+  static class CBase {
+  }
 
-  @Retention(RUNTIME) @interface E {
+  static class CDerived extends CBase {
+  }
+
+  @Retention(RUNTIME)
+  @interface E {
     int value();
   }
 
-  @E(9) static class ENonInheritedBase {}
-  static class ENonInheritedDerived extends ENonInheritedBase {}
+  @E(9)
+  static class ENonInheritedBase {
+  }
 
-  @Retention(RUNTIME) @interface Bs {
+  static class ENonInheritedDerived extends ENonInheritedBase {
+  }
+
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
-  @B(4) @B(5) static class ManyBHaver {}
+  @B(4)
+  @B(5)
+  static class ManyBHaver {
+  }
 
-  @Retention(RUNTIME) @Inherited @interface Ds {
+  @Retention(RUNTIME)
+  @Inherited
+  @interface Ds {
     D[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Ds.class) @interface D {
+  @Retention(RUNTIME)
+  @Repeatable(Ds.class)
+  @interface D {
     int value();
   }
 
-  @D(7) @D(8) static class DBase {}
-  static class DDerived extends DBase {}
+  @D(7)
+  @D(8)
+  static class DBase {
+  }
 
-  @Test void findsSingleNonRepeatable() {
+  static class DDerived extends DBase {
+  }
+
+  @Test
+  void findsSingleNonRepeatable() {
     List<A> as = ASSOCIATED.find(A.class, AHaver.class);
     assertThat(as).hasSize(1);
 
@@ -62,7 +92,8 @@ class AssociatedOnClassTest {
     assertThat(a.value()).isEqualTo(3);
   }
 
-  @Test void findsInheritedNonRepeatableOnSubclass() {
+  @Test
+  void findsInheritedNonRepeatableOnSubclass() {
     List<C> cs = ASSOCIATED.find(C.class, CDerived.class);
     assertThat(cs).hasSize(1);
 
@@ -70,13 +101,15 @@ class AssociatedOnClassTest {
     assertThat(c.value()).isEqualTo(6);
   }
 
-  @Test void missesNonInheritedAnnotationOnSubclass() {
+  @Test
+  void missesNonInheritedAnnotationOnSubclass() {
     List<E> es = ASSOCIATED.find(E.class, ENonInheritedDerived.class);
 
     assertThat(es).isEmpty();
   }
 
-  @Test void findsRepeatableAnnotations() {
+  @Test
+  void findsRepeatableAnnotations() {
     List<B> bs = ASSOCIATED.find(B.class, ManyBHaver.class);
 
     assertThat(bs)
@@ -84,7 +117,8 @@ class AssociatedOnClassTest {
       .containsExactlyInAnyOrder(4, 5);
   }
 
-  @Test void findsContainerAnnotation() {
+  @Test
+  void findsContainerAnnotation() {
     List<Bs> containers = ASSOCIATED.find(Bs.class, ManyBHaver.class);
     assertThat(containers).hasSize(1);
 
@@ -94,7 +128,8 @@ class AssociatedOnClassTest {
       .containsExactlyInAnyOrder(4, 5);
   }
 
-  @Test void findsInheritedContainerAnnotationOnSubclass() {
+  @Test
+  void findsInheritedContainerAnnotationOnSubclass() {
     List<Ds> containers = ASSOCIATED.find(Ds.class, DDerived.class);
     assertThat(containers).hasSize(1);
 
@@ -104,7 +139,8 @@ class AssociatedOnClassTest {
       .containsExactlyInAnyOrder(7, 8);
   }
 
-  @Test void missesRepeatableAnnotationsOnSubclassViaInheritedContainer() {
+  @Test
+  void missesRepeatableAnnotationsOnSubclassViaInheritedContainer() {
     List<D> ds = ASSOCIATED.find(D.class, DDerived.class);
 
     assertThat(ds).isEmpty();

@@ -11,15 +11,21 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnnotatedPathAllTest {
-  @Retention(RUNTIME) @interface Foo {
+  @Retention(RUNTIME)
+  @interface Foo {
     String value() default "";
   }
 
-  @Foo("alpha") static class Alpha {}
+  @Foo("alpha")
+  static class Alpha {
+  }
 
-  @Foo("beta") static class Beta {}
+  @Foo("beta")
+  static class Beta {
+  }
 
-  @Test void singleElementPathReturnsItsAnnotations() {
+  @Test
+  void singleElementPathReturnsItsAnnotations() {
     AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class));
 
     List<Annotation> all = path.all(DIRECT);
@@ -28,7 +34,8 @@ class AnnotatedPathAllTest {
     assertThat(((Foo) all.get(0)).value()).isEqualTo("alpha");
   }
 
-  @Test void multiElementPathConcatenatesAnnotationsInOrder() {
+  @Test
+  void multiElementPathConcatenatesAnnotationsInOrder() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
@@ -39,7 +46,8 @@ class AnnotatedPathAllTest {
     assertThat(((Foo) all.get(1)).value()).isEqualTo("beta");
   }
 
-  @Test void annotationsOfSameTypeFromBothElementsArePresent() {
+  @Test
+  void annotationsOfSameTypeFromBothElementsArePresent() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 

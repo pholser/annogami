@@ -15,16 +15,24 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasForSinglePresentIntraAliasingInheritedTest {
-  @Retention(RUNTIME) @Target(TYPE) @Inherited @interface Intra {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @Inherited
+  @interface Intra {
     @AliasFor("name") String value() default "";
+
     @AliasFor("value") String name() default "";
   }
 
-  @Intra(name = "hello") static class InhBase {}
+  @Intra(name = "hello")
+  static class InhBase {
+  }
 
-  static class InhDerived extends InhBase {}
+  static class InhDerived extends InhBase {
+  }
 
-  @Test void findWithAliasingPropagatesIntraAliasForInheritedAnnotation() {
+  @Test
+  void findWithAliasingPropagatesIntraAliasForInheritedAnnotation() {
     Intra intra =
       PRESENT.find(Intra.class, InhDerived.class, Aliasing.spring())
         .orElseGet(Assertions::fail);

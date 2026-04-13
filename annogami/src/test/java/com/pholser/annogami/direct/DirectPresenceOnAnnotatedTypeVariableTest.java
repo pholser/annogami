@@ -13,16 +13,20 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnAnnotatedTypeVariableTest {
-  @Retention(RUNTIME) @Target(TYPE_USE) @interface A {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @interface A {
     int value();
   }
 
   static class TypeUseHaver<T> {
-    @A(1) T field;
+    @A(1)
+    T field;
     T plain;
   }
 
-  @Test void findsOnAnnotatedTypeVariable() throws Exception {
+  @Test
+  void findsOnAnnotatedTypeVariable() throws Exception {
     A a =
       DIRECT.find(
         A.class,
@@ -32,7 +36,8 @@ class DirectPresenceOnAnnotatedTypeVariableTest {
     assertThat(a.value()).isEqualTo(1);
   }
 
-  @Test void missesOnAnnotatedTypeVariableNotDeclared() throws Exception {
+  @Test
+  void missesOnAnnotatedTypeVariableNotDeclared() throws Exception {
     DIRECT.find(
       A.class,
       TypeUseHaver.class.getDeclaredField("plain").getAnnotatedType()

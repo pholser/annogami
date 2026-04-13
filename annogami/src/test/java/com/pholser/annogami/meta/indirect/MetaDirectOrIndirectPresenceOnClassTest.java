@@ -11,19 +11,29 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MetaDirectOrIndirectPresenceOnClassTest {
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
-  @B(1) @B(2) @Retention(RUNTIME) @interface HasBs {}
+  @B(1)
+  @B(2)
+  @Retention(RUNTIME)
+  @interface HasBs {
+  }
 
-  @HasBs static class Target {}
+  @HasBs
+  static class Target {
+  }
 
-  @Test void findsRepeatableElementAnnotationsViaMetaWalk() {
+  @Test
+  void findsRepeatableElementAnnotationsViaMetaWalk() {
     List<B> bs = META_DIRECT_OR_INDIRECT.find(B.class, Target.class);
 
     assertThat(bs)
@@ -31,7 +41,8 @@ class MetaDirectOrIndirectPresenceOnClassTest {
       .containsExactlyInAnyOrder(1, 2);
   }
 
-  @Test void findsContainerAnnotationViaMetaWalkWhenRequested() {
+  @Test
+  void findsContainerAnnotationViaMetaWalkWhenRequested() {
     List<Bs> containers = META_DIRECT_OR_INDIRECT.find(Bs.class, Target.class);
 
     assertThat(containers).hasSize(1);

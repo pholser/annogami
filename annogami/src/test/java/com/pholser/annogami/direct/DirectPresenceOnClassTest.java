@@ -13,41 +13,60 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnClassTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @A(3) static class AHaver {
+  @A(3)
+  static class AHaver {
   }
 
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
-  @B(4) @B(5) static class ManyBHaver {
+  @B(4)
+  @B(5)
+  static class ManyBHaver {
   }
 
-  @Retention(RUNTIME) @Inherited @interface C {
+  @Retention(RUNTIME)
+  @Inherited
+  @interface C {
     int value();
   }
 
-  @C(6) @D(7) @D(8)
-  static class Base {}
-  static class Derived extends Base {}
+  @C(6)
+  @D(7)
+  @D(8)
+  static class Base {
+  }
 
-  @Retention(RUNTIME) @Inherited @interface Ds {
+  static class Derived extends Base {
+  }
+
+  @Retention(RUNTIME)
+  @Inherited
+  @interface Ds {
     D[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Ds.class) @interface D {
+  @Retention(RUNTIME)
+  @Repeatable(Ds.class)
+  @interface D {
     int value();
   }
 
-  @Test void findsDirectlyPresent() {
+  @Test
+  void findsDirectlyPresent() {
     A a =
       DIRECT.find(A.class, AHaver.class)
         .orElseGet(Assertions::fail);
@@ -55,17 +74,20 @@ class DirectPresenceOnClassTest {
     assertThat(a.value()).isEqualTo(3);
   }
 
-  @Test void missesNotDeclared() {
+  @Test
+  void missesNotDeclared() {
     DIRECT.find(A.class, ManyBHaver.class)
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void missesIndirectlyPresent() {
+  @Test
+  void missesIndirectlyPresent() {
     DIRECT.find(B.class, ManyBHaver.class)
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void findsContainerAnnotationOfIndirectlyPresent() {
+  @Test
+  void findsContainerAnnotationOfIndirectlyPresent() {
     Bs bs =
       DIRECT.find(Bs.class, ManyBHaver.class)
         .orElseGet(Assertions::fail);
@@ -73,42 +95,49 @@ class DirectPresenceOnClassTest {
     assertThat(bs.value()).hasSize(2);
   }
 
-  @Test void missesPresent() {
+  @Test
+  void missesPresent() {
     DIRECT.find(C.class, Derived.class)
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void missesAssociated() {
+  @Test
+  void missesAssociated() {
     DIRECT.find(D.class, Derived.class)
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void missesContainerAnnotationOfAssociated() {
+  @Test
+  void missesContainerAnnotationOfAssociated() {
     DIRECT.find(Ds.class, Derived.class)
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void findsAll() {
+  @Test
+  void findsAll() {
     assertThat(DIRECT.all(AHaver.class))
       .hasSize(1)
       .allSatisfy(a -> assertThat(a.annotationType()).isEqualTo(A.class));
   }
 
-  @Test void findsAllContainerButNotRepeated() {
+  @Test
+  void findsAllContainerButNotRepeated() {
     assertThat(DIRECT.all(ManyBHaver.class))
       .extracting(a -> a.annotationType().getName())
       .containsExactly(Bs.class.getName())
       .doesNotContain(B.class.getName());
   }
 
-  @Test void findsAllDeclaredAnnotationsOnBaseIncludingInheritedContainer() {
+  @Test
+  void findsAllDeclaredAnnotationsOnBaseIncludingInheritedContainer() {
     assertThat(DIRECT.all(Base.class))
       .extracting(a -> a.annotationType().getName())
       .containsExactlyInAnyOrder(C.class.getName(), Ds.class.getName())
       .doesNotContain(D.class.getName());
   }
 
-  @Test void missesAllInheritedAnnotationsOnSubclass() {
+  @Test
+  void missesAllInheritedAnnotationsOnSubclass() {
     assertThat(DIRECT.all(Derived.class)).isEmpty();
   }
 }

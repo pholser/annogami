@@ -9,17 +9,32 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BreadthFirstMetaWalkerCycleTest {
-  @Retention(RUNTIME) @interface A {}
+  @Retention(RUNTIME)
+  @interface A {
+  }
 
-  @A @Retention(RUNTIME) @interface B {}
+  @A
+  @Retention(RUNTIME)
+  @interface B {
+  }
 
-  @B @Retention(RUNTIME) @interface AWithB {}
+  @B
+  @Retention(RUNTIME)
+  @interface AWithB {
+  }
 
-  @AWithB @Retention(RUNTIME) @interface BWithA {}
+  @AWithB
+  @Retention(RUNTIME)
+  @interface BWithA {
+  }
 
-  @AWithB @BWithA static class Target {}
+  @AWithB
+  @BWithA
+  static class Target {
+  }
 
-  @Test void terminatesOnCycle() {
+  @Test
+  void terminatesOnCycle() {
     MetaWalker walker =
       new BreadthFirstMetaWalker(MetaWalkConfig.defaultsDeclared());
 

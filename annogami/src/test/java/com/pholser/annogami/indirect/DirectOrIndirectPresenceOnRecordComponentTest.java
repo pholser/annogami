@@ -14,22 +14,30 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectOrIndirectPresenceOnRecordComponentTest {
-  @Retention(RUNTIME) @Target(RECORD_COMPONENT) @interface A {
+  @Retention(RUNTIME)
+  @Target(RECORD_COMPONENT)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @Target(RECORD_COMPONENT) @interface Bs {
+  @Retention(RUNTIME)
+  @Target(RECORD_COMPONENT)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Target(RECORD_COMPONENT) @Repeatable(Bs.class)
+  @Retention(RUNTIME)
+  @Target(RECORD_COMPONENT)
+  @Repeatable(Bs.class)
   @interface B {
     int value();
   }
 
-  record R(@A(1) int a, @B(2) @B(3) int b, int c) {}
+  record R(@A(1) int a, @B(2) @B(3) int b, int c) {
+  }
 
-  @Test void findsSingleNonRepeatable() {
+  @Test
+  void findsSingleNonRepeatable() {
     List<A> as =
       DIRECT_OR_INDIRECT.find(A.class, R.class.getRecordComponents()[0]);
     assertThat(as).hasSize(1);
@@ -38,7 +46,8 @@ class DirectOrIndirectPresenceOnRecordComponentTest {
     assertThat(a.value()).isEqualTo(1);
   }
 
-  @Test void findsRepeatable() {
+  @Test
+  void findsRepeatable() {
     List<B> bs =
       DIRECT_OR_INDIRECT.find(B.class, R.class.getRecordComponents()[1]);
 
@@ -47,7 +56,8 @@ class DirectOrIndirectPresenceOnRecordComponentTest {
       .containsExactlyInAnyOrder(2, 3);
   }
 
-  @Test void findsContainerAnnotationOfRepeatable() {
+  @Test
+  void findsContainerAnnotationOfRepeatable() {
     List<Bs> containers =
       DIRECT_OR_INDIRECT.find(Bs.class, R.class.getRecordComponents()[1]);
     assertThat(containers).hasSize(1);
@@ -59,7 +69,8 @@ class DirectOrIndirectPresenceOnRecordComponentTest {
       .containsExactlyInAnyOrder(2, 3);
   }
 
-  @Test void missesNonDeclared() {
+  @Test
+  void missesNonDeclared() {
     List<A> as =
       DIRECT_OR_INDIRECT.find(A.class, R.class.getRecordComponents()[2]);
 

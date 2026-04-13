@@ -14,19 +14,27 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasForAllSynthesizesEachAnnotationInResultTest {
-  @Retention(RUNTIME) @interface First {
+  @Retention(RUNTIME)
+  @interface First {
     @AliasFor("alias") String value() default "";
+
     @AliasFor("value") String alias() default "";
   }
 
-  @Retention(RUNTIME) @interface Second {
+  @Retention(RUNTIME)
+  @interface Second {
     @AliasFor("alias") String value() default "";
+
     @AliasFor("value") String alias() default "";
   }
 
-  @First(value = "foo") @Second(value = "bar") static class Target {}
+  @First(value = "foo")
+  @Second(value = "bar")
+  static class Target {
+  }
 
-  @Test void eachAnnotationInResultGetsSynthesized() {
+  @Test
+  void eachAnnotationInResultGetsSynthesized() {
     List<Annotation> all = DIRECT.all(Target.class, Aliasing.spring());
 
     First first =

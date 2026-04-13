@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 final class Reflection {
+
   private Reflection() {
     throw new AssertionError();
   }

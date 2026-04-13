@@ -33,26 +33,37 @@ class SpringAnnotationComparisonTest {
 
   // --- test subjects ---
 
-  @Service static class MyService {}
+  @Service
+  static class MyService {
+  }
 
   // Real @Service is NOT @Inherited — neither META_ASSOCIATED
   // nor Spring's TYPE_HIERARCHY finds it via the JVM @Inherited
   // mechanism; Spring walks the hierarchy explicitly.
-  @Service static class ServiceBase {}
-  static class DerivedService extends ServiceBase {}
+  @Service
+  static class ServiceBase {
+  }
+
+  static class DerivedService extends ServiceBase {
+  }
 
   static class MappedController {
-    @GetMapping("/orders") void listOrders() {}
+    @GetMapping("/orders")
+    void listOrders() {
+    }
   }
 
   @Transactional(timeout = 30)
   static class TxService {
-    @Transactional(readOnly = true) void readData() {}
+    @Transactional(readOnly = true)
+    void readData() {
+    }
   }
 
   // --- tests ---
 
-  @Test void componentOnDirectClass_springAndAnnogamiAgree() {
+  @Test
+  void componentOnDirectClass_springAndAnnogamiAgree() {
     boolean spring = AnnotatedElementUtils
       .hasAnnotation(MyService.class, Component.class);
 
@@ -64,7 +75,8 @@ class SpringAnnotationComparisonTest {
     assertThat(annogami).isEqualTo(spring);
   }
 
-  @Test void serviceOnSuperclass_springFinds_metaAssociatedDoesNot() {
+  @Test
+  void serviceOnSuperclass_springFinds_metaAssociatedDoesNot() {
     // Real @Service is NOT @Inherited. Spring's TYPE_HIERARCHY strategy
     // explicitly walks the class hierarchy regardless of @Inherited.
     // META_ASSOCIATED only follows annotations marked @Inherited at the
@@ -81,7 +93,8 @@ class SpringAnnotationComparisonTest {
     assertThat(annogami).isFalse(); // META_ASSOCIATED cannot reach it
   }
 
-  @Test void serviceOnSuperclass_annotatedPathBridgesGap() {
+  @Test
+  void serviceOnSuperclass_annotatedPathBridgesGap() {
     // For annotations not marked @Inherited on superclasses, use an
     // explicit AnnotatedPath over the class hierarchy to replicate
     // Spring's TYPE_HIERARCHY behaviour.
@@ -102,8 +115,9 @@ class SpringAnnotationComparisonTest {
     assertThat(annogami).isEqualTo(spring);
   }
 
-  @Test void attributeSynthesis_springAndAnnogamiAgree()
-      throws Exception {
+  @Test
+  void attributeSynthesis_springAndAnnogamiAgree()
+    throws Exception {
     Method method = MappedController.class
       .getDeclaredMethod("listOrders");
 
@@ -122,8 +136,9 @@ class SpringAnnotationComparisonTest {
     assertThat(annogami.get().path()).containsExactly("/orders");
   }
 
-  @Test void springFindMergedReturnsNearestWholeAnnotation()
-      throws Exception {
+  @Test
+  void springFindMergedReturnsNearestWholeAnnotation()
+    throws Exception {
     Method method = TxService.class.getDeclaredMethod("readData");
 
     // Spring finds the method-level @Transactional and returns it
@@ -135,8 +150,9 @@ class SpringAnnotationComparisonTest {
     assertThat(tx.timeout()).isEqualTo(-1);   // method default; class ignored
   }
 
-  @Test void annogamiMergeFillsAttributesAcrossPathElements()
-      throws Exception {
+  @Test
+  void annogamiMergeFillsAttributesAcrossPathElements()
+    throws Exception {
     Method method = TxService.class.getDeclaredMethod("readData");
 
     AnnotatedPath path = AnnotatedPathBuilder
@@ -154,8 +170,9 @@ class SpringAnnotationComparisonTest {
     assertThat(tx.get().timeout()).isEqualTo(30);  // filled from class
   }
 
-  @Test void springReturnsOneMatch_annogamiPathReturnsAll()
-      throws Exception {
+  @Test
+  void springReturnsOneMatch_annogamiPathReturnsAll()
+    throws Exception {
     Method method = TxService.class.getDeclaredMethod("readData");
 
     // Spring returns the nearest (method-level) occurrence only

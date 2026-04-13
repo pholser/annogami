@@ -12,25 +12,38 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnConstructorTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
   static class CtorHaver {
-    @A(100) CtorHaver() {}
-    @B(200) @B(300) CtorHaver(int x) {}
-    CtorHaver(String s) {}
+    @A(100)
+    CtorHaver() {
+    }
+
+    @B(200)
+    @B(300)
+    CtorHaver(int x) {
+    }
+
+    CtorHaver(String s) {
+    }
   }
 
-  @Test void findsDirectlyPresent() throws Exception {
+  @Test
+  void findsDirectlyPresent() throws Exception {
     A a =
       DIRECT.find(A.class, CtorHaver.class.getDeclaredConstructor())
         .orElseGet(Assertions::fail);
@@ -38,17 +51,20 @@ class DirectPresenceOnConstructorTest {
     assertThat(a.value()).isEqualTo(100);
   }
 
-  @Test void missesNotDeclared() throws Exception {
+  @Test
+  void missesNotDeclared() throws Exception {
     DIRECT.find(A.class, CtorHaver.class.getDeclaredConstructor(String.class))
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void missesIndirectlyPresent() throws Exception {
+  @Test
+  void missesIndirectlyPresent() throws Exception {
     DIRECT.find(B.class, CtorHaver.class.getDeclaredConstructor(int.class))
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
+  @Test
+  void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     Bs bs =
       DIRECT.find(Bs.class, CtorHaver.class.getDeclaredConstructor(int.class))
         .orElseGet(Assertions::fail);

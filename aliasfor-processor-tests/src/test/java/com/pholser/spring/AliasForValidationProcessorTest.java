@@ -5,6 +5,7 @@ import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import javax.tools.JavaFileObject;
 
 import static com.google.testing.compile.CompilationSubject.assertThat;
@@ -18,27 +19,27 @@ class AliasForValidationProcessorTest {
   @DisplayName(
     "Happy path: intra-annotation alias with same type/default, OK usage")
   void validIntraAnnotationAlias_noConflicts() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.ValidIntra",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.ValidIntra",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
+          import org.springframework.core.annotation.AliasFor;
 
-      @interface Meta {
-        String value() default "meta";
-      }
+          @interface Meta {
+            String value() default "meta";
+          }
 
-      @Meta @interface MyMapping {
-        @AliasFor("path") String value() default "/default";
-        @AliasFor("value") String path() default "/default";
-      }
+          @Meta @interface MyMapping {
+            @AliasFor("path") String value() default "/default";
+            @AliasFor("value") String path() default "/default";
+          }
 
-      class Usage {
-        @MyMapping("/foo") void handler() {}
-      }
-      """
-    );
+          class Usage {
+            @MyMapping("/foo") void handler() {}
+          }
+          """);
 
     Compilation compilation = compiler().compile(source);
 
@@ -48,27 +49,28 @@ class AliasForValidationProcessorTest {
   @Test
   @DisplayName("Conflicting explicit values on two aliases in same annotation")
   void conflictingAliasValuesInUsage() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.ConflictingUsage",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.ConflictingUsage",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
+          import org.springframework.core.annotation.AliasFor;
 
-      @interface Meta {
-        String value() default "meta";
-      }
+          @interface Meta {
+            String value() default "meta";
+          }
 
-      @Meta @interface MyMapping {
-        @AliasFor("path") String value() default "/default";
-        @AliasFor("value") String path() default "/default";
-      }
+          @Meta @interface MyMapping {
+            @AliasFor("path") String value() default "/default";
+            @AliasFor("value") String path() default "/default";
+          }
 
-      class Usage {
-        @MyMapping(value = "/foo", path = "/bar") void handler() {}
-      }
-      """
-    );
+          class Usage {
+            @MyMapping(value = "/foo", path = "/bar") void handler() {}
+          }
+          """
+      );
 
     Compilation compilation = compiler().compile(source);
 
@@ -83,18 +85,19 @@ class AliasForValidationProcessorTest {
   @DisplayName(
     "@AliasFor on non-method element (e.g. on the annotation type itself)")
   void aliasForOnNonMethod() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.AliasForOnType",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.AliasForOnType",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
+          import org.springframework.core.annotation.AliasFor;
 
-      @AliasFor @interface BadAnnotation {
-        String value() default "";
-      }
-      """
-    );
+          @AliasFor @interface BadAnnotation {
+            String value() default "";
+          }
+          """
+      );
 
     Compilation compilation = compiler().compile(source);
 
@@ -107,20 +110,21 @@ class AliasForValidationProcessorTest {
   @Test
   @DisplayName("@AliasFor on method not enclosed in annotation type")
   void aliasForOnMethodNotInAnnotationType() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.AliasForOnRegularMethod",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.AliasForOnRegularMethod",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
+          import org.springframework.core.annotation.AliasFor;
 
-      class NotAnAnnotation {
-        @AliasFor public String value() {
-          return "";
-        }
-      }
-      """
-    );
+          class NotAnAnnotation {
+            @AliasFor public String value() {
+              return "";
+            }
+          }
+          """
+      );
 
     Compilation compilation = compiler().compile(source);
 
@@ -133,22 +137,23 @@ class AliasForValidationProcessorTest {
   @Test
   @DisplayName("Target attribute name does not exist on target annotation")
   void aliasForMissingTargetAttribute() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.MissingTargetAttribute",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.MissingTargetAttribute",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
+          import org.springframework.core.annotation.AliasFor;
 
-      @interface Meta {
-        String value() default "meta";
-      }
+          @interface Meta {
+            String value() default "meta";
+          }
 
-      @Meta @interface MyAnnotation {
-        @AliasFor("doesNotExist") String value() default "x";
-      }
-      """
-    );
+          @Meta @interface MyAnnotation {
+            @AliasFor("doesNotExist") String value() default "x";
+          }
+          """
+      );
 
     Compilation compilation = compiler().compile(source);
 
@@ -161,23 +166,24 @@ class AliasForValidationProcessorTest {
   @Test
   @DisplayName("Mismatched return types between alias source and target")
   void mismatchedReturnTypes() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.MismatchedTypes",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.MismatchedTypes",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
+          import org.springframework.core.annotation.AliasFor;
 
-      @interface Meta {
-        String value() default "meta";
-      }
+          @interface Meta {
+            String value() default "meta";
+          }
 
-      @Meta @interface MyAnnotation {
-        @AliasFor("other") String value() default "x";
-        @AliasFor("value") int other() default 1;
-      }
-      """
-    );
+          @Meta @interface MyAnnotation {
+            @AliasFor("other") String value() default "x";
+            @AliasFor("value") int other() default 1;
+          }
+          """
+      );
 
     Compilation compilation = compiler().compile(source);
 
@@ -190,23 +196,24 @@ class AliasForValidationProcessorTest {
   @Test
   @DisplayName("Missing defaults on alias attributes")
   void missingDefaultsOnAliasAttributes() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.MissingDefaults",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.MissingDefaults",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
+          import org.springframework.core.annotation.AliasFor;
 
-      @interface Meta {
-        String value() default "meta";
-      }
+          @interface Meta {
+            String value() default "meta";
+          }
 
-      @Meta @interface MyAnnotation {
-        @AliasFor("other") String value();
-        @AliasFor("value") String other();
-      }
-      """
-    );
+          @Meta @interface MyAnnotation {
+            @AliasFor("other") String value();
+            @AliasFor("value") String other();
+          }
+          """
+      );
 
     Compilation compilation = compiler().compile(source);
 
@@ -218,23 +225,24 @@ class AliasForValidationProcessorTest {
   @Test
   @DisplayName("Mismatched defaults between alias attributes")
   void mismatchedDefaults() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.MismatchedDefaults",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.MismatchedDefaults",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
+          import org.springframework.core.annotation.AliasFor;
 
-      @interface Meta {
-        String value() default "meta";
-      }
+          @interface Meta {
+            String value() default "meta";
+          }
 
-      @Meta @interface MyAnnotation {
-        @AliasFor("other") String value() default "a";
-        @AliasFor("value") String other() default "b";
-      }
-      """
-    );
+          @Meta @interface MyAnnotation {
+            @AliasFor("other") String value() default "a";
+            @AliasFor("value") String other() default "b";
+          }
+          """
+      );
 
     Compilation compilation = compiler().compile(source);
 
@@ -247,26 +255,27 @@ class AliasForValidationProcessorTest {
   @DisplayName(
     "annotation = ... but declaring annotation not meta-annotated with it")
   void metaAnnotationMissingWhenAnnotationAttributeUsed() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.MetaAnnotationMissing",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.MetaAnnotationMissing",
+        """
+          package example;
 
-      import org.springframework.core.annotation.AliasFor;
-      import java.lang.annotation.Retention;
-      import java.lang.annotation.RetentionPolicy;
+          import org.springframework.core.annotation.AliasFor;
+          import java.lang.annotation.Retention;
+          import java.lang.annotation.RetentionPolicy;
 
-      @Retention(RetentionPolicy.RUNTIME)
-      @interface Meta {
-        String value() default "meta";
-      }
+          @Retention(RetentionPolicy.RUNTIME)
+          @interface Meta {
+            String value() default "meta";
+          }
 
-      @interface MyAnnotation {
-        @AliasFor(annotation = Meta.class, attribute = "value")
-        String value() default "x";
-      }
-      """
-    );
+          @interface MyAnnotation {
+            @AliasFor(annotation = Meta.class, attribute = "value")
+            String value() default "x";
+          }
+          """
+      );
 
     Compilation compilation = compiler().compile(source);
 
@@ -278,20 +287,21 @@ class AliasForValidationProcessorTest {
   @Test
   @DisplayName("Sanity check: processor is a no-op when AliasFor isn't present")
   void noAliasForOnClasspath_noWorkDone() {
-    JavaFileObject source = JavaFileObjects.forSourceString(
-      "example.NoAlias",
-      """
-      package example;
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.NoAlias",
+        """
+          package example;
 
-      @interface NoAlias {
-        String value() default "";
-      }
+          @interface NoAlias {
+            String value() default "";
+          }
 
-      class Usage {
-        @NoAlias("x") void handler() {}
-      }
-      """
-    );
+          class Usage {
+            @NoAlias("x") void handler() {}
+          }
+          """
+      );
 
     // Here we instantiate the processor directly; in a real world case,
     // aliasForElement would be null and process() just returns false.

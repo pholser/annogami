@@ -17,7 +17,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectOrIndirectPresenceOnAnnotatedWildcardTypeTest {
-  @Retention(RUNTIME) @Target(TYPE_USE) @interface A {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @interface A {
     int value();
   }
 
@@ -26,7 +28,8 @@ class DirectOrIndirectPresenceOnAnnotatedWildcardTypeTest {
     List<?> plain;
   }
 
-  @Test void findsOnAnnotatedWildcardType() throws Exception {
+  @Test
+  void findsOnAnnotatedWildcardType() throws Exception {
     Field f = WildCarder.class.getDeclaredField("withWildcard");
     AnnotatedParameterizedType paramType =
       (AnnotatedParameterizedType) f.getAnnotatedType();
@@ -40,7 +43,8 @@ class DirectOrIndirectPresenceOnAnnotatedWildcardTypeTest {
     assertThat(a.value()).isEqualTo(1);
   }
 
-  @Test void missesOnUnannotatedWildcardType() throws Exception {
+  @Test
+  void missesOnUnannotatedWildcardType() throws Exception {
     Field f = WildCarder.class.getDeclaredField("plain");
     AnnotatedParameterizedType paramType =
       (AnnotatedParameterizedType) f.getAnnotatedType();

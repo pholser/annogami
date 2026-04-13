@@ -9,13 +9,21 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BreadthFirstMetaWalkerMaxDepthTest {
-  @Retention(RUNTIME) @interface A {}
+  @Retention(RUNTIME)
+  @interface A {
+  }
 
-  @A @Retention(RUNTIME) @interface HasA {}
+  @A
+  @Retention(RUNTIME)
+  @interface HasA {
+  }
 
-  @HasA static class Target {}
+  @HasA
+  static class Target {
+  }
 
-  @Test void maxDepthZeroOnlyIncludesStartVisit() {
+  @Test
+  void maxDepthZeroOnlyIncludesStartVisit() {
     MetaWalkConfig config =
       new MetaWalkConfig(
         Sources.DECLARED,
@@ -32,7 +40,8 @@ class BreadthFirstMetaWalkerMaxDepthTest {
     assertThat(visits.get(0).element()).isEqualTo(Target.class);
   }
 
-  @Test void maxDepthOneIncludesOnlyTypesDirectlyOnStart() {
+  @Test
+  void maxDepthOneIncludesOnlyTypesDirectlyOnStart() {
     MetaWalkConfig config =
       new MetaWalkConfig(
         Sources.DECLARED,
@@ -45,8 +54,8 @@ class BreadthFirstMetaWalkerMaxDepthTest {
 
     List<MetaVisit> types =
       walker.walk(Target.class)
-      .filter(v -> v.element() instanceof Class<?> c && c.isAnnotation())
-      .toList();
+        .filter(v -> v.element() instanceof Class<?> c && c.isAnnotation())
+        .toList();
 
     assertThat(types)
       .extracting(v -> v.element().getClass())

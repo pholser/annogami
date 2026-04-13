@@ -12,11 +12,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpringAliasForTransitiveMetaOverrideCycleTest {
-  @Retention(RUNTIME) @interface Base {
+  @Retention(RUNTIME)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Base @interface Level1 {
+  @Retention(RUNTIME)
+  @Base
+  @interface Level1 {
     @AliasFor(annotation = Base.class, attribute = "value")
     String x() default "";
 
@@ -25,14 +28,19 @@ class SpringAliasForTransitiveMetaOverrideCycleTest {
     String xAlias() default "";
   }
 
-  @Retention(RUNTIME) @Level1 @interface Composed {
+  @Retention(RUNTIME)
+  @Level1
+  @interface Composed {
     @AliasFor(annotation = Level1.class, attribute = "xAlias")
     String z() default "";
   }
 
-  @Composed(z = "boom") static class Target {}
+  @Composed(z = "boom")
+  static class Target {
+  }
 
-  @Test void cycleInAliasGraphIsDetectedAndFailsFast() {
+  @Test
+  void cycleInAliasGraphIsDetectedAndFailsFast() {
     assertThatThrownBy(() ->
       Presences.META_DIRECT
         .find(Base.class, Target.class, Aliasing.spring())

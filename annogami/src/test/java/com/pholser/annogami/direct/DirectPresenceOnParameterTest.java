@@ -13,25 +13,35 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnParameterTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
   static class ParameterHolder {
-    void p1(@A(1000) int x) {}
-    void p2(@B(2000) @B(3000) int x) {}
-    void p3(int x) {}
+    void p1(@A(1000) int x) {
+    }
+
+    void p2(@B(2000) @B(3000) int x) {
+    }
+
+    void p3(int x) {
+    }
   }
 
-  @Test void findsDirectlyPresent() throws Exception {
+  @Test
+  void findsDirectlyPresent() throws Exception {
     A a =
       DIRECT.find(A.class, parameterOf("p1"))
         .orElseGet(Assertions::fail);
@@ -39,17 +49,20 @@ class DirectPresenceOnParameterTest {
     assertThat(a.value()).isEqualTo(1000);
   }
 
-  @Test void missesNotDeclared() throws Exception {
+  @Test
+  void missesNotDeclared() throws Exception {
     DIRECT.find(A.class, parameterOf("p3"))
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void missesIndirectlyPresent() throws Exception {
+  @Test
+  void missesIndirectlyPresent() throws Exception {
     DIRECT.find(B.class, parameterOf("p2"))
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
+  @Test
+  void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     Bs bs =
       DIRECT.find(Bs.class, parameterOf("p2"))
         .orElseGet(Assertions::fail);

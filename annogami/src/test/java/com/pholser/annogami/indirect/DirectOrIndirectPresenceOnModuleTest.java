@@ -12,7 +12,8 @@ class DirectOrIndirectPresenceOnModuleTest {
   // When we add in JPMS modularity for annogami,
   // add a test that finds module markers successfully
 
-  @Test void missesNotDeclared() {
+  @Test
+  void missesNotDeclared() {
     List<ModuleMarker> markers =
       DIRECT_OR_INDIRECT.find(ModuleMarker.class, String.class.getModule());
 

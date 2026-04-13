@@ -5,14 +5,16 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 
 final class SynthesizedAnnotations {
-  private SynthesizedAnnotations() {}
+  private SynthesizedAnnotations() {
+    throw new AssertionError();
+  }
 
   static <A extends Annotation> A of(
     Class<A> annoType, Map<String, Object> overrides) {
+
     return annoType.cast(Proxy.newProxyInstance(
       annoType.getClassLoader(),
-      new Class<?>[] { annoType },
-      new SynthesizedAnnotationHandler(annoType, overrides)
-    ));
+      new Class<?>[]{annoType},
+      new SynthesizedAnnotationHandler(annoType, overrides)));
   }
 }

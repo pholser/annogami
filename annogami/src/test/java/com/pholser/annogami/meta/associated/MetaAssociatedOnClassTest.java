@@ -12,20 +12,33 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MetaAssociatedPresenceOnClassTest {
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
-  @B(4) @B(5) @Inherited @Retention(RUNTIME) @interface HasBs {}
+  @B(4)
+  @B(5)
+  @Inherited
+  @Retention(RUNTIME)
+  @interface HasBs {
+  }
 
-  @HasBs static class Base {}
-  static class Derived extends Base {}
+  @HasBs
+  static class Base {
+  }
 
-  @Test void findsRepeatableElementAnnotations() {
+  static class Derived extends Base {
+  }
+
+  @Test
+  void findsRepeatableElementAnnotations() {
     List<B> bs = META_ASSOCIATED.find(B.class, Derived.class);
 
     assertThat(bs)
@@ -33,7 +46,8 @@ class MetaAssociatedPresenceOnClassTest {
       .containsExactlyInAnyOrder(4, 5);
   }
 
-  @Test void findsContainerAnnotationWhenRequested() {
+  @Test
+  void findsContainerAnnotationWhenRequested() {
     List<Bs> containers = META_ASSOCIATED.find(Bs.class, Derived.class);
 
     assertThat(containers).hasSize(1);

@@ -7,6 +7,6 @@ public final class FullyQualifiedClassNames {
     "java.lang.annotation.Annotation";
 
   private FullyQualifiedClassNames() {
-    throw new AssertionError("no instances allowed");
+    throw new AssertionError();
   }
 }

@@ -12,25 +12,38 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnMethodTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
   static class MethodHaver {
-    @A(10) void m1() {}
-    @B(20) @B(30) void m2() {}
-    void m3() {}
+    @A(10)
+    void m1() {
+    }
+
+    @B(20)
+    @B(30)
+    void m2() {
+    }
+
+    void m3() {
+    }
   }
 
-  @Test void findsDirectlyPresent() throws Exception {
+  @Test
+  void findsDirectlyPresent() throws Exception {
     A a =
       DIRECT.find(A.class, MethodHaver.class.getDeclaredMethod("m1"))
         .orElseGet(Assertions::fail);
@@ -38,17 +51,20 @@ class DirectPresenceOnMethodTest {
     assertThat(a.value()).isEqualTo(10);
   }
 
-  @Test void missesNotDeclared() throws Exception {
+  @Test
+  void missesNotDeclared() throws Exception {
     DIRECT.find(A.class, MethodHaver.class.getDeclaredMethod("m3"))
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void missesIndirectlyPresent() throws Exception {
+  @Test
+  void missesIndirectlyPresent() throws Exception {
     DIRECT.find(B.class, MethodHaver.class.getDeclaredMethod("m2"))
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
+  @Test
+  void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     Bs bs =
       DIRECT.find(Bs.class, MethodHaver.class.getDeclaredMethod("m2"))
         .orElseGet(Assertions::fail);

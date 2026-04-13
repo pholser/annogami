@@ -18,28 +18,39 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnAnnotatedTypeTest {
-  @Retention(RUNTIME) @Target(TYPE_USE) @interface A {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @Target(TYPE_USE) @interface Bs {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Target(TYPE_USE) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
   static class Holder {
     int @A(1) [] array;
     int @B(2) @B(3) [] repeatArray;
-    @A(4) List<String> param;
-    @B(5) @B(6) List<String> repeatParam;
+    @A(4)
+    List<String> param;
+    @B(5)
+    @B(6)
+    List<String> repeatParam;
     List<@A(7) String> annotatedArg;
     List<String> plain;
   }
 
-  @Test void findsOnAnnotatedArrayType() throws Exception {
+  @Test
+  void findsOnAnnotatedArrayType() throws Exception {
     A a =
       DIRECT.find(
         A.class,
@@ -49,21 +60,24 @@ class DirectPresenceOnAnnotatedTypeTest {
     assertThat(a.value()).isEqualTo(1);
   }
 
-  @Test void missesOnAnnotatedArrayTypeNotDeclared() throws Exception {
+  @Test
+  void missesOnAnnotatedArrayTypeNotDeclared() throws Exception {
     DIRECT.find(
       A.class,
       Holder.class.getDeclaredField("plain").getAnnotatedType()
     ).ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void missesOnAnnotatedArrayTypeIndirectlyPresent() throws Exception {
+  @Test
+  void missesOnAnnotatedArrayTypeIndirectlyPresent() throws Exception {
     DIRECT.find(
       B.class,
       Holder.class.getDeclaredField("repeatArray").getAnnotatedType()
     ).ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void findsContainerOnAnnotatedArrayType() throws Exception {
+  @Test
+  void findsContainerOnAnnotatedArrayType() throws Exception {
     Bs bs =
       DIRECT.find(
         Bs.class,
@@ -73,7 +87,8 @@ class DirectPresenceOnAnnotatedTypeTest {
     assertThat(bs.value()).hasSize(2);
   }
 
-  @Test void findsOnAnnotatedParameterizedType() throws Exception {
+  @Test
+  void findsOnAnnotatedParameterizedType() throws Exception {
     A a =
       DIRECT.find(
         A.class,
@@ -83,7 +98,8 @@ class DirectPresenceOnAnnotatedTypeTest {
     assertThat(a.value()).isEqualTo(4);
   }
 
-  @Test void findsContainerOnAnnotatedParameterizedType() throws Exception {
+  @Test
+  void findsContainerOnAnnotatedParameterizedType() throws Exception {
     Bs bs =
       DIRECT.find(
         Bs.class,
@@ -93,7 +109,8 @@ class DirectPresenceOnAnnotatedTypeTest {
     assertThat(bs.value()).hasSize(2);
   }
 
-  @Test void findsOnAnnotatedTypeArgument() throws Exception {
+  @Test
+  void findsOnAnnotatedTypeArgument() throws Exception {
     Field f = Holder.class.getDeclaredField("annotatedArg");
     AnnotatedParameterizedType paramType =
       (AnnotatedParameterizedType) f.getAnnotatedType();

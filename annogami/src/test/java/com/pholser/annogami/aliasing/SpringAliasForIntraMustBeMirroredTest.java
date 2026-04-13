@@ -12,15 +12,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpringAliasForIntraMustBeMirroredTest {
-  @Retention(RUNTIME) @interface Broken {
+  @Retention(RUNTIME)
+  @interface Broken {
     @AliasFor("name") String value() default "";
+
     String name() default "";
   }
 
   @Broken(value = "x")
-  static class Target {}
+  static class Target {
+  }
 
-  @Test void intraAliasMustBeReciprocal() {
+  @Test
+  void intraAliasMustBeReciprocal() {
     assertThatThrownBy(() ->
       DIRECT.find(Broken.class, Target.class, Aliasing.spring())
         .orElseGet(Assertions::fail)

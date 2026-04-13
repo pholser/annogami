@@ -108,6 +108,7 @@ final class SpringAliasing implements Aliasing {
     IntraAliasModel model = intraModelFor(annoType, aliasForType);
     for (List<String> group : model.aliasGroups()) {
       Object chosen = null;
+
       for (String attrName : group) {
         if (overrides.containsKey(attrName)) {
           Object val = overrides.get(attrName);
@@ -120,6 +121,7 @@ final class SpringAliasing implements Aliasing {
           }
         }
       }
+
       if (chosen != null) {
         for (String attrName : group) {
           overrides.put(attrName, chosen);
@@ -139,6 +141,7 @@ final class SpringAliasing implements Aliasing {
 
       for (Method m : declaring.getDeclaredMethods()) {
         Annotation aliasFor = m.getAnnotation(aliasForType);
+
         if (aliasFor != null) {
           String targetAttr = targetAttributeOf(aliasFor);
           Class<?> targetAnnoRaw = targetAnnoTypeOf(aliasFor);
@@ -205,7 +208,7 @@ final class SpringAliasing implements Aliasing {
   }
 
   private static List<Class<? extends Annotation>>
-    implicitMetaTargetsFromContext(
+  implicitMetaTargetsFromContext(
     Class<? extends Annotation> declaring,
     String targetAttr,
     List<Annotation> metaContext) {
@@ -517,6 +520,7 @@ final class SpringAliasing implements Aliasing {
       if (!m.canAccess(a)) {
         m.trySetAccessible();
       }
+
       return m.invoke(a);
     } catch (IllegalAccessException | InvocationTargetException e) {
       throw new IllegalStateException(e);

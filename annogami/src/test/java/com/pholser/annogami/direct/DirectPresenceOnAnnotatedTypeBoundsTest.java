@@ -15,14 +15,20 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnAnnotatedTypeBoundsTest {
-  @Retention(RUNTIME) @Target(TYPE_USE) @interface A {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @interface A {
     int value();
   }
 
-  static class BoundsHaver<@A(1) T extends @A(2) Number> {}
-  static class NoAnnotatedBounds<T extends Number> {}
+  static class BoundsHaver<@A(1) T extends @A(2) Number> {
+  }
 
-  @Test void findsDirectlyPresent() {
+  static class NoAnnotatedBounds<T extends Number> {
+  }
+
+  @Test
+  void findsDirectlyPresent() {
     @SuppressWarnings("rawtypes")
     TypeVariable<Class<BoundsHaver>>[] vars =
       BoundsHaver.class.getTypeParameters();
@@ -35,7 +41,8 @@ class DirectPresenceOnAnnotatedTypeBoundsTest {
     assertThat(a.value()).isEqualTo(2);
   }
 
-  @Test void missesWhenNotAnnotated() {
+  @Test
+  void missesWhenNotAnnotated() {
     @SuppressWarnings("rawtypes")
     TypeVariable<Class<NoAnnotatedBounds>>[] vars =
       NoAnnotatedBounds.class.getTypeParameters();

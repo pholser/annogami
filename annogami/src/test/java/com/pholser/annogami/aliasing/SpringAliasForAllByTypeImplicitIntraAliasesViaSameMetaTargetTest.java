@@ -17,11 +17,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
-  @Retention(RUNTIME) @Target(TYPE) @interface Base {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Target(TYPE) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @Base
+  @interface Composed {
     @AliasFor(annotation = Base.class, attribute = "value")
     String name() default "";
 
@@ -29,13 +34,20 @@ class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
     String value() default "";
   }
 
-  @Composed(name = "hello") static class TargetNameOnly {}
+  @Composed(name = "hello")
+  static class TargetNameOnly {
+  }
 
-  @Composed(value = "hello") static class TargetValueOnly {}
+  @Composed(value = "hello")
+  static class TargetValueOnly {
+  }
 
-  @Composed(name = "one", value = "two") static class TargetConflict {}
+  @Composed(name = "one", value = "two")
+  static class TargetConflict {
+  }
 
-  @Test void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
+  @Test
+  void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
     List<Composed> found =
       DIRECT_OR_INDIRECT.find(
         Composed.class, TargetNameOnly.class, Aliasing.spring());
@@ -46,7 +58,8 @@ class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(c.value()).isEqualTo("hello");
   }
 
-  @Test void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
+  @Test
+  void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
     List<Composed> found =
       DIRECT_OR_INDIRECT.find(
         Composed.class, TargetValueOnly.class, Aliasing.spring());
@@ -57,14 +70,16 @@ class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(c.name()).isEqualTo("hello");
   }
 
-  @Test void conflictingExplicitValuesOnImplicitAliasesFailFast() {
+  @Test
+  void conflictingExplicitValuesOnImplicitAliasesFailFast() {
     assertThatThrownBy(
       () -> DIRECT_OR_INDIRECT.find(
         Composed.class, TargetConflict.class, Aliasing.spring()))
       .isInstanceOf(IllegalStateException.class);
   }
 
-  @Test void metaViewAlsoSeesTheResolvedValue() {
+  @Test
+  void metaViewAlsoSeesTheResolvedValue() {
     List<Base> found =
       META_DIRECT_OR_INDIRECT.find(
         Base.class, TargetNameOnly.class, Aliasing.spring());

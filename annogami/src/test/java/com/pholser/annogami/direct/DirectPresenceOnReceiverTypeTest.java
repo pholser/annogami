@@ -15,16 +15,22 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnReceiverTypeTest {
-  @Retention(RUNTIME) @Target(TYPE_USE) @interface A {
+  @Retention(RUNTIME)
+  @Target(TYPE_USE)
+  @interface A {
     int value();
   }
 
   static class ReceiverHaver {
-    void m(@A(1) ReceiverHaver this) {}
-    void m2(ReceiverHaver this) {}
+    void m(@A(1)ReceiverHaver this) {
+    }
+
+    void m2(ReceiverHaver this) {
+    }
   }
 
-  @Test void findsDirectlyPresent() throws Exception {
+  @Test
+  void findsDirectlyPresent() throws Exception {
     Method m = ReceiverHaver.class.getDeclaredMethod("m");
     AnnotatedType receiver = m.getAnnotatedReceiverType();
 
@@ -33,7 +39,8 @@ class DirectPresenceOnReceiverTypeTest {
     assertThat(a.value()).isEqualTo(1);
   }
 
-  @Test void missesWhenNotAnnotated() throws Exception {
+  @Test
+  void missesWhenNotAnnotated() throws Exception {
     Method m2 = ReceiverHaver.class.getDeclaredMethod("m2");
     AnnotatedType receiver = m2.getAnnotatedReceiverType();
 

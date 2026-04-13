@@ -13,14 +13,28 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BreadthFirstMetaWalkerEmissionVsScanTest {
-  @Retention(RUNTIME) @interface A { int value(); }
+  @Retention(RUNTIME)
+  @interface A {
+    int value();
+  }
 
-  @A(10) @Retention(RUNTIME) @interface HasA10 {}
-  @A(20) @Retention(RUNTIME) @interface HasA20 {}
+  @A(10)
+  @Retention(RUNTIME)
+  @interface HasA10 {
+  }
 
-  @HasA10 @HasA20 static class Target {}
+  @A(20)
+  @Retention(RUNTIME)
+  @interface HasA20 {
+  }
 
-  @Test void manyTypeVisitsEmittedButSingleScan() {
+  @HasA10
+  @HasA20
+  static class Target {
+  }
+
+  @Test
+  void manyTypeVisitsEmittedButSingleScan() {
     CountingSource counter = new CountingSource(Sources.DECLARED);
     MetaWalkConfig config =
       new MetaWalkConfig(
@@ -50,21 +64,24 @@ class BreadthFirstMetaWalkerEmissionVsScanTest {
       this.delegate = delegate;
     }
 
-    @Override public Annotation[] all(AnnotatedElement element) {
+    @Override
+    public Annotation[] all(AnnotatedElement element) {
       if (element instanceof Class<?> c && c.isAnnotation()) {
         calls.merge(c.getName(), 1, Integer::sum);
       }
       return delegate.all(element);
     }
 
-    @Override public <T extends Annotation> T one(
+    @Override
+    public <T extends Annotation> T one(
       Class<T> type,
       AnnotatedElement element) {
 
       return delegate.one(type, element);
     }
 
-    @Override public <T extends Annotation> T[] byType(
+    @Override
+    public <T extends Annotation> T[] byType(
       Class<T> type,
       AnnotatedElement element) {
 

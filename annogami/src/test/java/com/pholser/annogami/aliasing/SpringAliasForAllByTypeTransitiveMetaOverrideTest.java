@@ -15,23 +15,34 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasForAllByTypeTransitiveMetaOverrideTest {
-  @Retention(RUNTIME) @Target(TYPE) @interface Base {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Target(TYPE) @Base @interface Level1 {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @Base
+  @interface Level1 {
     @AliasFor(annotation = Base.class, attribute = "value")
     String x() default "";
   }
 
-  @Retention(RUNTIME) @Target(TYPE) @Level1 @interface Composed {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @Level1
+  @interface Composed {
     @AliasFor(annotation = Level1.class, attribute = "x")
     String y() default "";
   }
 
-  @Composed(y = "hello") static class Subject {}
+  @Composed(y = "hello")
+  static class Subject {
+  }
 
-  @Test void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
+  @Test
+  void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
     List<Level1> level1Found =
       META_DIRECT_OR_INDIRECT.find(
         Level1.class, Subject.class, Aliasing.spring());

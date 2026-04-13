@@ -14,19 +14,26 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasForAllMetaOverrideNonValueAttributeTest {
-  @Retention(RUNTIME) @interface Base {
+  @Retention(RUNTIME)
+  @interface Base {
     String name() default "default-name";
+
     int count() default 42;
   }
 
-  @Retention(RUNTIME) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Base
+  @interface Composed {
     @AliasFor(annotation = Base.class, attribute = "name")
     String myName() default "";
   }
 
-  @Composed(myName = "hello") static class Target {}
+  @Composed(myName = "hello")
+  static class Target {
+  }
 
-  @Test void metaAliasForNonValueAttributeIsApplied() {
+  @Test
+  void metaAliasForNonValueAttributeIsApplied() {
     List<Annotation> all = META_DIRECT.all(Target.class, Aliasing.spring());
 
     Composed composed =

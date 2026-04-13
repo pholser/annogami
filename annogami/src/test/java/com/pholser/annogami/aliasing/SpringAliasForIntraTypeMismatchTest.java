@@ -12,14 +12,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpringAliasForIntraTypeMismatchTest {
-  @Retention(RUNTIME) @interface BrokenTypes {
+  @Retention(RUNTIME)
+  @interface BrokenTypes {
     @AliasFor("name") String value() default "";
+
     @AliasFor("value") int name() default 0;
   }
 
-  @BrokenTypes(value = "x") static class Target {}
+  @BrokenTypes(value = "x")
+  static class Target {
+  }
 
-  @Test void mirroredAliasesMustHaveSameReturnType() {
+  @Test
+  void mirroredAliasesMustHaveSameReturnType() {
     assertThatThrownBy(() ->
       DIRECT.find(BrokenTypes.class, Target.class, Aliasing.spring())
         .orElseGet(Assertions::fail)

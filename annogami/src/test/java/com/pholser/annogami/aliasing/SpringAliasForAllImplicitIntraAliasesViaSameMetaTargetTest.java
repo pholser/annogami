@@ -16,11 +16,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
-  @Retention(RUNTIME) @interface Base {
+  @Retention(RUNTIME)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Base
+  @interface Composed {
     @AliasFor(annotation = Base.class, attribute = "value")
     String name() default "";
 
@@ -28,13 +31,20 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
     String value() default "";
   }
 
-  @Composed(name = "hello") static class TargetNameOnly {}
+  @Composed(name = "hello")
+  static class TargetNameOnly {
+  }
 
-  @Composed(value = "hello") static class TargetValueOnly {}
+  @Composed(value = "hello")
+  static class TargetValueOnly {
+  }
 
-  @Composed(name = "one", value = "two") static class TargetConflict {}
+  @Composed(name = "one", value = "two")
+  static class TargetConflict {
+  }
 
-  @Test void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
+  @Test
+  void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
     List<Annotation> all = DIRECT.all(TargetNameOnly.class, Aliasing.spring());
 
     Composed c =
@@ -48,7 +58,8 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(c.value()).isEqualTo("hello");
   }
 
-  @Test void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
+  @Test
+  void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
     List<Annotation> all = DIRECT.all(TargetValueOnly.class, Aliasing.spring());
 
     Composed c =
@@ -62,13 +73,15 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(c.name()).isEqualTo("hello");
   }
 
-  @Test void conflictingExplicitValuesOnImplicitAliasesFailFast() {
+  @Test
+  void conflictingExplicitValuesOnImplicitAliasesFailFast() {
     assertThatThrownBy(
       () -> DIRECT.all(TargetConflict.class, Aliasing.spring()))
       .isInstanceOf(IllegalStateException.class);
   }
 
-  @Test void metaViewAlsoSeesTheResolvedValue() {
+  @Test
+  void metaViewAlsoSeesTheResolvedValue() {
     List<Annotation> all =
       META_DIRECT.all(TargetNameOnly.class, Aliasing.spring());
 

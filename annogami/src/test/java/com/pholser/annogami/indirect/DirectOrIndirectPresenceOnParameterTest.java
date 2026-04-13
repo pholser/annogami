@@ -14,25 +14,35 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectOrIndirectPresenceOnParameterTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
   static class ParameterHaver {
-    void p1(@A(1000) int x) {}
-    void p2(@B(2000) @B(3000) int x) {}
-    void p3(int x) {}
+    void p1(@A(1000) int x) {
+    }
+
+    void p2(@B(2000) @B(3000) int x) {
+    }
+
+    void p3(int x) {
+    }
   }
 
-  @Test void findsSingleNonRepeatable() throws Exception {
+  @Test
+  void findsSingleNonRepeatable() throws Exception {
     List<A> as = DIRECT_OR_INDIRECT.find(A.class, parameterOf("p1"));
     assertThat(as).hasSize(1);
 
@@ -40,13 +50,15 @@ class DirectOrIndirectPresenceOnParameterTest {
     assertThat(a.value()).isEqualTo(1000);
   }
 
-  @Test void missesNonDeclared() throws Exception {
+  @Test
+  void missesNonDeclared() throws Exception {
     List<A> as = DIRECT_OR_INDIRECT.find(A.class, parameterOf("p3"));
 
     assertThat(as).isEmpty();
   }
 
-  @Test void findsRepeatable() throws Exception {
+  @Test
+  void findsRepeatable() throws Exception {
     List<B> bs = DIRECT_OR_INDIRECT.find(B.class, parameterOf("p2"));
 
     assertThat(bs)
@@ -54,7 +66,8 @@ class DirectOrIndirectPresenceOnParameterTest {
       .containsExactlyInAnyOrder(2000, 3000);
   }
 
-  @Test void findsContainerAnnotationOfRepeatable() throws Exception {
+  @Test
+  void findsContainerAnnotationOfRepeatable() throws Exception {
     List<Bs> containers = DIRECT_OR_INDIRECT.find(Bs.class, parameterOf("p2"));
     assertThat(containers).hasSize(1);
 

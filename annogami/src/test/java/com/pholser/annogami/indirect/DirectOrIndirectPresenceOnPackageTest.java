@@ -10,7 +10,8 @@ import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectOrIndirectPresenceOnPackageTest {
-  @Test void findsOnPackage() {
+  @Test
+  void findsOnPackage() {
     Package pkg =
       getClass().getClassLoader().getDefinedPackage(
         "com.pholser.annogami.pkg");
@@ -22,7 +23,8 @@ class DirectOrIndirectPresenceOnPackageTest {
     assertThat(a.value()).isEqualTo(42);
   }
 
-  @Test void missesNotDeclared() {
+  @Test
+  void missesNotDeclared() {
     List<A> as = DIRECT_OR_INDIRECT.find(A.class, getClass().getPackage());
 
     assertThat(as).isEmpty();

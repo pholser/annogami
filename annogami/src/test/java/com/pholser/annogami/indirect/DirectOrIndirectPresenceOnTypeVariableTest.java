@@ -15,14 +15,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectOrIndirectPresenceOnTypeVariableTest {
-  @Retention(RUNTIME) @Target(TYPE_PARAMETER) @interface TP {
+  @Retention(RUNTIME)
+  @Target(TYPE_PARAMETER)
+  @interface TP {
     int value();
   }
 
   static class GenericClass<@TP(1) T, @TP(2) U> {
   }
 
-  @Test void findsOnTypeVariableDeclaration() {
+  @Test
+  void findsOnTypeVariableDeclaration() {
     @SuppressWarnings("rawtypes")
     TypeVariable<Class<GenericClass>>[] typeVars =
       GenericClass.class.getTypeParameters();
@@ -34,7 +37,8 @@ class DirectOrIndirectPresenceOnTypeVariableTest {
     assertThat(tp.value()).isEqualTo(1);
   }
 
-  @Test void missesOnGenericDeclarationItself() {
+  @Test
+  void missesOnGenericDeclarationItself() {
     GenericDeclaration decl = GenericClass.class;
 
     List<TP> tps = DIRECT_OR_INDIRECT.find(TP.class, decl);

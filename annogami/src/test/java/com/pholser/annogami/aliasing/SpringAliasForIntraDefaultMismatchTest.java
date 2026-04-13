@@ -13,15 +13,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpringAliasForIntraDefaultMismatchTest {
-  @Retention(RUNTIME) @interface BrokenDefaults {
+  @Retention(RUNTIME)
+  @interface BrokenDefaults {
     @AliasFor("name") String value() default "a";
+
     @AliasFor("value") String name() default "b";
   }
 
   @BrokenDefaults(value = "x")
-  static class Target {}
+  static class Target {
+  }
 
-  @Test void mirroredAliasesMustHaveSameDefaultValue() {
+  @Test
+  void mirroredAliasesMustHaveSameDefaultValue() {
     assertThatThrownBy(() ->
       DIRECT.find(BrokenDefaults.class, Target.class, Aliasing.spring())
         .orElseGet(Assertions::fail)

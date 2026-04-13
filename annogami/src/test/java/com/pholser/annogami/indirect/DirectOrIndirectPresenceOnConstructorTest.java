@@ -12,25 +12,38 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectOrIndirectPresenceOnConstructorTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
   static class CtorHaver {
-    @A(100) CtorHaver() {}
-    @B(200) @B(300) CtorHaver(int x) {}
-    CtorHaver(String s) {}
+    @A(100)
+    CtorHaver() {
+    }
+
+    @B(200)
+    @B(300)
+    CtorHaver(int x) {
+    }
+
+    CtorHaver(String s) {
+    }
   }
 
-  @Test void findsSingleNonRepeatable() throws Exception {
+  @Test
+  void findsSingleNonRepeatable() throws Exception {
     List<A> as =
       DIRECT_OR_INDIRECT.find(
         A.class,
@@ -41,7 +54,8 @@ class DirectOrIndirectPresenceOnConstructorTest {
     assertThat(a.value()).isEqualTo(100);
   }
 
-  @Test void missesNonDeclared() throws Exception {
+  @Test
+  void missesNonDeclared() throws Exception {
     List<A> as =
       DIRECT_OR_INDIRECT.find(
         A.class,
@@ -50,7 +64,8 @@ class DirectOrIndirectPresenceOnConstructorTest {
     assertThat(as).isEmpty();
   }
 
-  @Test void findsRepeatableAnnotations() throws Exception {
+  @Test
+  void findsRepeatableAnnotations() throws Exception {
     List<B> bs =
       DIRECT_OR_INDIRECT.find(
         B.class,
@@ -61,7 +76,8 @@ class DirectOrIndirectPresenceOnConstructorTest {
       .containsExactlyInAnyOrder(200, 300);
   }
 
-  @Test void findsContainerAnnotation() throws Exception {
+  @Test
+  void findsContainerAnnotation() throws Exception {
     List<Bs> containers =
       DIRECT_OR_INDIRECT.find(
         Bs.class,

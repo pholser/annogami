@@ -5,15 +5,18 @@ import com.pholser.annogami.Single;
 import static com.pholser.annogami.Presences.META_PRESENT;
 
 final class MetaPresentSingleContractTest extends SingleContractTest {
-  @Override protected Single subject() {
+  @Override
+  protected Single subject() {
     return META_PRESENT;
   }
 
-  @Override protected boolean supportsMeta() {
+  @Override
+  protected boolean supportsMeta() {
     return true;
   }
 
-  @Override protected boolean honorsInherited() {
+  @Override
+  protected boolean honorsInherited() {
     return true;
   }
 }

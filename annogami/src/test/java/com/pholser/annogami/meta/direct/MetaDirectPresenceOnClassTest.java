@@ -15,45 +15,76 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MetaDirectPresenceOnClassTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @A(3) @Retention(RUNTIME) @interface HasA {}
+  @A(3)
+  @Retention(RUNTIME)
+  @interface HasA {
+  }
 
-  @HasA static class AHaverViaMeta {}
+  @HasA
+  static class AHaverViaMeta {
+  }
 
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
-  @B(1) @B(2) @Retention(RUNTIME) @interface HasBs {}
+  @B(1)
+  @B(2)
+  @Retention(RUNTIME)
+  @interface HasBs {
+  }
 
-  @HasBs static class BHaverViaMeta {}
+  @HasBs
+  static class BHaverViaMeta {
+  }
 
-  @Retention(RUNTIME) @Inherited @interface C {
+  @Retention(RUNTIME)
+  @Inherited
+  @interface C {
     int value();
   }
 
-  @C(6) @Retention(RUNTIME) @interface HasC {}
+  @C(6)
+  @Retention(RUNTIME)
+  @interface HasC {
+  }
 
-  @HasC static class CBase {}
-  static class CDerived extends CBase {}
+  @HasC
+  static class CBase {
+  }
+
+  static class CDerived extends CBase {
+  }
 
   @A(10)
-  @Retention(RUNTIME) @interface HasA10 {}
+  @Retention(RUNTIME)
+  @interface HasA10 {
+  }
 
   @A(20)
-  @Retention(RUNTIME) @interface HasA20 {}
+  @Retention(RUNTIME)
+  @interface HasA20 {
+  }
 
-  @HasA10 @HasA20
-  static class TwoPathsToA {}
+  @HasA10
+  @HasA20
+  static class TwoPathsToA {
+  }
 
-  @Test void allEmitsDuplicateMetaReachedViaDifferentPaths() {
+  @Test
+  void allEmitsDuplicateMetaReachedViaDifferentPaths() {
     List<Annotation> all = META_DIRECT.all(TwoPathsToA.class);
 
     long count =
@@ -64,7 +95,8 @@ class MetaDirectPresenceOnClassTest {
     assertThat(count).isEqualTo(2);
   }
 
-  @Test void allEmitsDistinctMetaReachedViaDifferentPaths() {
+  @Test
+  void allEmitsDistinctMetaReachedViaDifferentPaths() {
     List<Annotation> all = META_DIRECT.all(TwoPathsToA.class);
 
     List<Integer> aValues =
@@ -76,7 +108,8 @@ class MetaDirectPresenceOnClassTest {
     assertThat(aValues).containsExactlyInAnyOrder(10, 20);
   }
 
-  @Test void allIncludesDeclaredSeedAnnotationOnTarget() {
+  @Test
+  void allIncludesDeclaredSeedAnnotationOnTarget() {
     List<String> types =
       META_DIRECT.all(AHaverViaMeta.class).stream()
         .map(a -> a.annotationType().getName())
@@ -85,7 +118,8 @@ class MetaDirectPresenceOnClassTest {
     assertThat(types).contains(HasA.class.getName());
   }
 
-  @Test void allIncludesMetaAnnotationTypesFromSeedAnnotationType() {
+  @Test
+  void allIncludesMetaAnnotationTypesFromSeedAnnotationType() {
     List<String> types =
       META_DIRECT.all(AHaverViaMeta.class).stream()
         .map(a -> a.annotationType().getName())
@@ -94,7 +128,8 @@ class MetaDirectPresenceOnClassTest {
     assertThat(types).contains(A.class.getName());
   }
 
-  @Test void allShowsRepeatableAsContainerNotElements() {
+  @Test
+  void allShowsRepeatableAsContainerNotElements() {
     List<String> types =
       META_DIRECT.all(BHaverViaMeta.class).stream()
         .map(a -> a.annotationType().getName())
@@ -105,11 +140,13 @@ class MetaDirectPresenceOnClassTest {
       .doesNotContain(B.class.getName());
   }
 
-  @Test void allDoesNotSeedFromInheritedAnnotationsOnSubclass() {
+  @Test
+  void allDoesNotSeedFromInheritedAnnotationsOnSubclass() {
     assertThat(META_DIRECT.all(CDerived.class)).isEmpty();
   }
 
-  @Test void findsMetaPresentOnClass() {
+  @Test
+  void findsMetaPresentOnClass() {
     A a =
       META_DIRECT.find(A.class, AHaverViaMeta.class)
         .orElseGet(Assertions::fail);
@@ -117,7 +154,8 @@ class MetaDirectPresenceOnClassTest {
     assertThat(a.value()).isEqualTo(3);
   }
 
-  @Test void missesInheritedSeedBecauseDeclaredStartDoesNotSeeIt() {
+  @Test
+  void missesInheritedSeedBecauseDeclaredStartDoesNotSeeIt() {
     META_DIRECT.find(C.class, CDerived.class)
       .ifPresent(AnnotationAssertions::falseFind);
   }

@@ -13,24 +13,40 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MetaPresentOnClassTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @A(3) @Retention(RUNTIME) @interface HasA {}
+  @A(3)
+  @Retention(RUNTIME)
+  @interface HasA {
+  }
 
-  @HasA static class AHaverViaMeta {}
+  @HasA
+  static class AHaverViaMeta {
+  }
 
-  @Retention(RUNTIME) @interface D {
+  @Retention(RUNTIME)
+  @interface D {
     int value();
   }
 
-  @D(9) @Inherited @Retention(RUNTIME) @interface HasD {}
+  @D(9)
+  @Inherited
+  @Retention(RUNTIME)
+  @interface HasD {
+  }
 
-  @HasD static class DBase {}
-  static class DDerived extends DBase {}
+  @HasD
+  static class DBase {
+  }
 
-  @Test void findsMetaPresentOnClass() {
+  static class DDerived extends DBase {
+  }
+
+  @Test
+  void findsMetaPresentOnClass() {
     A a =
       META_PRESENT.find(A.class, AHaverViaMeta.class)
         .orElseGet(Assertions::fail);
@@ -38,7 +54,8 @@ class MetaPresentOnClassTest {
     assertThat(a.value()).isEqualTo(3);
   }
 
-  @Test void findsThroughInheritedSeedOnSubclass() {
+  @Test
+  void findsThroughInheritedSeedOnSubclass() {
     D d =
       META_PRESENT.find(D.class, DDerived.class)
         .orElseGet(Assertions::fail);
@@ -46,7 +63,8 @@ class MetaPresentOnClassTest {
     assertThat(d.value()).isEqualTo(9);
   }
 
-  @Test void allIncludesStartPresentAnnotationsAndMetaAnnotations() {
+  @Test
+  void allIncludesStartPresentAnnotationsAndMetaAnnotations() {
     List<Annotation> all = META_PRESENT.all(DDerived.class);
 
     List<String> types =

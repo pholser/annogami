@@ -13,16 +13,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpringAliasForIntraAnnotationTest {
-  @Retention(RUNTIME) @interface Intra {
+  @Retention(RUNTIME)
+  @interface Intra {
     @AliasFor("name") String value() default "";
+
     @AliasFor("value") String name() default "";
   }
 
-  @Intra(name = "hello") static class Target1 {}
-  @Intra(value = "hello") static class Target2 {}
-  @Intra(name = "one", value = "two") static class TargetConflict {}
+  @Intra(name = "hello")
+  static class Target1 {
+  }
 
-  @Test void intraAliasReadsThroughEitherMember() {
+  @Intra(value = "hello")
+  static class Target2 {
+  }
+
+  @Intra(name = "one", value = "two")
+  static class TargetConflict {
+  }
+
+  @Test
+  void intraAliasReadsThroughEitherMember() {
     Intra i =
       DIRECT.find(Intra.class, Target1.class, Aliasing.spring())
         .orElseGet(Assertions::fail);
@@ -31,7 +42,8 @@ class SpringAliasForIntraAnnotationTest {
     assertThat(i.value()).isEqualTo("hello");
   }
 
-  @Test void intraAliasReadsThroughEitherDirection() {
+  @Test
+  void intraAliasReadsThroughEitherDirection() {
     Intra i =
       DIRECT.find(Intra.class, Target2.class, Aliasing.spring())
         .orElseGet(Assertions::fail);
@@ -40,7 +52,8 @@ class SpringAliasForIntraAnnotationTest {
     assertThat(i.name()).isEqualTo("hello");
   }
 
-  @Test void intraAliasConflictingExplicitValuesFailFast() {
+  @Test
+  void intraAliasConflictingExplicitValuesFailFast() {
     assertThatThrownBy(() ->
       DIRECT.find(Intra.class, TargetConflict.class, Aliasing.spring())
         .orElseGet(Assertions::fail)

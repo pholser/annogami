@@ -15,17 +15,25 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasForAllByTypeFindUpgradesExistingAnnotationsTest {
-  @Retention(RUNTIME) @Target(TYPE) @interface Base {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Target(TYPE) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @Base
+  @interface Composed {
     @AliasFor("value") String path() default "";
   }
 
-  @Composed(path = "p") static class Subject {}
+  @Composed(path = "p")
+  static class Subject {
+  }
 
-  @Test void findWithAliasingUpgradesReturnedAnnotationInstance() {
+  @Test
+  void findWithAliasingUpgradesReturnedAnnotationInstance() {
     List<Base> found =
       META_DIRECT_OR_INDIRECT.find(
         Base.class, Subject.class, Aliasing.spring());

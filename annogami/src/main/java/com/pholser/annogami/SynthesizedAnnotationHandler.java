@@ -32,7 +32,8 @@ final class SynthesizedAnnotationHandler implements InvocationHandler {
     this.members = methods;
   }
 
-  @Override public Object invoke(Object proxy, Method m, Object[] args)
+  @Override
+  public Object invoke(Object proxy, Method m, Object[] args)
     throws Throwable {
 
     if (isAnnotationType(m)) {
@@ -113,12 +114,14 @@ final class SynthesizedAnnotationHandler implements InvocationHandler {
 
   private int handleHashCode() {
     int result = 0;
+
     for (Method m : members) {
       if (m.getParameterCount() != 0) continue;
       String name = m.getName();
       Object v = valueOf(m);
       result += (127 * name.hashCode()) ^ memberHashCode(v);
     }
+
     return result;
   }
 

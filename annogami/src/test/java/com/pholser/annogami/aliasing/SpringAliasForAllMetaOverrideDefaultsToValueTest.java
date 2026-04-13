@@ -14,17 +14,23 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasForAllMetaOverrideDefaultsToValueTest {
-  @Retention(RUNTIME) @interface Base {
+  @Retention(RUNTIME)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Base
+  @interface Composed {
     @AliasFor(annotation = Base.class) String name() default "";
   }
 
-  @Composed(name = "hello") static class Target {}
+  @Composed(name = "hello")
+  static class Target {
+  }
 
-  @Test void aliasForAnnotationOnlyDefaultsToTargetValue() {
+  @Test
+  void aliasForAnnotationOnlyDefaultsToTargetValue() {
     List<Annotation> all = META_DIRECT.all(Target.class, Aliasing.spring());
 
     Composed composed =

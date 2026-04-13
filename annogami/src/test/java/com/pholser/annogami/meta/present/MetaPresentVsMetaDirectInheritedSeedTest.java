@@ -13,14 +13,26 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MetaPresentVsMetaDirectInheritedSeedTest {
-  @Retention(RUNTIME) @interface A { int value(); }
+  @Retention(RUNTIME)
+  @interface A {
+    int value();
+  }
 
-  @A(1) @Retention(RUNTIME) @Inherited @interface HasA {}
+  @A(1)
+  @Retention(RUNTIME)
+  @Inherited
+  @interface HasA {
+  }
 
-  @HasA static class Base {}
-  static class Derived extends Base {}
+  @HasA
+  static class Base {
+  }
 
-  @Test void metaPresentSeesInheritedSeedButMetaDirectDoesNot() {
+  static class Derived extends Base {
+  }
+
+  @Test
+  void metaPresentSeesInheritedSeedButMetaDirectDoesNot() {
     META_DIRECT.find(A.class, Derived.class)
       .ifPresent(AnnotationAssertions::falseFind);
     ;

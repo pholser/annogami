@@ -12,21 +12,30 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnnotatedPathMergeTest {
-  @Retention(RUNTIME) @interface Config {
+  @Retention(RUNTIME)
+  @interface Config {
     String host() default "localhost";
+
     int port() default 8080;
   }
 
-  @Config(host = "alpha.example.com") static class Alpha {}
+  @Config(host = "alpha.example.com")
+  static class Alpha {
+  }
 
-  @Config(port = 9090) static class Beta {}
+  @Config(port = 9090)
+  static class Beta {
+  }
 
   @Config(host = "gamma.example.com", port = 7070)
-  static class Gamma {}
+  static class Gamma {
+  }
 
-  static class NoAnnotation {}
+  static class NoAnnotation {
+  }
 
-  @Test void mergeOnSingleElementReturnsItsValues() {
+  @Test
+  void mergeOnSingleElementReturnsItsValues() {
     AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class));
 
     assertThat(path.merge(Config.class, DIRECT))
@@ -37,7 +46,8 @@ class AnnotatedPathMergeTest {
       });
   }
 
-  @Test void earlierElementValueWinsForSameAttribute() {
+  @Test
+  void earlierElementValueWinsForSameAttribute() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Gamma.class));
 
@@ -47,7 +57,8 @@ class AnnotatedPathMergeTest {
         assertThat(c.host()).isEqualTo("alpha.example.com"));
   }
 
-  @Test void laterElementFillsInAttributeLeftAtDefault() {
+  @Test
+  void laterElementFillsInAttributeLeftAtDefault() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
@@ -59,28 +70,38 @@ class AnnotatedPathMergeTest {
       });
   }
 
-  @Test void returnsEmptyWhenNoElementHasTheAnnotation() {
+  @Test
+  void returnsEmptyWhenNoElementHasTheAnnotation() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(NoAnnotation.class));
 
     assertThat(path.merge(Config.class, DIRECT)).isEmpty();
   }
 
-  @Retention(RUNTIME) @interface Base {
+  @Retention(RUNTIME)
+  @interface Base {
     String value() default "";
+
     String extra() default "";
   }
 
-  @Retention(RUNTIME) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Base
+  @interface Composed {
     @AliasFor(annotation = Base.class, attribute = "value")
     String name() default "";
   }
 
-  @Composed(name = "alpha") static class AlphaComposed {}
+  @Composed(name = "alpha")
+  static class AlphaComposed {
+  }
 
-  @Composed(name = "beta") static class BetaComposed {}
+  @Composed(name = "beta")
+  static class BetaComposed {
+  }
 
-  @Test void mergeWithAliasingAppliesAliasesBeforeMerging() {
+  @Test
+  void mergeWithAliasingAppliesAliasesBeforeMerging() {
     AnnotatedPath path = new AnnotatedPath(
       List.of(AlphaComposed.class, BetaComposed.class));
 

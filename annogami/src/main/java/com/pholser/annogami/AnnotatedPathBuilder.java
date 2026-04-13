@@ -17,15 +17,15 @@ import static com.pholser.annogami.ClassHierarchies.depthFirstOverrideHierarchyO
 public sealed class AnnotatedPathBuilder
   extends AnnotatedPath.SegmentBuilder
   permits AnnotatedPathBuilder.Parameter,
-  AnnotatedPathBuilder.RecordComponent,
-  AnnotatedPathBuilder.Field,
-  AnnotatedPathBuilder.Constructor,
-  AnnotatedPathBuilder.Method,
-  AnnotatedPathBuilder.Methods,
-  AnnotatedPathBuilder.Class,
-  AnnotatedPathBuilder.Classes,
-  AnnotatedPathBuilder.Package,
-  AnnotatedPathBuilder.Module {
+    AnnotatedPathBuilder.RecordComponent,
+    AnnotatedPathBuilder.Field,
+    AnnotatedPathBuilder.Constructor,
+    AnnotatedPathBuilder.Method,
+    AnnotatedPathBuilder.Methods,
+    AnnotatedPathBuilder.Class,
+    AnnotatedPathBuilder.Classes,
+    AnnotatedPathBuilder.Package,
+    AnnotatedPathBuilder.Module {
 
   /**
    * This segment builder's predecessor annotated elements.
@@ -38,7 +38,8 @@ public sealed class AnnotatedPathBuilder
   protected AnnotatedPathBuilder() {
   }
 
-  @Override protected List<AnnotatedElement> predecessors() {
+  @Override
+  protected List<AnnotatedElement> predecessors() {
     return new ArrayList<>(predecessors);
   }
 
@@ -125,7 +126,7 @@ public sealed class AnnotatedPathBuilder
      *
      * @return builder segment focused at that constructor
      * @throws IllegalStateException if this segment's parameter is not a
-     * constructor parameter
+     *                               constructor parameter
      */
     public Constructor toDeclaringConstructor() {
       Executable exec = p.getDeclaringExecutable();
@@ -143,7 +144,7 @@ public sealed class AnnotatedPathBuilder
      *
      * @return builder segment focused at that method
      * @throws IllegalStateException if this segment's parameter is not a
-     * method parameter
+     *                               method parameter
      */
     public Method toDeclaringMethod() {
       Executable exec = p.getDeclaringExecutable();
@@ -374,9 +375,10 @@ public sealed class AnnotatedPathBuilder
      */
     public Classes toClassEnclosure() {
       List<java.lang.Class<?>> enclosure = new ArrayList<>();
+
       for (java.lang.Class<?> c = k.getEnclosingClass();
-           c != null;
-           c = c.getEnclosingClass()) {
+        c != null;
+        c = c.getEnclosingClass()) {
 
         enclosure.add(c);
       }

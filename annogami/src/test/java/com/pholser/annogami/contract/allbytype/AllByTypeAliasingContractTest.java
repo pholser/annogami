@@ -19,18 +19,28 @@ abstract class AllByTypeAliasingContractTest {
 
   protected abstract boolean honorsInherited();
 
-  @Retention(RUNTIME) @Target(TYPE) @Inherited @interface Intra {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @Inherited
+  @interface Intra {
     @AliasFor("name") String value() default "";
+
     @AliasFor("value") String name() default "";
   }
 
-  @Intra(name = "hello") static class HasDirectIntra {}
+  @Intra(name = "hello")
+  static class HasDirectIntra {
+  }
 
-  @Intra(name = "hello") static class InhBase {}
+  @Intra(name = "hello")
+  static class InhBase {
+  }
 
-  static class InhDerived extends InhBase {}
+  static class InhDerived extends InhBase {
+  }
 
-  @Test final void intraAliasedValuePropagatesOnDirectlyDeclaredAnnotation() {
+  @Test
+  final void intraAliasedValuePropagatesOnDirectlyDeclaredAnnotation() {
     List<Intra> found =
       subject().find(Intra.class, HasDirectIntra.class, Aliasing.spring());
 
@@ -40,7 +50,8 @@ abstract class AllByTypeAliasingContractTest {
     assertThat(found.get(0).value()).isEqualTo("hello");
   }
 
-  @Test final void intraAliasedValuePropagatesOnInheritedAnnotation() {
+  @Test
+  final void intraAliasedValuePropagatesOnInheritedAnnotation() {
     List<Intra> found =
       subject().find(Intra.class, InhDerived.class, Aliasing.spring());
 

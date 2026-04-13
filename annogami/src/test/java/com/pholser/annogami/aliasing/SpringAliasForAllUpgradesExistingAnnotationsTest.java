@@ -16,18 +16,25 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasForAllUpgradesExistingAnnotationsTest {
-  @Retention(RUNTIME) @Target(TYPE) @interface Base {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Target(TYPE) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @Base
+  @interface Composed {
     @AliasFor("value") String path() default "";
   }
 
-  @Composed(path = "p") static class Subject {
+  @Composed(path = "p")
+  static class Subject {
   }
 
-  @Test void allWithAliasingUpgradesReturnedAnnotationInstance() {
+  @Test
+  void allWithAliasingUpgradesReturnedAnnotationInstance() {
     List<Annotation> all = META_DIRECT.all(Subject.class, Aliasing.spring());
 
     Composed composed =

@@ -18,11 +18,11 @@ final class BreadthFirstMetaWalker implements MetaWalker {
     this.config = Objects.requireNonNull(config);
   }
 
-  @Override public Stream<MetaVisit> walk(AnnotatedElement start) {
+  @Override
+  public Stream<MetaVisit> walk(AnnotatedElement start) {
     Objects.requireNonNull(start);
 
     List<MetaVisit> out = new ArrayList<>();
-    Deque<TypeVisit> queue = new ArrayDeque<>();
 
     if (config.includeStartElement()) {
       out.add(new StartVisit(start));
@@ -31,6 +31,8 @@ final class BreadthFirstMetaWalker implements MetaWalker {
     if (config.maxDepth() == 0) {
       return out.stream();
     }
+
+    Deque<TypeVisit> queue = new ArrayDeque<>();
 
     for (Annotation each : config.startSource().all(start)) {
       Class<? extends Annotation> t = each.annotationType();
@@ -68,9 +70,7 @@ final class BreadthFirstMetaWalker implements MetaWalker {
             metaType,
             visit.depth() + 1,
             append(visit.path(), metaType),
-            meta
-          )
-        );
+            meta));
       }
     }
 

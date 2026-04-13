@@ -16,20 +16,30 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasForAllByTypeMetaAssociatedInheritedSeedTest {
-  @Retention(RUNTIME) @Target(TYPE) @interface Base {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Target(TYPE) @Inherited @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Target(TYPE)
+  @Inherited
+  @Base
+  @interface Composed {
     @AliasFor(annotation = Base.class, attribute = "value")
     String name() default "";
   }
 
-  @Composed(name = "hello") static class InhBase {}
+  @Composed(name = "hello")
+  static class InhBase {
+  }
 
-  static class InhDerived extends InhBase {}
+  static class InhDerived extends InhBase {
+  }
 
-  @Test void findWithAliasingUpgradesMetaAnnotationFromInheritedSeed() {
+  @Test
+  void findWithAliasingUpgradesMetaAnnotationFromInheritedSeed() {
     List<Base> found =
       META_ASSOCIATED.find(Base.class, InhDerived.class, Aliasing.spring());
 

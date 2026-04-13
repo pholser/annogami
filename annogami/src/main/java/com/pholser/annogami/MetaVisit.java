@@ -18,7 +18,8 @@ record TypeVisit(
   Annotation via)
   implements MetaVisit {
 
-  @Override public AnnotatedElement element() {
+  @Override
+  public AnnotatedElement element() {
     return type;
   }
 }

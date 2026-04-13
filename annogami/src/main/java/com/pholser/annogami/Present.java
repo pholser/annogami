@@ -27,6 +27,7 @@ public final class Present implements Single, All {
     Objects.requireNonNull(annoType, "type");
     Objects.requireNonNull(target, "target");
     Objects.requireNonNull(aliasing, "aliasing");
+
     return SegmentResolver.withSeedSource(Sources.PRESENT)
       .findFirst(annoType, target, this, aliasing);
   }
@@ -40,6 +41,7 @@ public final class Present implements Single, All {
   public List<Annotation> all(AnnotatedElement target, Aliasing aliasing) {
     Objects.requireNonNull(target, "target");
     Objects.requireNonNull(aliasing, "aliasing");
+
     return SegmentResolver.withSeedSource(Sources.PRESENT)
       .all(target, all(target), aliasing);
   }

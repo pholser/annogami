@@ -31,36 +31,52 @@ class JUnitAnnotationComparisonTest {
 
   // --- composed annotation types ---
 
-  static final class NoOpExtension implements Extension {}
+  static final class NoOpExtension implements Extension {
+  }
 
-  @Retention(RUNTIME) @Target({TYPE, METHOD})
+  @Retention(RUNTIME)
+  @Target({TYPE, METHOD})
   @ExtendWith(NoOpExtension.class)
-  @interface WithNoOp {}
+  @interface WithNoOp {
+  }
 
-  @Retention(RUNTIME) @Target(METHOD)
-  @Test @Tag("fast") @Tag("unit")
-  @interface FastTest {}
+  @Retention(RUNTIME)
+  @Target(METHOD)
+  @Test
+  @Tag("fast")
+  @Tag("unit")
+  @interface FastTest {
+  }
 
   // --- test subjects ---
 
-  @WithNoOp static class ExtendedSubject {}
+  @WithNoOp
+  static class ExtendedSubject {
+  }
 
   static class ComposedSubject {
-    @FastTest void myTest() {}
+    @FastTest
+    void myTest() {
+    }
   }
 
   static class LifecycleBase {
-    @BeforeEach void setUp() {}
+    @BeforeEach
+    void setUp() {
+    }
   }
 
   static class LifecycleDerived extends LifecycleBase {
     // Overrides setUp() but does not redeclare @BeforeEach
-    @Override void setUp() {}
+    @Override
+    void setUp() {
+    }
   }
 
   // --- tests ---
 
-  @Test void extensionDiscovery_bothFindThroughComposed() {
+  @Test
+  void extensionDiscovery_bothFindThroughComposed() {
     // JUnit: findRepeatableAnnotations follows composed annotations
     List<ExtendWith> junit = AnnotationSupport
       .findRepeatableAnnotations(
@@ -80,7 +96,8 @@ class JUnitAnnotationComparisonTest {
       .containsExactly(NoOpExtension.class);
   }
 
-  @Test void testDetection_bothFindThroughComposed() throws Exception {
+  @Test
+  void testDetection_bothFindThroughComposed() throws Exception {
     Method method = ComposedSubject.class
       .getDeclaredMethod("myTest");
 
@@ -96,7 +113,8 @@ class JUnitAnnotationComparisonTest {
     assertThat(annogami).isEqualTo(junit);
   }
 
-  @Test void tagDiscovery_bothFindThroughComposed() throws Exception {
+  @Test
+  void tagDiscovery_bothFindThroughComposed() throws Exception {
     Method method = ComposedSubject.class
       .getDeclaredMethod("myTest");
 
@@ -118,7 +136,8 @@ class JUnitAnnotationComparisonTest {
       .containsExactlyInAnyOrder("fast", "unit");
   }
 
-  @Test void beforeEach_differentQuestions() throws Exception {
+  @Test
+  void beforeEach_differentQuestions() throws Exception {
     // JUnit's question: which methods in this class hierarchy carry
     // @BeforeEach? It searches the class structure and returns the
     // annotated method, which may be in a superclass.

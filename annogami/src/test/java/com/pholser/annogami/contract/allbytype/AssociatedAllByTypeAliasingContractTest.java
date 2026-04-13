@@ -7,11 +7,13 @@ import static com.pholser.annogami.Presences.ASSOCIATED;
 final class AssociatedAllByTypeAliasingContractTest
   extends AllByTypeAliasingContractTest {
 
-  @Override protected AllByType subject() {
+  @Override
+  protected AllByType subject() {
     return ASSOCIATED;
   }
 
-  @Override protected boolean honorsInherited() {
+  @Override
+  protected boolean honorsInherited() {
     return true;
   }
 }

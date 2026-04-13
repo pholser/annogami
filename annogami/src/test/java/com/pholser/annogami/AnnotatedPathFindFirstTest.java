@@ -10,19 +10,29 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnnotatedPathFindFirstTest {
-  @Retention(RUNTIME) @interface Foo {
+  @Retention(RUNTIME)
+  @interface Foo {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @interface Bar {}
+  @Retention(RUNTIME)
+  @interface Bar {
+  }
 
-  @Foo("alpha") static class Alpha {}
+  @Foo("alpha")
+  static class Alpha {
+  }
 
-  @Foo("beta") static class Beta {}
+  @Foo("beta")
+  static class Beta {
+  }
 
-  @Bar static class WithBar {}
+  @Bar
+  static class WithBar {
+  }
 
-  @Test void findsAnnotationOnFirstMatchingElement() {
+  @Test
+  void findsAnnotationOnFirstMatchingElement() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
@@ -31,7 +41,8 @@ class AnnotatedPathFindFirstTest {
       .hasValueSatisfying(f -> assertThat(f.value()).isEqualTo("alpha"));
   }
 
-  @Test void skipsElementsWithoutTheAnnotation() {
+  @Test
+  void skipsElementsWithoutTheAnnotation() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(WithBar.class, Beta.class));
 
@@ -40,7 +51,8 @@ class AnnotatedPathFindFirstTest {
       .hasValueSatisfying(f -> assertThat(f.value()).isEqualTo("beta"));
   }
 
-  @Test void returnsEmptyWhenNoElementHasTheAnnotation() {
+  @Test
+  void returnsEmptyWhenNoElementHasTheAnnotation() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(WithBar.class));
 

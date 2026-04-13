@@ -14,11 +14,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
-  @Retention(RUNTIME) @interface Base {
+  @Retention(RUNTIME)
+  @interface Base {
     String value() default "";
   }
 
-  @Retention(RUNTIME) @Base @interface Composed {
+  @Retention(RUNTIME)
+  @Base
+  @interface Composed {
     @AliasFor(annotation = Base.class, attribute = "value")
     String name() default "";
 
@@ -26,13 +29,20 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
     String value() default "";
   }
 
-  @Composed(name = "hello") static class TargetNameOnly {}
+  @Composed(name = "hello")
+  static class TargetNameOnly {
+  }
 
-  @Composed(value = "hello") static class TargetValueOnly {}
+  @Composed(value = "hello")
+  static class TargetValueOnly {
+  }
 
-  @Composed(name = "one", value = "two") static class TargetConflict {}
+  @Composed(name = "one", value = "two")
+  static class TargetConflict {
+  }
 
-  @Test void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
+  @Test
+  void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
     Composed c =
       DIRECT.find(Composed.class, TargetNameOnly.class, Aliasing.spring())
         .orElseGet(Assertions::fail);
@@ -41,7 +51,8 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(c.value()).isEqualTo("hello");
   }
 
-  @Test void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
+  @Test
+  void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
     Composed c =
       DIRECT.find(Composed.class, TargetValueOnly.class, Aliasing.spring())
         .orElseGet(Assertions::fail);
@@ -50,7 +61,8 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(c.name()).isEqualTo("hello");
   }
 
-  @Test void conflictingExplicitValuesOnImplicitAliasesFailFast() {
+  @Test
+  void conflictingExplicitValuesOnImplicitAliasesFailFast() {
     assertThatThrownBy(() ->
       DIRECT.find(Composed.class, TargetConflict.class, Aliasing.spring())
         .orElseGet(Assertions::fail)
@@ -58,7 +70,8 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
     ).isInstanceOf(IllegalStateException.class);
   }
 
-  @Test void metaViewAlsoSeesTheResolvedValue() {
+  @Test
+  void metaViewAlsoSeesTheResolvedValue() {
     Base b =
       META_DIRECT.find(Base.class, TargetNameOnly.class, Aliasing.spring())
         .orElseGet(Assertions::fail);

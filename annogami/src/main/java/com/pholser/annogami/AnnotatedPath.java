@@ -67,16 +67,17 @@ public final class AnnotatedPath {
     for (Method attr : annoType.getDeclaredMethods()) {
       attr.setAccessible(true);
       Object defaultVal = attr.getDefaultValue();
-      for (A instance : instances) {
+
+      for (A a : instances) {
         try {
-          Object val = attr.invoke(instance);
+          Object val = attr.invoke(a);
+
           if (!Objects.deepEquals(val, defaultVal)) {
             overrides.put(attr.getName(), val);
             break;
           }
         } catch (ReflectiveOperationException e) {
-          throw new IllegalStateException(
-            "Cannot read attribute " + attr, e);
+          throw new IllegalStateException("Cannot read attribute " + attr, e);
         }
       }
     }

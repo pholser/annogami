@@ -12,25 +12,33 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnFieldTest {
-  @Retention(RUNTIME) @interface A {
+  @Retention(RUNTIME)
+  @interface A {
     int value();
   }
 
-  @Retention(RUNTIME) @interface Bs {
+  @Retention(RUNTIME)
+  @interface Bs {
     B[] value();
   }
 
-  @Retention(RUNTIME) @Repeatable(Bs.class) @interface B {
+  @Retention(RUNTIME)
+  @Repeatable(Bs.class)
+  @interface B {
     int value();
   }
 
   static class FieldHaver {
-    @A(1) int a;
-    @B(2) @B(3) int manyBs;
+    @A(1)
+    int a;
+    @B(2)
+    @B(3)
+    int manyBs;
     int none;
   }
 
-  @Test void findsDirectlyPresent() throws Exception {
+  @Test
+  void findsDirectlyPresent() throws Exception {
     A a =
       DIRECT.find(A.class, FieldHaver.class.getDeclaredField("a"))
         .orElseGet(Assertions::fail);
@@ -38,17 +46,20 @@ class DirectPresenceOnFieldTest {
     assertThat(a.value()).isEqualTo(1);
   }
 
-  @Test void missesNotDeclaredOnField() throws Exception {
+  @Test
+  void missesNotDeclaredOnField() throws Exception {
     DIRECT.find(A.class, FieldHaver.class.getDeclaredField("none"))
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void missesIndirectlyPresent() throws Exception {
+  @Test
+  void missesIndirectlyPresent() throws Exception {
     DIRECT.find(B.class, FieldHaver.class.getDeclaredField("manyBs"))
       .ifPresent(AnnotationAssertions::falseFind);
   }
 
-  @Test void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
+  @Test
+  void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     Bs bs =
       DIRECT.find(Bs.class, FieldHaver.class.getDeclaredField("manyBs"))
         .orElseGet(Assertions::fail);

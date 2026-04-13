@@ -10,7 +10,8 @@ class DirectPresenceOnModuleTest {
   // When we add in JPMS modularity for annogami,
   // add a test that finds module markers successfully
 
-  @Test void missesNotDeclared() {
+  @Test
+  void missesNotDeclared() {
     DIRECT.find(ModuleMarker.class, String.class.getModule())
       .ifPresent(AnnotationAssertions::falseFind);
   }
