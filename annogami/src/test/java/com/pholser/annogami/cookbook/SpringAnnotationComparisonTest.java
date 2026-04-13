@@ -4,14 +4,15 @@ import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.AnnotatedPath;
 import com.pholser.annogami.AnnotatedPathBuilder;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.annotation.AliasFor;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
@@ -21,56 +22,24 @@ import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.Presences.META_ASSOCIATED;
 import static com.pholser.annogami.Presences.META_DIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Demonstrates equivalence and differences between Spring's annotation
- * utilities and annogami for common annotation discovery patterns.
+ * utilities and annogami for common annotation discovery patterns,
+ * using real Spring annotation types.
  */
 class SpringAnnotationComparisonTest {
-
-  // --- annotation types mimicking Spring patterns ---
-
-  @Retention(RUNTIME) @Target(TYPE) @interface Component {}
-
-  // @Inherited: META_ASSOCIATED can reach @Component on subclasses
-  @Retention(RUNTIME) @Target(TYPE) @Inherited @Component
-  @interface Service {}
-
-  // NOT @Inherited: META_ASSOCIATED cannot reach @Component on subclasses
-  @Retention(RUNTIME) @Target(TYPE) @Component
-  @interface Repository {}
-
-  @Retention(RUNTIME) @Target({TYPE, METHOD})
-  @interface Transactional {
-    boolean readOnly() default false;
-    int timeout() default -1;
-  }
-
-  @Retention(RUNTIME) @Target({METHOD, ANNOTATION_TYPE})
-  @interface RequestMapping {
-    String[] path() default {};
-  }
-
-  @Retention(RUNTIME) @Target(METHOD) @RequestMapping
-  @interface GetMapping {
-    @AliasFor(annotation = RequestMapping.class, attribute = "path")
-    String[] value() default {};
-  }
 
   // --- test subjects ---
 
   @Service static class MyService {}
 
+  // Real @Service is NOT @Inherited — neither META_ASSOCIATED
+  // nor Spring's TYPE_HIERARCHY finds it via the JVM @Inherited
+  // mechanism; Spring walks the hierarchy explicitly.
   @Service static class ServiceBase {}
-  static class DerivedFromInherited extends ServiceBase {}
-
-  @Repository static class RepositoryBase {}
-  static class DerivedFromNonInherited extends RepositoryBase {}
+  static class DerivedService extends ServiceBase {}
 
   static class MappedController {
     @GetMapping("/orders") void listOrders() {}
@@ -95,52 +64,34 @@ class SpringAnnotationComparisonTest {
     assertThat(annogami).isEqualTo(spring);
   }
 
-  @Test void inheritedSuperclass_metaAssociatedAgreesWithSpring() {
-    // @Service is @Inherited, so DerivedFromInherited inherits it.
-    // Both Spring's TYPE_HIERARCHY and META_ASSOCIATED find it.
+  @Test void serviceOnSuperclass_springFinds_metaAssociatedDoesNot() {
+    // Real @Service is NOT @Inherited. Spring's TYPE_HIERARCHY strategy
+    // explicitly walks the class hierarchy regardless of @Inherited.
+    // META_ASSOCIATED only follows annotations marked @Inherited at the
+    // JVM level, so it cannot reach @Service on the superclass.
     boolean spring = MergedAnnotations
-      .from(DerivedFromInherited.class, SearchStrategy.TYPE_HIERARCHY)
+      .from(DerivedService.class, SearchStrategy.TYPE_HIERARCHY)
       .isPresent(Component.class);
 
     boolean annogami = !META_ASSOCIATED
-      .find(Component.class, DerivedFromInherited.class)
-      .isEmpty();
-
-    assertThat(spring).isTrue();
-    assertThat(annogami).isEqualTo(spring);
-  }
-
-  @Test void nonInheritedSuperclass_springFinds_metaAssociatedDoesNot() {
-    // @Repository is NOT @Inherited. Spring's TYPE_HIERARCHY strategy
-    // explicitly walks the class hierarchy; META_ASSOCIATED only
-    // follows annotations marked @Inherited at the JVM level.
-    boolean spring = MergedAnnotations
-      .from(
-        DerivedFromNonInherited.class,
-        SearchStrategy.TYPE_HIERARCHY)
-      .isPresent(Component.class);
-
-    boolean annogami = !META_ASSOCIATED
-      .find(Component.class, DerivedFromNonInherited.class)
+      .find(Component.class, DerivedService.class)
       .isEmpty();
 
     assertThat(spring).isTrue();
     assertThat(annogami).isFalse(); // META_ASSOCIATED cannot reach it
   }
 
-  @Test void nonInheritedSuperclass_annotatedPathBridgesGap() {
-    // For non-@Inherited superclass annotations, use an explicit
-    // AnnotatedPath over the class hierarchy to replicate
+  @Test void serviceOnSuperclass_annotatedPathBridgesGap() {
+    // For annotations not marked @Inherited on superclasses, use an
+    // explicit AnnotatedPath over the class hierarchy to replicate
     // Spring's TYPE_HIERARCHY behaviour.
     AnnotatedPath path = AnnotatedPathBuilder
-      .fromClass(DerivedFromNonInherited.class)
+      .fromClass(DerivedService.class)
       .toDepthHierarchy()
       .build();
 
     boolean spring = MergedAnnotations
-      .from(
-        DerivedFromNonInherited.class,
-        SearchStrategy.TYPE_HIERARCHY)
+      .from(DerivedService.class, SearchStrategy.TYPE_HIERARCHY)
       .isPresent(Component.class);
 
     boolean annogami = !path
@@ -180,8 +131,8 @@ class SpringAnnotationComparisonTest {
     Transactional tx = AnnotatedElementUtils
       .findMergedAnnotation(method, Transactional.class);
 
-    assertThat(tx.readOnly()).isTrue();   // from method
-    assertThat(tx.timeout()).isEqualTo(-1); // method default; class ignored
+    assertThat(tx.readOnly()).isTrue();       // from method
+    assertThat(tx.timeout()).isEqualTo(-1);   // method default; class ignored
   }
 
   @Test void annogamiMergeFillsAttributesAcrossPathElements()
@@ -194,13 +145,13 @@ class SpringAnnotationComparisonTest {
       .build();
 
     // Method's readOnly=true wins (non-default).
-    // Class fills in timeout=30 for the attribute method left at default.
+    // Class fills in timeout=30 for the attribute left at default.
     Optional<Transactional> tx = path.merge(
       Transactional.class, DIRECT);
 
     assertThat(tx).isPresent();
-    assertThat(tx.get().readOnly()).isTrue();    // from method
-    assertThat(tx.get().timeout()).isEqualTo(30); // filled from class
+    assertThat(tx.get().readOnly()).isTrue();      // from method
+    assertThat(tx.get().timeout()).isEqualTo(30);  // filled from class
   }
 
   @Test void springReturnsOneMatch_annogamiPathReturnsAll()
@@ -222,7 +173,7 @@ class SpringAnnotationComparisonTest {
       Transactional.class, DIRECT_OR_INDIRECT);
 
     assertThat(all).hasSize(2);
-    assertThat(all.get(0).readOnly()).isTrue();    // method
+    assertThat(all.get(0).readOnly()).isTrue();     // method
     assertThat(all.get(1).timeout()).isEqualTo(30); // class
   }
 }

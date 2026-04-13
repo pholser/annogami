@@ -81,6 +81,8 @@ final class SpringAliasing implements Aliasing {
     }
 
     if (!overridesIntoTarget.isEmpty()) {
+      expandThroughIntraAliases(
+        annoType, overridesIntoTarget, aliasForType);
       return Optional.of(
         SynthesizedAnnotations.of(annoType, overridesIntoTarget));
     }
@@ -96,6 +98,34 @@ final class SpringAliasing implements Aliasing {
     }
 
     return Optional.empty();
+  }
+
+  private void expandThroughIntraAliases(
+    Class<? extends Annotation> annoType,
+    Map<String, Object> overrides,
+    Class<? extends Annotation> aliasForType) {
+
+    IntraAliasModel model = intraModelFor(annoType, aliasForType);
+    for (List<String> group : model.aliasGroups()) {
+      Object chosen = null;
+      for (String attrName : group) {
+        if (overrides.containsKey(attrName)) {
+          Object val = overrides.get(attrName);
+          if (chosen == null) {
+            chosen = val;
+          } else if (!Objects.deepEquals(chosen, val)) {
+            throw new IllegalStateException(
+              "Conflicting values within alias group for @"
+                + annoType.getName() + ": " + chosen + " vs " + val);
+          }
+        }
+      }
+      if (chosen != null) {
+        for (String attrName : group) {
+          overrides.put(attrName, chosen);
+        }
+      }
+    }
   }
 
   private static Map<Node, Node> buildAliasEdges(
