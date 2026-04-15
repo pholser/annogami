@@ -52,7 +52,7 @@ boolean isComponent =
 ```java
 // declared annotations only — no superclass inheritance
 boolean isComponent =
-  !META_DIRECT_OR_INDIRECT.find(Component.class, MyService.class)
+  !META_DIRECT.find(Component.class, MyService.class)
     .isEmpty();
 
 // also considers @Component on annotated superclasses
@@ -94,10 +94,8 @@ RequestMapping rm =
 MergedAnnotation<RequestMapping> merged =
   MergedAnnotations.from(method)
     .get(RequestMapping.class);
-if(merged.
-
-isPresent()){
-RequestMapping rm = merged.synthesize();
+if (merged.isPresent()) {
+  RequestMapping rm = merged.synthesize();
 }
 ```
 
