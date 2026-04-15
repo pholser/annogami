@@ -1,4 +1,4 @@
-rootProject.name = 'aliasfor-processor'
+rootProject.name = 'annogami'
 
 include 'aliasfor-processor-core'
 include 'aliasfor-processor-tests'
