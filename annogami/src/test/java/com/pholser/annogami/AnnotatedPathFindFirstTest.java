@@ -1,11 +1,13 @@
 package com.pholser.annogami;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Retention;
 import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT;
+import static com.pholser.annogami.Presences.META_DIRECT;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,5 +59,35 @@ class AnnotatedPathFindFirstTest {
       new AnnotatedPath(List.of(WithBar.class));
 
     assertThat(path.findFirst(Foo.class, DIRECT)).isEmpty();
+  }
+
+  @Retention(RUNTIME)
+  @interface Base {
+    String value() default "";
+  }
+
+  @Retention(RUNTIME)
+  @Base
+  @interface Composed {
+    @AliasFor(annotation = Base.class, attribute = "value")
+    String name() default "";
+  }
+
+  @Composed(name = "first")
+  static class FirstComposed {
+  }
+
+  @Composed(name = "second")
+  static class SecondComposed {
+  }
+
+  @Test
+  void findFirstWithAliasingReturnsSynthesizedResultFromFirstMatch() {
+    AnnotatedPath path =
+      new AnnotatedPath(List.of(FirstComposed.class, SecondComposed.class));
+
+    assertThat(path.findFirst(Base.class, META_DIRECT, Aliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("first"));
   }
 }

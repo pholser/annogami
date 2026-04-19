@@ -1,11 +1,13 @@
 package com.pholser.annogami;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Retention;
 import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
+import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,5 +64,38 @@ class AnnotatedPathFindTest {
 
     assertThat(found).hasSize(1);
     assertThat(found.get(0).value()).isEqualTo("alpha");
+  }
+
+  @Retention(RUNTIME)
+  @interface Base {
+    String value() default "";
+  }
+
+  @Retention(RUNTIME)
+  @Base
+  @interface Composed {
+    @AliasFor(annotation = Base.class, attribute = "value")
+    String name() default "";
+  }
+
+  @Composed(name = "alpha")
+  static class AlphaComposed {
+  }
+
+  @Composed(name = "beta")
+  static class BetaComposed {
+  }
+
+  @Test
+  void findWithAliasingReturnsSynthesizedResultsFromAllPathElements() {
+    AnnotatedPath path =
+      new AnnotatedPath(List.of(AlphaComposed.class, BetaComposed.class));
+
+    List<Base> found =
+      path.find(Base.class, META_DIRECT_OR_INDIRECT, Aliasing.spring());
+
+    assertThat(found).hasSize(2);
+    assertThat(found.get(0).value()).isEqualTo("alpha");
+    assertThat(found.get(1).value()).isEqualTo("beta");
   }
 }

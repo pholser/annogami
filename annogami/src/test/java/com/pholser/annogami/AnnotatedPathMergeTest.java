@@ -100,6 +100,31 @@ class AnnotatedPathMergeTest {
   static class BetaComposed {
   }
 
+  @Config
+  static class AllDefaults {
+  }
+
+  @Test
+  void mergeWhenAllAttributesAreAtDefaultReturnsAnnotationWithDefaults() {
+    AnnotatedPath path = new AnnotatedPath(List.of(AllDefaults.class));
+
+    assertThat(path.merge(Config.class, DIRECT))
+      .isPresent()
+      .hasValueSatisfying(c -> {
+        assertThat(c.host()).isEqualTo("localhost");
+        assertThat(c.port()).isEqualTo(8080);
+      });
+  }
+
+  @Test
+  void mergeSkipsUnannotatedElementsAndFallsBackToAnnotatedOnes() {
+    AnnotatedPath path = new AnnotatedPath(List.of(NoAnnotation.class, Beta.class));
+
+    assertThat(path.merge(Config.class, DIRECT))
+      .isPresent()
+      .hasValueSatisfying(c -> assertThat(c.port()).isEqualTo(9090));
+  }
+
   @Test
   void mergeWithAliasingAppliesAliasesBeforeMerging() {
     AnnotatedPath path = new AnnotatedPath(

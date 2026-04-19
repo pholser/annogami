@@ -285,6 +285,136 @@ class AliasForValidationProcessorTest {
   }
 
   @Test
+  @DisplayName("Conflicting alias values on a field annotation usage")
+  void conflictingAliasValuesOnFieldUsage() {
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.ConflictingField",
+        """
+          package example;
+
+          import org.springframework.core.annotation.AliasFor;
+
+          @interface MyAnno {
+            @AliasFor("path") String value() default "/default";
+            @AliasFor("value") String path() default "/default";
+          }
+
+          class Owner {
+            @MyAnno(value = "/foo", path = "/bar")
+            String myField = "";
+          }
+          """);
+
+    Compilation compilation = compiler().compile(source);
+
+    assertThat(compilation).failed();
+    assertThat(compilation)
+      .hadErrorContaining("are aliases and must have the same value")
+      .inFile(source)
+      .onLineContaining("@MyAnno(value = \"/foo\", path = \"/bar\")");
+  }
+
+  @Test
+  @DisplayName("Conflicting alias values on a constructor parameter annotation usage")
+  void conflictingAliasValuesOnConstructorParamUsage() {
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.ConflictingCtorParam",
+        """
+          package example;
+
+          import org.springframework.core.annotation.AliasFor;
+
+          @interface MyAnno {
+            @AliasFor("path") String value() default "/default";
+            @AliasFor("value") String path() default "/default";
+          }
+
+          class Owner {
+            final String route;
+
+            Owner(@MyAnno(value = "/foo", path = "/bar") String route) {
+              this.route = route;
+            }
+          }
+          """);
+
+    Compilation compilation = compiler().compile(source);
+
+    assertThat(compilation).failed();
+    assertThat(compilation)
+      .hadErrorContaining("are aliases and must have the same value")
+      .inFile(source)
+      .onLineContaining("@MyAnno(value = \"/foo\", path = \"/bar\")");
+  }
+
+  @Test
+  @DisplayName("Happy path: cross-annotation alias with implicit 'value' target attribute")
+  void validCrossAnnotationAlias_implicitValueTarget() {
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.ImplicitValue",
+        """
+          package example;
+
+          import org.springframework.core.annotation.AliasFor;
+
+          @interface Route {
+            String value() default "";
+          }
+
+          @Route
+          @interface GetMapping {
+            @AliasFor(annotation = Route.class)
+            String value() default "";
+          }
+
+          class Usage {
+            @GetMapping("/users") void handler() {}
+          }
+          """);
+
+    Compilation compilation = compiler().compile(source);
+
+    assertThat(compilation).succeeded();
+  }
+
+  @Test
+  @DisplayName("Happy path: cross-annotation alias where declaring annotation is meta-annotated")
+  void validCrossAnnotationAlias_declaringAnnotationIsMetaAnnotated() {
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.ValidCross",
+        """
+          package example;
+
+          import org.springframework.core.annotation.AliasFor;
+          import java.lang.annotation.Retention;
+          import java.lang.annotation.RetentionPolicy;
+
+          @Retention(RetentionPolicy.RUNTIME)
+          @interface Route {
+            String path() default "";
+          }
+
+          @Route
+          @interface GetMapping {
+            @AliasFor(annotation = Route.class, attribute = "path")
+            String value() default "";
+          }
+
+          class Usage {
+            @GetMapping("/users") void handler() {}
+          }
+          """);
+
+    Compilation compilation = compiler().compile(source);
+
+    assertThat(compilation).succeeded();
+  }
+
+  @Test
   @DisplayName("Sanity check: processor is a no-op when AliasFor isn't present")
   void noAliasForOnClasspath_noWorkDone() {
     JavaFileObject source =

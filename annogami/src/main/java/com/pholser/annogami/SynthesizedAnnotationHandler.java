@@ -27,6 +27,7 @@ final class SynthesizedAnnotationHandler implements InvocationHandler {
       if (m.getParameterCount() != 0 || m.getReturnType() == void.class) {
         throw new IllegalArgumentException("Not an annotation member: " + m);
       }
+      m.setAccessible(true);
     }
 
     this.members = methods;
