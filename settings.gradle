@@ -2,4 +2,5 @@ rootProject.name = 'annogami'
 
 include 'aliasfor-processor-core'
 include 'aliasfor-processor-tests'
-include 'annogami'
+include 'annogami-core'
+include 'annogami-spring'
