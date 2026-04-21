@@ -2,6 +2,10 @@ plugins {
   id 'java-library'
 }
 
+java {
+  modularity.inferModulePath = true
+}
+
 group = 'com.pholser.spring'
 version = '1.0.0-SNAPSHOT'
 

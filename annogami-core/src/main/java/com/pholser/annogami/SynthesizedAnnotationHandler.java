@@ -4,6 +4,8 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.IncompleteAnnotationException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -27,7 +29,6 @@ final class SynthesizedAnnotationHandler implements InvocationHandler {
       if (m.getParameterCount() != 0 || m.getReturnType() == void.class) {
         throw new IllegalArgumentException("Not an annotation member: " + m);
       }
-      m.setAccessible(true);
     }
 
     this.members = methods;
@@ -104,13 +105,40 @@ final class SynthesizedAnnotationHandler implements InvocationHandler {
 
     for (Method m : members) {
       Object v1 = valueOf(m);
-      Object v2 = m.invoke(other);
+      Object v2 = getValueFromAnnotation(other, m);
       if (!memberEquals(v1, v2)) {
         return false;
       }
     }
 
     return true;
+  }
+
+  // Annotation instances are always Proxy objects in Java's reflection model.
+  // Rather than calling m.invoke(other) directly — which would require
+  // com.pholser.annogami to have a read edge to the annotation's declaring
+  // module — we dispatch through the other proxy's InvocationHandler, which
+  // executes in its own module context and has the necessary access rights.
+  private static Object getValueFromAnnotation(Object annotation, Method m)
+    throws Exception {
+
+    if (Proxy.isProxyClass(annotation.getClass())) {
+      InvocationHandler h = Proxy.getInvocationHandler(annotation);
+      if (h instanceof SynthesizedAnnotationHandler sh) {
+        return sh.valueOf(m);
+      }
+      try {
+        return h.invoke(annotation, m, null);
+      } catch (Exception | Error t) {
+        throw t;
+      } catch (Throwable t) {
+        throw new UndeclaredThrowableException(t);
+      }
+    }
+
+    // Annotation instances that are not proxies should not exist in practice,
+    // but handle the fallback gracefully.
+    return m.invoke(annotation);
   }
 
   private int handleHashCode() {
