@@ -1,0 +1,37 @@
+plugins {
+  id 'java-library'
+}
+
+group = 'com.pholser.annogami'
+version = '1.0.0-SNAPSHOT'
+
+java {
+  modularity.inferModulePath = true
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation project(':annogami-spring')
+  implementation project(':annogami-programmatic')
+  // @AliasFor is used in the annotation type definitions (RUNTIME retention),
+  // so spring-core must be present at both compile and runtime.
+  compileOnly 'org.springframework:spring-core:7.0.1'
+
+  testImplementation platform('org.junit:junit-bom:6.0.1')
+  testImplementation 'org.junit.jupiter:junit-jupiter'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+  testImplementation 'org.assertj:assertj-core:3.27.6'
+  testImplementation 'org.springframework:spring-core:7.0.1'
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+  options.release = 17
+}
+
+test {
+  useJUnitPlatform()
+}
