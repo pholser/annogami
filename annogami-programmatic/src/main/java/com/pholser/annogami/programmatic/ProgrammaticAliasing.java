@@ -53,6 +53,9 @@ public final class ProgrammaticAliasing implements Aliasing {
     Class<A> annoType,
     List<Annotation> metaContext) {
 
+    Objects.requireNonNull(annoType, "annoType");
+    Objects.requireNonNull(metaContext, "metaContext");
+
     Map<String, List<SourceRef>> attrEdges = edgesByTarget.get(annoType);
     if (attrEdges == null || attrEdges.isEmpty()) {
       return Optional.empty();
@@ -140,8 +143,29 @@ public final class ProgrammaticAliasing implements Aliasing {
       Class<T> targetType,
       String targetAttr) {
 
+      Objects.requireNonNull(sourceType, "sourceType");
+      Objects.requireNonNull(sourceAttr, "sourceAttr");
+      Objects.requireNonNull(targetType, "targetType");
+      Objects.requireNonNull(targetAttr, "targetAttr");
+
+      if (sourceType == targetType && sourceAttr.equals(targetAttr)) {
+        throw new IllegalArgumentException(
+          "Self-alias: " + sourceType.getName() + "." + sourceAttr + " cannot alias itself");
+      }
+
       Method sourceMethod = resolveAttr(sourceType, sourceAttr);
       Method targetMethod = resolveAttr(targetType, targetAttr);
+
+      if (sourceMethod.getDefaultValue() == null) {
+        throw new IllegalArgumentException(
+          "Source attribute " + sourceType.getName() + "." + sourceAttr
+            + "() has no default value; aliasing requires a default");
+      }
+      if (targetMethod.getDefaultValue() == null) {
+        throw new IllegalArgumentException(
+          "Target attribute " + targetType.getName() + "." + targetAttr
+            + "() has no default value; aliasing requires a default");
+      }
 
       if (!sourceMethod.getReturnType().equals(targetMethod.getReturnType())) {
         throw new IllegalArgumentException(
