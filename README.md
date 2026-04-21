@@ -1,7 +1,7 @@
 # annogami
 
 A Java library for annotation discovery with explicit scanning scope,
-attribute synthesis (Spring `@AliasFor`), and path-based attribute merging.
+attribute synthesis, and path-based attribute merging.
 
 This repository also contains a compile-time annotation processor that
 statically validates Spring `@AliasFor` usage.
@@ -12,13 +12,15 @@ statically validates Spring `@AliasFor` usage.
 
 | Module | Description |
 |---|---|
-| `annogami` | Annotation discovery library |
+| `annogami-core` | Annotation discovery, path building, and synthesis infrastructure |
+| `annogami-spring` | Spring `@AliasFor` attribute synthesis (requires `spring-core`) |
+| `annogami-programmatic` | Programmatic alias declarations for annotation types you don't own |
 | `aliasfor-processor-core` | Compile-time `@AliasFor` validation processor |
 | `aliasfor-processor-tests` | Tests for the processor |
 
 ---
 
-## annogami
+## annogami-core
 
 ### Presence constants
 
@@ -44,30 +46,10 @@ annotations up the class hierarchy.
 ```java
 import static com.pholser.annogami.Presences.*;
 
-// Is MyService annotated with @Component or something meta-annotated with it?
+// Is MyService annotated with @Component, or with something meta-annotated with it?
 boolean isComponent =
   !META_PRESENT.find(Component.class, MyService.class).isEmpty();
-
-// Find @RequestMapping synthesized from @GetMapping (with @AliasFor support)
-Optional<RequestMapping> rm =
-  META_DIRECT.find(RequestMapping.class, method, Aliasing.spring());
 ```
-
-### Aliasing
-
-`Aliasing.spring()` enables Spring `@AliasFor` attribute synthesis. Pass
-it as the final argument to any `find` or `all` call:
-
-```java
-Optional<RequestMapping> rm =
-  META_DIRECT.find(RequestMapping.class, method, Aliasing.spring());
-
-List<Annotation> all =
-  META_DIRECT.all(element, Aliasing.spring());
-```
-
-Without an `Aliasing` argument, annotations are returned as-is from the
-JVM with no attribute overriding.
 
 ### Annotated paths
 
@@ -118,9 +100,9 @@ List<Transactional> all =
 Optional<Transactional> merged =
   path.merge(Transactional.class, DIRECT);
 
-// All annotations from all elements in the path
+// All annotations from all elements in the path (with aliasing applied)
 List<Annotation> everything =
-  path.all(META_DIRECT, Aliasing.spring());
+  path.all(META_DIRECT, aliasing);
 ```
 
 `merge` works with `Single` only (no `All`/`AllByType` overload). This
@@ -153,6 +135,95 @@ Optional<Transactional> annogami =
 See [`docs/cookbook.md`](docs/cookbook.md) for more worked examples comparing
 annogami with Spring's `AnnotatedElementUtils`/`MergedAnnotations` and
 JUnit's `AnnotationSupport`.
+
+---
+
+## annogami-spring
+
+`SpringAliasing` resolves Spring `@AliasFor` relationships at runtime,
+synthesizing annotations whose attribute values have been propagated
+according to the alias graph declared by the annotation types themselves.
+
+```java
+import com.pholser.annogami.spring.SpringAliasing;
+
+Aliasing aliasing = SpringAliasing.aliasing();
+
+// Find @RequestMapping synthesized from @GetMapping (with @AliasFor support)
+Optional<RequestMapping> rm =
+  META_DIRECT.find(RequestMapping.class, method, aliasing);
+
+// All annotations from a path, with aliasing applied
+List<Annotation> all =
+  path.all(META_DIRECT, aliasing);
+```
+
+Requires `spring-core` on the runtime classpath. Add a dependency on
+`annogami-spring`, which declares `spring-core` as a `compileOnly`
+dependency — bring your own Spring version.
+
+---
+
+## annogami-programmatic
+
+`ProgrammaticAliasing` lets you declare alias relationships between
+annotation types you don't own, without modifying them or using
+`@AliasFor`. This is useful when bridging annotations across independent
+frameworks.
+
+Build an instance with `ProgrammaticAliasing.builder()`, declaring one or
+more directed edges. Each edge says: when synthesizing the target
+annotation type, use the value of the source attribute to supply the
+target attribute (if the source value is non-default).
+
+```java
+import com.pholser.annogami.programmatic.ProgrammaticAliasing;
+
+Aliasing aliasing = ProgrammaticAliasing.builder()
+  .alias(GetMapping.class, "value", Route.class, "path")
+  .alias(GetMapping.class, "path",  Route.class, "path")
+  .build();
+
+Optional<Route> route =
+  aliasing.synthesize(Route.class, List.of(getMapping));
+```
+
+When multiple source edges target the same attribute, the **first
+non-default value wins**, in registration order.
+
+### Graph shapes
+
+A source attribute can feed multiple target attributes (fan-out):
+
+```java
+Aliasing aliasing = ProgrammaticAliasing.builder()
+  .alias(GetMapping.class, "value", Endpoint.class, "method")
+  .alias(GetMapping.class, "value", Endpoint.class, "path")
+  .build();
+```
+
+Multiple source attributes can feed the same target attribute (fan-in):
+
+```java
+Aliasing aliasing = ProgrammaticAliasing.builder()
+  .alias(GetMapping.class, "value", Route.class, "path")
+  .alias(GetMapping.class, "path",  Route.class, "path")
+  .build();
+```
+
+### Validation at build time
+
+`Builder.alias()` validates each edge immediately and throws
+`IllegalArgumentException` if:
+
+- Either attribute does not exist on its annotation type
+- The source or target attribute has no default value (a default is
+  required to distinguish "not set" from "explicitly set to the default")
+- The source and target attribute return types are incompatible
+- The source and target are the same attribute on the same type (self-alias)
+
+`synthesize()` throws `NullPointerException` if `annoType` or `metaContext`
+is null.
 
 ---
 
@@ -189,8 +260,9 @@ Or as a standalone JAR on `javac`'s `-processorpath`.
 ## Requirements
 
 - Java 17+
-- Spring `spring-core` on the classpath for `Aliasing.spring()` support
-  (the `annogami` library itself has no mandatory Spring dependency)
+- `annogami-spring` requires `spring-core` on the classpath
+- `annogami-core` and `annogami-programmatic` have no external runtime
+  dependencies
 
 ---
 
