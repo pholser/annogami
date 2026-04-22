@@ -415,6 +415,61 @@ class AliasForValidationProcessorTest {
   }
 
   @Test
+  @DisplayName("Non-mirrored intra-alias: target attribute has no @AliasFor back")
+  void nonMirroredIntraAlias_targetMissingAlias() {
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.NonMirrored",
+        """
+          package example;
+
+          import org.springframework.core.annotation.AliasFor;
+
+          @interface MyAnno {
+            @AliasFor("path") String value() default "/default";
+            String path() default "/default";
+          }
+          """
+      );
+
+    Compilation compilation = compiler().compile(source);
+
+    assertThat(compilation).failed();
+    assertThat(compilation)
+      .hadErrorContaining("must be mirrored")
+      .inFile(source)
+      .onLineContaining("@AliasFor(\"path\") String value()");
+  }
+
+  @Test
+  @DisplayName("Non-mirrored intra-alias: target aliases a different attribute, not back to source")
+  void nonMirroredIntraAlias_targetAliasesDifferentAttribute() {
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.MisdirectedMirror",
+        """
+          package example;
+
+          import org.springframework.core.annotation.AliasFor;
+
+          @interface MyAnno {
+            @AliasFor("b") String a() default "";
+            @AliasFor("c") String b() default "";
+            @AliasFor("b") String c() default "";
+          }
+          """
+      );
+
+    Compilation compilation = compiler().compile(source);
+
+    assertThat(compilation).failed();
+    assertThat(compilation)
+      .hadErrorContaining("must be mirrored")
+      .inFile(source)
+      .onLineContaining("@AliasFor(\"b\") String a()");
+  }
+
+  @Test
   @DisplayName("Sanity check: processor is a no-op when AliasFor isn't present")
   void noAliasForOnClasspath_noWorkDone() {
     JavaFileObject source =

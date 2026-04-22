@@ -399,7 +399,46 @@ public class AliasForValidationProcessor extends AbstractProcessor {
       for (AliasDescriptor alias : model.aliases()) {
         validateAliasPair(alias);
       }
-      // Future work: alias graph analysis (cycles, transitivity).
+      validateIntraAnnotationMirrors(model);
+    }
+  }
+
+  // Spring requires that intra-annotation @AliasFor pairs be symmetric:
+  // if 'a' aliases 'b' within the same annotation, 'b' must alias 'a'.
+  private void validateIntraAnnotationMirrors(AnnotationAliasModel model) {
+    // Build a map of source attribute name -> target attribute name
+    // for intra-annotation aliases only.
+    Map<String, String> intraEdges = new HashMap<>();
+
+    for (AliasDescriptor alias : model.aliases()) {
+      if (typeUtils.isSameType(
+        alias.declaringAnno().asType(),
+        alias.targetAnno().asType())) {
+
+        intraEdges.put(alias.sourceAttributeName(), alias.targetAttributeName());
+      }
+    }
+
+    for (AliasDescriptor alias : model.aliases()) {
+      if (!typeUtils.isSameType(
+        alias.declaringAnno().asType(),
+        alias.targetAnno().asType())) {
+
+        continue;
+      }
+
+      String src = alias.sourceAttributeName();
+      String tgt = alias.targetAttributeName();
+      String reverse = intraEdges.get(tgt);
+
+      if (!src.equals(reverse)) {
+        messager.printMessage(
+          Diagnostic.Kind.ERROR,
+          "@AliasFor within the same annotation must be mirrored: '"
+            + src + "' aliases '" + tgt
+            + "' but '" + tgt + "' does not alias '" + src + "'",
+          alias.sourceMethod());
+      }
     }
   }
 
