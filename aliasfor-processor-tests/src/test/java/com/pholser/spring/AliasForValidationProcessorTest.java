@@ -350,6 +350,62 @@ class AliasForValidationProcessorTest {
   }
 
   @Test
+  @DisplayName("Cross-annotation alias: source default differing from target default is allowed")
+  void crossAnnotationAlias_differentDefaultsAreAllowed() {
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.DifferentDefaultsCross",
+        """
+          package example;
+
+          import org.springframework.core.annotation.AliasFor;
+
+          @interface Route {
+            String path() default "";
+          }
+
+          @Route
+          @interface GetMapping {
+            @AliasFor(annotation = Route.class, attribute = "path")
+            String value() default "/";
+          }
+          """
+      );
+
+    Compilation compilation = compiler().compile(source);
+
+    assertThat(compilation).succeeded();
+  }
+
+  @Test
+  @DisplayName("Cross-annotation alias: source attribute with no default is allowed")
+  void crossAnnotationAlias_sourceWithNoDefaultIsAllowed() {
+    JavaFileObject source =
+      JavaFileObjects.forSourceString(
+        "example.NoDefaultCross",
+        """
+          package example;
+
+          import org.springframework.core.annotation.AliasFor;
+
+          @interface Route {
+            String path() default "";
+          }
+
+          @Route
+          @interface GetMapping {
+            @AliasFor(annotation = Route.class, attribute = "path")
+            String value();
+          }
+          """
+      );
+
+    Compilation compilation = compiler().compile(source);
+
+    assertThat(compilation).succeeded();
+  }
+
+  @Test
   @DisplayName("Happy path: cross-annotation alias with implicit 'value' target attribute")
   void validCrossAnnotationAlias_implicitValueTarget() {
     JavaFileObject source =

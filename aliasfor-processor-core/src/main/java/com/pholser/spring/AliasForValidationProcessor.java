@@ -446,7 +446,7 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     ExecutableElement source = alias.sourceMethod();
     ExecutableElement target = alias.targetMethod();
 
-    // 1. Type compatibility
+    // 1. Type compatibility — required for both intra and cross-annotation aliases.
     TypeMirror sourceType = source.getReturnType();
     TypeMirror targetType = target.getReturnType();
     if (!typeUtils.isSameType(sourceType, targetType)) {
@@ -457,26 +457,35 @@ public class AliasForValidationProcessor extends AbstractProcessor {
         source);
     }
 
-    // 2. Default compatibility
-    AnnotationValue sourceDefault = source.getDefaultValue();
-    AnnotationValue targetDefault = target.getDefaultValue();
+    // 2. Default compatibility — required for intra-annotation aliases only.
+    // Spring's contract: for aliases within the same annotation both attributes
+    // must declare identical default values. For cross-annotation @AliasFor
+    // (annotation = SomeOtherAnno.class) the defaults are allowed to differ and
+    // a default is not required on the source attribute at all.
+    boolean isIntraAnnotation = typeUtils.isSameType(
+      alias.declaringAnno().asType(),
+      alias.targetAnno().asType());
 
-    if (sourceDefault == null || targetDefault == null) {
-      // You can relax this if you want. Spring generally expects defaults.
-      messager.printMessage(
-        Diagnostic.Kind.ERROR,
-        "@AliasFor attributes must declare default values",
-        source);
-      return;
-    }
+    if (isIntraAnnotation) {
+      AnnotationValue sourceDefault = source.getDefaultValue();
+      AnnotationValue targetDefault = target.getDefaultValue();
 
-    if (!annotationValueEquals(sourceDefault, targetDefault)) {
-      messager.printMessage(
-        Diagnostic.Kind.ERROR,
-        "@AliasFor attributes must declare the same default value; found "
-          + formatAnnotationValue(sourceDefault) + " vs "
-          + formatAnnotationValue(targetDefault),
-        source);
+      if (sourceDefault == null || targetDefault == null) {
+        messager.printMessage(
+          Diagnostic.Kind.ERROR,
+          "@AliasFor attributes must declare default values",
+          source);
+        return;
+      }
+
+      if (!annotationValueEquals(sourceDefault, targetDefault)) {
+        messager.printMessage(
+          Diagnostic.Kind.ERROR,
+          "@AliasFor attributes must declare the same default value; found "
+            + formatAnnotationValue(sourceDefault) + " vs "
+            + formatAnnotationValue(targetDefault),
+          source);
+      }
     }
   }
 
