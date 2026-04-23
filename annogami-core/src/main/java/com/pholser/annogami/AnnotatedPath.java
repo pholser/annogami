@@ -2,7 +2,11 @@ package com.pholser.annogami;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,24 +69,37 @@ public final class AnnotatedPath {
     Map<String, Object> overrides = new LinkedHashMap<>();
 
     for (Method attr : annoType.getDeclaredMethods()) {
-      attr.setAccessible(true);
       Object defaultVal = attr.getDefaultValue();
 
       for (A a : instances) {
-        try {
-          Object val = attr.invoke(a);
+        Object val = invokeAttr(a, attr);
 
-          if (!Objects.deepEquals(val, defaultVal)) {
-            overrides.put(attr.getName(), val);
-            break;
-          }
-        } catch (ReflectiveOperationException e) {
-          throw new IllegalStateException("Cannot read attribute " + attr, e);
+        if (!Objects.deepEquals(val, defaultVal)) {
+          overrides.put(attr.getName(), val);
+          break;
         }
       }
     }
 
     return Optional.of(SynthesizedAnnotations.of(annoType, overrides));
+  }
+
+  private static Object invokeAttr(Annotation a, Method attr) {
+    if (Proxy.isProxyClass(a.getClass())) {
+      InvocationHandler h = Proxy.getInvocationHandler(a);
+      try {
+        return h.invoke(a, attr, null);
+      } catch (RuntimeException | Error e) {
+        throw e;
+      } catch (Throwable t) {
+        throw new UndeclaredThrowableException(t);
+      }
+    }
+    try {
+      return attr.invoke(a);
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      throw new IllegalStateException("Cannot read attribute " + attr, e);
+    }
   }
 
   public List<Annotation> all(All detector) {

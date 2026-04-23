@@ -78,4 +78,28 @@ class AnnotatedPathAliasingTest {
       .isPresent()
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
   }
+
+  @Test
+  void mergeWithAliasingFirstNonDefaultValueWins() {
+    AnnotatedPath path =
+      new AnnotatedPath(List.of(Alpha.class, Beta.class));
+
+    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.aliasing()))
+      .isPresent()
+      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
+  }
+
+  @Composed(name = "")
+  static class Unset {
+  }
+
+  @Test
+  void mergeWithAliasingLaterElementFillsDefaultAttribute() {
+    AnnotatedPath path =
+      new AnnotatedPath(List.of(Unset.class, Beta.class));
+
+    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.aliasing()))
+      .isPresent()
+      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("beta"));
+  }
 }
