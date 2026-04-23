@@ -1,6 +1,7 @@
 package com.pholser.annogami;
 
 import com.pholser.annogami.spring.SpringAliasing;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -72,10 +73,9 @@ class AnnotatedPathAliasingTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    assertThat(
-      path.findFirst(Base.class, META_DIRECT, SpringAliasing.spring()))
-      .isPresent()
-      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
+    Base b = path.findFirst(Base.class, META_DIRECT, SpringAliasing.spring())
+      .orElseGet(Assertions::fail);
+    assertThat(b.value()).isEqualTo("alpha");
   }
 
   @Test
@@ -83,9 +83,9 @@ class AnnotatedPathAliasingTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.spring()))
-      .isPresent()
-      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
+    Base b = path.merge(Base.class, META_DIRECT, SpringAliasing.spring())
+      .orElseGet(Assertions::fail);
+    assertThat(b.value()).isEqualTo("alpha");
   }
 
   @Composed(name = "")
@@ -97,8 +97,8 @@ class AnnotatedPathAliasingTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Unset.class, Beta.class));
 
-    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.spring()))
-      .isPresent()
-      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("beta"));
+    Base b = path.merge(Base.class, META_DIRECT, SpringAliasing.spring())
+      .orElseGet(Assertions::fail);
+    assertThat(b.value()).isEqualTo("beta");
   }
 }

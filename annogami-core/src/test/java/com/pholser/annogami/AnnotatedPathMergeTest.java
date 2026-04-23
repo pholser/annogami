@@ -1,5 +1,6 @@
 package com.pholser.annogami;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -36,12 +37,9 @@ class AnnotatedPathMergeTest {
   void mergeOnSingleElementReturnsItsValues() {
     AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class));
 
-    assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(c -> {
-        assertThat(c.host()).isEqualTo("alpha.example.com");
-        assertThat(c.port()).isEqualTo(8080);
-      });
+    Config c = path.merge(Config.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(c.host()).isEqualTo("alpha.example.com");
+    assertThat(c.port()).isEqualTo(8080);
   }
 
   @Test
@@ -49,10 +47,8 @@ class AnnotatedPathMergeTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Gamma.class));
 
-    assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(c ->
-        assertThat(c.host()).isEqualTo("alpha.example.com"));
+    Config c = path.merge(Config.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(c.host()).isEqualTo("alpha.example.com");
   }
 
   @Test
@@ -60,12 +56,9 @@ class AnnotatedPathMergeTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(c -> {
-        assertThat(c.host()).isEqualTo("alpha.example.com");
-        assertThat(c.port()).isEqualTo(9090);
-      });
+    Config c = path.merge(Config.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(c.host()).isEqualTo("alpha.example.com");
+    assertThat(c.port()).isEqualTo(9090);
   }
 
   @Test
@@ -84,21 +77,17 @@ class AnnotatedPathMergeTest {
   void mergeWhenAllAttributesAreAtDefaultReturnsAnnotationWithDefaults() {
     AnnotatedPath path = new AnnotatedPath(List.of(AllDefaults.class));
 
-    assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(c -> {
-        assertThat(c.host()).isEqualTo("localhost");
-        assertThat(c.port()).isEqualTo(8080);
-      });
+    Config c = path.merge(Config.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(c.host()).isEqualTo("localhost");
+    assertThat(c.port()).isEqualTo(8080);
   }
 
   @Test
   void mergeSkipsUnannotatedElementsAndFallsBackToAnnotatedOnes() {
     AnnotatedPath path = new AnnotatedPath(List.of(NoAnnotation.class, Beta.class));
 
-    assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(c -> assertThat(c.port()).isEqualTo(9090));
+    Config c = path.merge(Config.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(c.port()).isEqualTo(9090);
   }
 
 }

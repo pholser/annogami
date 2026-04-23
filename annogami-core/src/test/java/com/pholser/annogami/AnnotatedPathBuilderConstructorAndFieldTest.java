@@ -1,5 +1,6 @@
 package com.pholser.annogami;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -35,9 +36,8 @@ class AnnotatedPathBuilderConstructorAndFieldTest {
 
     AnnotatedPath path = AnnotatedPathBuilder.fromConstructor(c).build();
 
-    assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("constructor-level"));
+    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(t.value()).isEqualTo("constructor-level");
   }
 
   @Test
@@ -62,9 +62,8 @@ class AnnotatedPathBuilderConstructorAndFieldTest {
 
     AnnotatedPath path = AnnotatedPathBuilder.fromField(f).build();
 
-    assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("field-level"));
+    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(t.value()).isEqualTo("field-level");
   }
 
   @Test

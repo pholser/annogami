@@ -1,6 +1,7 @@
 package com.pholser.annogami.programmatic;
 
 import com.pholser.annogami.Aliasing;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -25,8 +26,6 @@ class ProgrammaticAliasingTest {
     String path() default "";
   }
 
-  // --- Basic propagation ---
-
   @Test
   void nonDefaultValuePropagatesFromSourceToTarget() {
     Aliasing aliasing = ProgrammaticAliasing.builder()
@@ -37,9 +36,8 @@ class ProgrammaticAliasingTest {
       Route.class,
       List.of(fakeGetMapping("/users", "")));
 
-    assertThat(result)
-      .isPresent()
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/users"));
+    Route r = result.orElseGet(Assertions::fail);
+    assertThat(r.path()).isEqualTo("/users");
   }
 
   @Test
@@ -106,9 +104,8 @@ class ProgrammaticAliasingTest {
       Route.class,
       List.of(fakeGetMapping("/get", ""), fakePostMapping("/post")));
 
-    assertThat(result)
-      .isPresent()
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/get"));
+    Route r = result.orElseGet(Assertions::fail);
+    assertThat(r.path()).isEqualTo("/get");
   }
 
   @Test
@@ -122,12 +119,9 @@ class ProgrammaticAliasingTest {
       Route.class,
       List.of(fakeGetMapping("", ""), fakePostMapping("/post")));
 
-    assertThat(result)
-      .isPresent()
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/post"));
+    Route r = result.orElseGet(Assertions::fail);
+    assertThat(r.path()).isEqualTo("/post");
   }
-
-  // --- Multiple target attributes ---
 
   @Retention(RUNTIME)
   @interface Http {
@@ -181,8 +175,6 @@ class ProgrammaticAliasingTest {
       });
   }
 
-  // --- Validation at build time ---
-
   @Test
   void throwsWhenSourceAttributeDoesNotExist() {
     assertThatThrownBy(() ->
@@ -233,8 +225,6 @@ class ProgrammaticAliasingTest {
       .hasMessageContaining("incompatible");
   }
 
-  // --- Alias graph shapes ---
-
   @Test
   void registeringSameEdgeTwiceIsIdempotent() {
     Aliasing aliasing = ProgrammaticAliasing.builder()
@@ -246,9 +236,8 @@ class ProgrammaticAliasingTest {
       Route.class,
       List.of(fakeGetMapping("/users", "")));
 
-    assertThat(result)
-      .isPresent()
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/users"));
+    Route r = result.orElseGet(Assertions::fail);
+    assertThat(r.path()).isEqualTo("/users");
   }
 
   @Test
@@ -264,9 +253,8 @@ class ProgrammaticAliasingTest {
       Route.class,
       List.of(fakeGetMapping("", "/items")));
 
-    assertThat(result)
-      .isPresent()
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/items"));
+    Route r = result.orElseGet(Assertions::fail);
+    assertThat(r.path()).isEqualTo("/items");
   }
 
   @Test
@@ -283,19 +271,15 @@ class ProgrammaticAliasingTest {
       public Class<? extends Annotation> annotationType() { return Http.class; }
     };
 
-    Optional<Endpoint> result = aliasing.synthesize(
-      Endpoint.class,
-      List.of(fakeGetMapping("/orders", ""), http));
+    Endpoint result =
+      aliasing.synthesize(
+        Endpoint.class,
+        List.of(fakeGetMapping("/orders", ""), http)
+      ).orElseGet(Assertions::fail);
 
-    assertThat(result)
-      .isPresent()
-      .hasValueSatisfying(e -> {
-        assertThat(e.method()).isEqualTo("/orders");
-        assertThat(e.path()).isEqualTo("/orders");
-      });
+      assertThat(result.method()).isEqualTo("/orders");
+      assertThat(result.path()).isEqualTo("/orders");
   }
-
-  // --- Null and self-alias defenses ---
 
   @Test
   void throwsOnNullSourceTypeInAlias() {
@@ -335,9 +319,10 @@ class ProgrammaticAliasingTest {
 
   @Test
   void throwsOnNullAnnoTypeInSynthesize() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
     assertThatThrownBy(() -> aliasing.synthesize(null, List.of()))
       .isInstanceOf(NullPointerException.class);
@@ -345,9 +330,10 @@ class ProgrammaticAliasingTest {
 
   @Test
   void throwsOnNullMetaContextInSynthesize() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
     assertThatThrownBy(() -> aliasing.synthesize(Route.class, null))
       .isInstanceOf(NullPointerException.class);
@@ -362,17 +348,18 @@ class ProgrammaticAliasingTest {
       .isInstanceOf(IllegalArgumentException.class);
   }
 
-  // --- toString ---
-
   @Test
   void toStringFollowsAnnotationToStringConvention() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
-    Route synthesized = aliasing.synthesize(
-        Route.class, List.of(fakeGetMapping("/users", "")))
-      .orElseThrow();
+    Route synthesized =
+      aliasing.synthesize(
+        Route.class,
+        List.of(fakeGetMapping("/users", "")))
+      .orElseGet(Assertions::fail);
 
     String s = synthesized.toString();
 

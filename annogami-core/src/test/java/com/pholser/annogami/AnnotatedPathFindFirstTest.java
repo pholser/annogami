@@ -1,5 +1,6 @@
 package com.pholser.annogami;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -36,9 +37,8 @@ class AnnotatedPathFindFirstTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    assertThat(path.findFirst(Foo.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(f -> assertThat(f.value()).isEqualTo("alpha"));
+    Foo f = path.findFirst(Foo.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(f.value()).isEqualTo("alpha");
   }
 
   @Test
@@ -46,9 +46,8 @@ class AnnotatedPathFindFirstTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(WithBar.class, Beta.class));
 
-    assertThat(path.findFirst(Foo.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(f -> assertThat(f.value()).isEqualTo("beta"));
+    Foo f = path.findFirst(Foo.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(f.value()).isEqualTo("beta");
   }
 
   @Test

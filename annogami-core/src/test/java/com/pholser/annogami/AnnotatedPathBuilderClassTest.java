@@ -1,5 +1,6 @@
 package com.pholser.annogami;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -128,9 +129,8 @@ class AnnotatedPathBuilderClassTest {
       .build();
 
     // Path: [Local, createLocalClass()]. createLocalClass() has @Tag("helper-method").
-    assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("helper-method"));
+    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(t.value()).isEqualTo("helper-method");
   }
 
   @Test
@@ -164,9 +164,8 @@ class AnnotatedPathBuilderClassTest {
       .build();
 
     // Path: [LocalInCtor, LocalInCtorHolder()]. The constructor has @Tag("ctor-level").
-    assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("ctor-level"));
+    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(t.value()).isEqualTo("ctor-level");
   }
 
   @Test
@@ -186,9 +185,8 @@ class AnnotatedPathBuilderClassTest {
       .toDeclaringPackage()
       .build();
 
-    assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("sub"));
+    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(t.value()).isEqualTo("sub");
   }
 
   // --- toDeclaringModule ---
@@ -201,8 +199,7 @@ class AnnotatedPathBuilderClassTest {
       .toDeclaringModule()
       .build();
 
-    assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("sub"));
+    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(t.value()).isEqualTo("sub");
   }
 }

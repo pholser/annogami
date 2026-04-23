@@ -1,5 +1,6 @@
 package com.pholser.annogami;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -39,9 +40,8 @@ class AnnotatedPathBuilderParameterTest {
 
     AnnotatedPath path = AnnotatedPathBuilder.fromParameter(p).build();
 
-    assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("param-level"));
+    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
+    assertThat(t.value()).isEqualTo("param-level");
   }
 
   @Test
