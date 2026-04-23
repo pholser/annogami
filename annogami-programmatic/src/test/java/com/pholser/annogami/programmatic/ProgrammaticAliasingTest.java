@@ -362,6 +362,26 @@ class ProgrammaticAliasingTest {
       .isInstanceOf(IllegalArgumentException.class);
   }
 
+  // --- toString ---
+
+  @Test
+  void toStringFollowsAnnotationToStringConvention() {
+    Aliasing aliasing = ProgrammaticAliasing.builder()
+      .alias(GetMapping.class, "value", Route.class, "path")
+      .build();
+
+    Route synthesized = aliasing.synthesize(
+        Route.class, List.of(fakeGetMapping("/users", "")))
+      .orElseThrow();
+
+    String s = synthesized.toString();
+
+    assertThat(s)
+      .startsWith("@" + Route.class.getName() + "(")
+      .endsWith(")")
+      .contains("path=\"/users\"");
+  }
+
   // --- Helpers ---
 
   private static GetMapping fakeGetMapping(String value, String path) {

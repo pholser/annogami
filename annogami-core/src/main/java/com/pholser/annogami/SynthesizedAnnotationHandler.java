@@ -279,6 +279,10 @@ final class SynthesizedAnnotationHandler implements InvocationHandler {
       }
     }
 
+    if (v instanceof String s) {
+      return '"' + s + '"';
+    }
+
     return String.valueOf(v);
   }
 }
