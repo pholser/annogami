@@ -10,9 +10,9 @@ import javax.tools.JavaFileObject;
 
 import static com.google.testing.compile.CompilationSubject.assertThat;
 
-class AliasForValidationProcessorTest {
+class AliasValidationProcessorTest {
   private Compiler compiler() {
-    return Compiler.javac().withProcessors(new AliasForValidationProcessor());
+    return Compiler.javac().withProcessors(new AliasValidationProcessor());
   }
 
   @Test

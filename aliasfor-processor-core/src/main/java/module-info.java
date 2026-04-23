@@ -1,5 +1,7 @@
+import com.pholser.spring.AliasValidationProcessor;
+
 module com.pholser.spring.aliasfor.processor {
-    requires java.compiler;
-    provides javax.annotation.processing.Processor
-        with com.pholser.spring.AliasForValidationProcessor;
+  requires java.compiler;
+  provides javax.annotation.processing.Processor
+    with AliasValidationProcessor;
 }

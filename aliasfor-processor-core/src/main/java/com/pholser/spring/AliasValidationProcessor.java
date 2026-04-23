@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  * fully-qualified name.
  */
 @SupportedAnnotationTypes(FullyQualifiedClassNames.ALIAS_FOR)
-public class AliasForValidationProcessor extends AbstractProcessor {
+public class AliasValidationProcessor extends AbstractProcessor {
   private Types typeUtils;
   private Elements elementUtils;
   private Messager messager;
@@ -54,33 +54,33 @@ public class AliasForValidationProcessor extends AbstractProcessor {
   }
 
   @Override
-  public synchronized void init(ProcessingEnvironment processingEnv) {
-    super.init(processingEnv);
+  public synchronized void init(ProcessingEnvironment processing) {
+    super.init(processing);
 
-    this.typeUtils = processingEnv.getTypeUtils();
-    this.elementUtils = processingEnv.getElementUtils();
-    this.messager = processingEnv.getMessager();
+    this.typeUtils = processing.getTypeUtils();
+    this.elementUtils = processing.getElementUtils();
+    this.messager = processing.getMessager();
   }
 
   @Override
   public boolean process(
     Set<? extends TypeElement> annotations,
-    RoundEnvironment roundEnv) {
+    RoundEnvironment round) {
 
     if (annotations.isEmpty()) {
       return false;
     }
 
-    TypeElement aliasForElement =
+    TypeElement aliasElement =
       elementUtils.getTypeElement(FullyQualifiedClassNames.ALIAS_FOR);
-    if (aliasForElement == null) {
+    if (aliasElement == null) {
       // Spring not on the compilation classpath for this module; nothing to do
       return false;
     }
 
     // Phase 1: collect alias metadata
     Map<String, AnnotationAliasModel> aliasModels =
-      collectAliasModels(roundEnv, aliasForElement);
+      collectAliasModels(round, aliasElement);
     if (aliasModels.isEmpty()) {
       return false;
     }
@@ -89,7 +89,7 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     validateAnnotationTypes(aliasModels);
 
     // Phase 3: validate annotation usages
-    validateAnnotationUsages(aliasModels, roundEnv);
+    validateAnnotationUsages(aliasModels, round);
 
     // Returning false lets other processors also see @AliasFor if they want
     return false;
@@ -100,10 +100,10 @@ public class AliasForValidationProcessor extends AbstractProcessor {
    */
   record AliasDescriptor(
     ExecutableElement sourceMethod,
-    String sourceAttributeName,
+    String sourceAttrName,
     TypeElement declaringAnno,
     ExecutableElement targetMethod,
-    String targetAttributeName,
+    String targetAttrName,
     TypeElement targetAnno) {
   }
 
@@ -128,17 +128,13 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     }
   }
 
-  // ============================================================
-  //  Phase 1: collect alias metadata
-  // ============================================================
-
   private Map<String, AnnotationAliasModel> collectAliasModels(
     RoundEnvironment roundEnv,
-    TypeElement aliasForElement) {
+    TypeElement aliasElement) {
 
     Map<String, List<AliasDescriptor>> byAnnotation = new HashMap<>();
 
-    for (Element el : roundEnv.getElementsAnnotatedWith(aliasForElement)) {
+    for (Element el : roundEnv.getElementsAnnotatedWith(aliasElement)) {
       if (el.getKind() != ElementKind.METHOD) {
         messager.printMessage(
           Diagnostic.Kind.ERROR,
@@ -165,10 +161,9 @@ public class AliasForValidationProcessor extends AbstractProcessor {
         continue;
       }
 
-      AnnotationMirror aliasMirror = findAliasForMirror(method, aliasForElement);
+      AnnotationMirror aliasMirror = findAliasMirror(method, aliasElement);
       if (aliasMirror == null) {
-        // Should not happen if getElementsAnnotatedWith worked,
-        // but guard anyway
+        // Should not happen if getElementsAnnotatedWith worked; guard anyway
         continue;
       }
 
@@ -185,26 +180,29 @@ public class AliasForValidationProcessor extends AbstractProcessor {
         .add(desc);
     }
 
-    Map<String, AnnotationAliasModel> result = new HashMap<>();
+    Map<String, AnnotationAliasModel> aliasModels = new HashMap<>();
     for (var entry : byAnnotation.entrySet()) {
-      List<AliasDescriptor> list = entry.getValue();
-      if (list.isEmpty()) {
+      List<AliasDescriptor> descriptors = entry.getValue();
+      if (descriptors.isEmpty()) {
         continue;
       }
-      TypeElement annoType = list.get(0).declaringAnno();
-      result.put(entry.getKey(), new AnnotationAliasModel(annoType, list));
+
+      TypeElement annoType = descriptors.get(0).declaringAnno();
+      aliasModels.put(
+        entry.getKey(),
+        new AnnotationAliasModel(annoType, descriptors));
     }
 
-    return result;
+    return aliasModels;
   }
 
-  private AnnotationMirror findAliasForMirror(
+  private AnnotationMirror findAliasMirror(
     ExecutableElement method,
-    TypeElement aliasForElement) {
+    TypeElement aliasElement) {
 
     return method.getAnnotationMirrors().stream()
       .filter(m ->
-        typeUtils.isSameType(m.getAnnotationType(), aliasForElement.asType()))
+        typeUtils.isSameType(m.getAnnotationType(), aliasElement.asType()))
       .findFirst()
       .orElse(null);
   }
@@ -217,7 +215,6 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     var valuesWithDefaults =
       elementUtils.getElementValuesWithDefaults(aliasMirror);
 
-    // Extract @AliasFor elements: annotation, attribute, value
     TypeElement targetAnnoType =
       resolveTargetAnnotationType(
         valuesWithDefaults,
@@ -228,14 +225,14 @@ public class AliasForValidationProcessor extends AbstractProcessor {
       return null; // error reported
     }
 
-    String targetAttributeName =
+    String targetAttrName =
       resolveTargetAttributeName(valuesWithDefaults, aliasMirror, sourceMethod);
-    if (targetAttributeName == null) {
+    if (targetAttrName == null) {
       return null; // error reported
     }
 
     ExecutableElement targetMethod =
-      findAttributeMethod(targetAnnoType, targetAttributeName, sourceMethod);
+      findAttributeMethod(targetAnnoType, targetAttrName, sourceMethod);
     if (targetMethod == null) {
       return null; // error reported
     }
@@ -245,7 +242,7 @@ public class AliasForValidationProcessor extends AbstractProcessor {
       sourceMethod.getSimpleName().toString(),
       declaringAnno,
       targetMethod,
-      targetAttributeName,
+      targetAttrName,
       targetAnnoType);
   }
 
@@ -275,7 +272,7 @@ public class AliasForValidationProcessor extends AbstractProcessor {
 
     String typeName = annoTypeMirror.toString();
     if (FullyQualifiedClassNames.JAVA_ANNOTATION.equals(typeName)) {
-      // This means "no explicit annotation set" -> default to declaring annotation
+      // means "no explicit annotation set" -> default to declaring annotation
       return declaringAnno;
     }
 
@@ -298,7 +295,6 @@ public class AliasForValidationProcessor extends AbstractProcessor {
       return null;
     }
 
-    // Ensure declaringAnno is meta-annotated with targetAnno
     if (!isMetaAnnotatedWith(declaringAnno, targetAnno)) {
       messager.printMessage(
         Diagnostic.Kind.ERROR,
@@ -333,6 +329,7 @@ public class AliasForValidationProcessor extends AbstractProcessor {
 
     if (attribute != null && !attribute.isEmpty()
       && value != null && !value.isEmpty()) {
+
       messager.printMessage(
         Diagnostic.Kind.ERROR,
         "@AliasFor cannot declare both 'attribute' and 'value'",
@@ -347,18 +344,19 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     if (value != null && !value.isEmpty()) {
       return value;
     }
+
     // Matches Spring's default: aliasing "value"
     return "value";
   }
 
   private ExecutableElement findAttributeMethod(
     TypeElement annoType,
-    String attributeName,
+    String attrName,
     Element context) {
 
     for (Element enclosed : annoType.getEnclosedElements()) {
       if (enclosed.getKind() == ElementKind.METHOD
-        && enclosed.getSimpleName().contentEquals(attributeName)) {
+        && enclosed.getSimpleName().contentEquals(attrName)) {
 
         return (ExecutableElement) enclosed;
       }
@@ -366,7 +364,7 @@ public class AliasForValidationProcessor extends AbstractProcessor {
 
     messager.printMessage(
       Diagnostic.Kind.ERROR,
-      "Target attribute '" + attributeName + "' not found on annotation @"
+      "Target attribute '" + attrName + "' not found on annotation @"
         + annoType.getQualifiedName(),
       context);
     return null;
@@ -388,10 +386,6 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     return false;
   }
 
-  // ============================================================
-  //  Phase 2: validate annotation types (structural rules)
-  // ============================================================
-
   private void validateAnnotationTypes(
     Map<String, AnnotationAliasModel> aliasModels) {
 
@@ -399,6 +393,7 @@ public class AliasForValidationProcessor extends AbstractProcessor {
       for (AliasDescriptor alias : model.aliases()) {
         validateAliasPair(alias);
       }
+
       validateIntraAnnotationMirrors(model);
     }
   }
@@ -411,32 +406,31 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     Map<String, String> intraEdges = new HashMap<>();
 
     for (AliasDescriptor alias : model.aliases()) {
-      if (typeUtils.isSameType(
-        alias.declaringAnno().asType(),
-        alias.targetAnno().asType())) {
+      TypeMirror declaringType = alias.declaringAnno().asType();
+      TypeMirror targetType = alias.targetAnno().asType();
 
-        intraEdges.put(alias.sourceAttributeName(), alias.targetAttributeName());
+      if (typeUtils.isSameType(declaringType, targetType)) {
+        intraEdges.put(alias.sourceAttrName(), alias.targetAttrName());
       }
     }
 
     for (AliasDescriptor alias : model.aliases()) {
-      if (!typeUtils.isSameType(
-        alias.declaringAnno().asType(),
-        alias.targetAnno().asType())) {
-
+      TypeMirror declaringType = alias.declaringAnno().asType();
+      TypeMirror targetType = alias.targetAnno().asType();
+      if (!typeUtils.isSameType(declaringType, targetType)) {
         continue;
       }
 
-      String src = alias.sourceAttributeName();
-      String tgt = alias.targetAttributeName();
-      String reverse = intraEdges.get(tgt);
+      String sourceName = alias.sourceAttrName();
+      String targetName = alias.targetAttrName();
+      String reverse = intraEdges.get(targetName);
 
-      if (!src.equals(reverse)) {
+      if (!sourceName.equals(reverse)) {
         messager.printMessage(
           Diagnostic.Kind.ERROR,
           "@AliasFor within the same annotation must be mirrored: '"
-            + src + "' aliases '" + tgt
-            + "' but '" + tgt + "' does not alias '" + src + "'",
+            + sourceName + "' aliases '" + targetName
+            + "' but '" + targetName + "' does not alias '" + sourceName + "'",
           alias.sourceMethod());
       }
     }
@@ -505,11 +499,13 @@ public class AliasForValidationProcessor extends AbstractProcessor {
       if (la.size() != lb.size()) {
         return false;
       }
+
       for (int i = 0; i < la.size(); i++) {
         if (!annotationValueEquals(la.get(i), lb.get(i))) {
           return false;
         }
       }
+
       return true;
     }
 
@@ -525,12 +521,9 @@ public class AliasForValidationProcessor extends AbstractProcessor {
         .map(this::formatAnnotationValue)
         .collect(Collectors.joining(", ", "[", "]"));
     }
+
     return String.valueOf(value);
   }
-
-  // ============================================================
-  //  Phase 3: validate annotation usages (conflicting alias values)
-  // ============================================================
 
   private void validateAnnotationUsages(
     Map<String, AnnotationAliasModel> aliasModels,
@@ -543,9 +536,10 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     // Map by fully-qualified name for quick lookup
     Map<Name, AnnotationAliasModel> byTypeName =
       aliasModels.values().stream()
-        .collect(Collectors.toMap(
-          m -> m.annotationType().getQualifiedName(),
-          m -> m));
+        .collect(
+          Collectors.toMap(
+            m -> m.annotationType().getQualifiedName(),
+            m -> m));
 
     ElementScanner8<Void, Void> scanner = new ElementScanner8<>() {
       @Override
@@ -567,6 +561,7 @@ public class AliasForValidationProcessor extends AbstractProcessor {
     for (AnnotationMirror mirror : element.getAnnotationMirrors()) {
       TypeElement annoType = (TypeElement) mirror.getAnnotationType().asElement();
       AnnotationAliasModel model = aliasModels.get(annoType.getQualifiedName());
+
       if (model != null) {
         validateSingleAnnotationUsage(mirror, model, element);
       }
@@ -591,16 +586,15 @@ public class AliasForValidationProcessor extends AbstractProcessor {
 
     for (AliasDescriptor alias : model.aliases()) {
       // For now, only check aliases within the same annotation type.
-      if (!typeUtils.isSameType(
-        alias.declaringAnno().asType(),
-        alias.targetAnno().asType())) {
+      TypeMirror declaringType = alias.declaringAnno().asType();
+      TypeMirror targetType = alias.targetAnno().asType();
+
+      if (!typeUtils.isSameType(declaringType, targetType)) {
         continue;
       }
 
-      AnnotationValue left = byName.get(alias.sourceAttributeName());
-      AnnotationValue right = byName.get(alias.targetAttributeName());
-
-      // If one or both are not explicitly set, nothing to check.
+      AnnotationValue left = byName.get(alias.sourceAttrName());
+      AnnotationValue right = byName.get(alias.targetAttrName());
       if (left == null || right == null) {
         continue;
       }
@@ -608,8 +602,8 @@ public class AliasForValidationProcessor extends AbstractProcessor {
       if (!annotationValueEquals(left, right)) {
         messager.printMessage(
           Diagnostic.Kind.ERROR,
-          "Attributes '" + alias.sourceAttributeName() + "' and '"
-            + alias.targetAttributeName()
+          "Attributes '" + alias.sourceAttrName() + "' and '"
+            + alias.targetAttrName()
             + "' are aliases and must have the same value; found "
             + formatAnnotationValue(left) + " vs "
             + formatAnnotationValue(right),
