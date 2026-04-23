@@ -12,7 +12,27 @@ import static com.pholser.annogami.ClassHierarchies.depthFirstHierarchyOf;
 import static com.pholser.annogami.ClassHierarchies.depthFirstOverrideHierarchyOf;
 
 /**
- * Annotated path builder; builds and retains a sequence of annotated elements.
+ * Fluent builder for constructing an {@link AnnotatedPath} by navigating
+ * the reflective structure of a Java program element.
+ *
+ * <p>A path is assembled by starting at a concrete element with one of the
+ * static {@code from*} factory methods, optionally chaining {@code to*}
+ * navigation methods to extend the path through related elements (declaring
+ * class, override hierarchy, enclosing classes, etc.), and finally calling
+ * {@link #build()} to produce the {@link AnnotatedPath}. For example:
+ *
+ * <pre>{@code
+ * AnnotatedPath path = AnnotatedPathBuilder
+ *     .fromMethod(someMethod)
+ *     .toDeclaringClass()
+ *     .toBreadthHierarchy()
+ *     .build();
+ * }</pre>
+ *
+ * <p>Each inner class represents one segment of the chain. Segments that
+ * expose no further {@code to*} methods — {@link Methods}, {@link Classes},
+ * {@link Package}, and {@link Module} — can only be terminated with
+ * {@link #build()}.
  */
 public sealed class AnnotatedPathBuilder
   extends AnnotatedPath.SegmentBuilder
@@ -28,13 +48,10 @@ public sealed class AnnotatedPathBuilder
     AnnotatedPathBuilder.Module {
 
   /**
-   * This segment builder's predecessor annotated elements.
+   * Accumulated elements in the path built so far, in priority order.
    */
   protected final List<AnnotatedElement> predecessors = new ArrayList<>();
 
-  /**
-   * Protected for subclasses.
-   */
   protected AnnotatedPathBuilder() {
   }
 
@@ -126,7 +143,7 @@ public sealed class AnnotatedPathBuilder
      *
      * @return builder segment focused at that constructor
      * @throws IllegalStateException if this segment's parameter is not a
-     *                               constructor parameter
+     * constructor parameter
      */
     public Constructor toDeclaringConstructor() {
       Executable exec = p.getDeclaringExecutable();
@@ -144,7 +161,7 @@ public sealed class AnnotatedPathBuilder
      *
      * @return builder segment focused at that method
      * @throws IllegalStateException if this segment's parameter is not a
-     *                               method parameter
+     * method parameter
      */
     public Method toDeclaringMethod() {
       Executable exec = p.getDeclaringExecutable();
@@ -219,12 +236,15 @@ public sealed class AnnotatedPathBuilder
 
     /**
      * Extends the in-progress path from this segment's method through all
-     * methods in the class hierarchy that this segment's method overrides
-     * (depth-first; superclass, then directly implemented interfaces).
-     * This is effectively a terminal operation, since the resulting
-     * builder segment affords no operation other than {@link #build()}.
+     * methods in the class hierarchy that this segment's method overrides,
+     * visited depth-first (superclass chain exhausted before sibling
+     * interfaces). No further navigation is available from the resulting
+     * segment; call {@link #build()} to complete the path.
      *
-     * @return builder segment focused after the method override chain
+     * <p>Returns an empty extension when the method is {@code static} or
+     * {@code private}, as neither can participate in overriding.
+     *
+     * @return builder segment containing the overridden method chain
      */
     public Methods toDepthOverridden() {
       return new Methods(depthFirstOverrideHierarchyOf(m), predecessors);
@@ -232,12 +252,15 @@ public sealed class AnnotatedPathBuilder
 
     /**
      * Extends the in-progress path from this segment's method through all
-     * methods in the class hierarchy that this segment's method overrides
-     * (breadth-first; superclass, then directly implemented interfaces).
-     * This is effectively a terminal operation, since the resulting
-     * builder segment affords no operation other than {@link #build()}.
+     * methods in the class hierarchy that this segment's method overrides,
+     * visited breadth-first (superclass and interfaces at each level before
+     * descending further). No further navigation is available from the
+     * resulting segment; call {@link #build()} to complete the path.
      *
-     * @return builder segment focused after the method override chain
+     * <p>Returns an empty extension when the method is {@code static} or
+     * {@code private}, as neither can participate in overriding.
+     *
+     * @return builder segment containing the overridden method chain
      */
     public Methods toBreadthOverridden() {
       return new Methods(breadthFirstOverrideHierarchyOf(m), predecessors);
@@ -367,11 +390,11 @@ public sealed class AnnotatedPathBuilder
 
     /**
      * Extends the in-progress path from this segment's class through all
-     * its nesting classes, from innermost to outermost. This is effectively
-     * a terminal operation, since the resulting builder segment affords no
-     * operation other than {@link #build()}.
+     * its enclosing classes, from innermost to outermost. No further
+     * navigation is available from the resulting segment; call
+     * {@link #build()} to complete the path.
      *
-     * @return builder segment focused after the class enclosure chain
+     * @return builder segment containing the enclosing class chain
      */
     public Classes toClassEnclosure() {
       List<java.lang.Class<?>> enclosure = new ArrayList<>();
@@ -388,12 +411,12 @@ public sealed class AnnotatedPathBuilder
 
     /**
      * Extends the in-progress path from this segment's class through all
-     * classes in its hierarchy (depth-first; superclass, then directly
-     * implemented interfaces). This is effectively a terminal operation,
-     * since the resulting builder segment affords no operation other than
-     * {@link #build()}.
+     * classes in its hierarchy, visited depth-first (superclass chain
+     * exhausted before sibling interfaces). No further navigation is
+     * available from the resulting segment; call {@link #build()} to
+     * complete the path.
      *
-     * @return builder segment focused after the class hierarchy chain
+     * @return builder segment containing the class hierarchy
      */
     public Classes toDepthHierarchy() {
       return new Classes(depthFirstHierarchyOf(k), predecessors);
@@ -401,12 +424,12 @@ public sealed class AnnotatedPathBuilder
 
     /**
      * Extends the in-progress path from this segment's class through all
-     * classes in its hierarchy (breadth-first; superclass, then directly
-     * implemented interfaces). This is effectively a terminal operation,
-     * since the resulting builder segment affords no operation other than
-     * {@link #build()}.
+     * classes in its hierarchy, visited breadth-first (superclass and
+     * interfaces at each level before descending further). No further
+     * navigation is available from the resulting segment; call
+     * {@link #build()} to complete the path.
      *
-     * @return builder segment focused after the class hierarchy chain
+     * @return builder segment containing the class hierarchy
      */
     public Classes toBreadthHierarchy() {
       return new Classes(breadthFirstHierarchyOf(k), predecessors);
@@ -414,7 +437,8 @@ public sealed class AnnotatedPathBuilder
   }
 
   /**
-   * Terminal builder segment representing a sequence of methods.
+   * Leaf builder segment representing a sequence of methods; only
+   * {@link #build()} is available.
    */
   public static final class Methods extends AnnotatedPathBuilder {
     Methods(
@@ -427,7 +451,8 @@ public sealed class AnnotatedPathBuilder
   }
 
   /**
-   * Terminal builder segment representing a sequence of classes.
+   * Leaf builder segment representing a sequence of classes; only
+   * {@link #build()} is available.
    */
   public static final class Classes extends AnnotatedPathBuilder {
     Classes(
@@ -440,7 +465,8 @@ public sealed class AnnotatedPathBuilder
   }
 
   /**
-   * Terminal builder segment representing a package.
+   * Leaf builder segment representing a package; only {@link #build()} is
+   * available.
    */
   public static final class Package extends AnnotatedPathBuilder {
     Package(
@@ -453,7 +479,8 @@ public sealed class AnnotatedPathBuilder
   }
 
   /**
-   * Terminal builder segment representing a module.
+   * Leaf builder segment representing a module; only {@link #build()} is
+   * available.
    */
   public static final class Module extends AnnotatedPathBuilder {
     Module(
