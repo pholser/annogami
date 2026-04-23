@@ -3,13 +3,10 @@ package com.pholser.annogami.spring;
 import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.SynthesizedAnnotations;
 import com.pholser.annogami.UnionFind;
+import com.pholser.annogami.internal.AnnotationInvoker;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -526,27 +523,8 @@ public final class SpringAliasing implements Aliasing {
       .orElse(null);
   }
 
-  // All JVM annotation instances are Proxy objects backed by an internal
-  // AnnotationInvocationHandler (java.base). Dispatching through the proxy's
-  // InvocationHandler lets it execute in java.base's module context, which has
-  // access to annotation types in any package — including packages that are
-  // only qualified-exported and do not list com.pholser.annogami.spring.
   private static Object invoke(Annotation a, Method m) {
-    if (Proxy.isProxyClass(a.getClass())) {
-      InvocationHandler h = Proxy.getInvocationHandler(a);
-      try {
-        return h.invoke(a, m, null);
-      } catch (RuntimeException | Error e) {
-        throw e;
-      } catch (Throwable t) {
-        throw new UndeclaredThrowableException(t);
-      }
-    }
-    try {
-      return m.invoke(a);
-    } catch (IllegalAccessException | InvocationTargetException e) {
-      throw new IllegalStateException(e);
-    }
+    return AnnotationInvoker.invoke(a, m, () -> m.invoke(a));
   }
 
   private static Optional<Method> findMethod(Class<?> k, String name) {

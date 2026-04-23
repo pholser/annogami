@@ -2,13 +2,10 @@ package com.pholser.annogami.programmatic;
 
 import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.SynthesizedAnnotations;
+import com.pholser.annogami.internal.AnnotationInvoker;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -96,26 +93,11 @@ public final class ProgrammaticAliasing implements Aliasing {
     return Optional.of(SynthesizedAnnotations.of(annoType, overrides));
   }
 
-  // All JVM annotation instances are Proxy objects backed by an internal
-  // AnnotationInvocationHandler (java.base). Dispatching through the proxy's
-  // InvocationHandler lets it execute in java.base's module context, which has
-  // access to annotation types in any package — including packages that are
-  // only qualified-exported and do not list com.pholser.annogami.programmatic.
   private static Object invoke(Annotation annotation, String attrName) {
     try {
       Method m = annotation.annotationType().getDeclaredMethod(attrName);
-      if (Proxy.isProxyClass(annotation.getClass())) {
-        InvocationHandler h = Proxy.getInvocationHandler(annotation);
-        try {
-          return h.invoke(annotation, m, null);
-        } catch (RuntimeException | Error e) {
-          throw e;
-        } catch (Throwable t) {
-          throw new UndeclaredThrowableException(t);
-        }
-      }
-      return m.invoke(annotation);
-    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+      return AnnotationInvoker.invoke(annotation, m, () -> m.invoke(annotation));
+    } catch (NoSuchMethodException e) {
       throw new IllegalStateException(
         "Cannot invoke " + annotation.annotationType().getName() + "." + attrName + "()", e);
     }
