@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import com.pholser.annogami.Presences;
 import org.junit.jupiter.api.Assertions;
@@ -44,7 +43,7 @@ class SpringAliasForTransitiveMetaOverrideCycleTest {
   void cycleInAliasGraphIsDetectedAndFailsFast() {
     assertThatThrownBy(() ->
       Presences.META_DIRECT
-        .find(Base.class, Target.class, SpringAliasing.aliasing())
+        .find(Base.class, Target.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail)
         .value() // force proxy creation / member access
     ).isInstanceOf(IllegalStateException.class)

@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public final class SpringAliasing implements Aliasing {
-  public static Aliasing aliasing() {
+  public static Aliasing spring() {
     return new SpringAliasing();
   }
 

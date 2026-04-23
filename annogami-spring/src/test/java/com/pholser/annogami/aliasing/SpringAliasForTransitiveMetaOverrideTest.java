@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
@@ -38,7 +37,7 @@ class SpringAliasForTransitiveMetaOverrideTest {
   @Test
   void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
     Base b =
-      META_DIRECT.find(Base.class, Target.class, SpringAliasing.aliasing())
+      META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring())
         .orElseThrow();
 
     assertThat(b.value()).isEqualTo("hello");

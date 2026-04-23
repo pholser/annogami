@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ class SpringAliasForAllByTypeMetaAssociatedInheritedSeedTest {
   @Test
   void findWithAliasingUpgradesMetaAnnotationFromInheritedSeed() {
     List<Base> found =
-      META_ASSOCIATED.find(Base.class, InhDerived.class, SpringAliasing.aliasing());
+      META_ASSOCIATED.find(Base.class, InhDerived.class, SpringAliasing.spring());
 
     Base base = found.stream().findFirst().orElseGet(Assertions::fail);
 

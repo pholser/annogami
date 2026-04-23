@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +35,7 @@ class SpringAliasForAllSynthesizesEachAnnotationInResultTest {
 
   @Test
   void eachAnnotationInResultGetsSynthesized() {
-    List<Annotation> all = DIRECT.all(Target.class, SpringAliasing.aliasing());
+    List<Annotation> all = DIRECT.all(Target.class, SpringAliasing.spring());
 
     First first =
       all.stream()

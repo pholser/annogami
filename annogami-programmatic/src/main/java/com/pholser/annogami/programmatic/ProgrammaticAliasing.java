@@ -23,10 +23,11 @@ import java.util.Optional;
  *
  * <p>Build an instance with {@link #builder()}:
  * <pre>{@code
- * Aliasing aliasing = ProgrammaticAliasing.builder()
- *   .alias(GetMapping.class, "value", Route.class, "path")
- *   .alias(GetMapping.class, "path",  Route.class, "path")
- *   .build();
+ * Aliasing aliasing =
+ *   ProgrammaticAliasing.builder()
+ *     .alias(GetMapping.class, "value", Route.class, "path")
+ *     .alias(GetMapping.class, "path",  Route.class, "path")
+ *     .build();
  * }</pre>
  *
  * <p>Each {@code alias} call declares a directed edge: when synthesizing the
@@ -36,7 +37,8 @@ import java.util.Optional;
  * value is non-default wins.
  */
 public final class ProgrammaticAliasing implements Aliasing {
-  private final Map<Class<? extends Annotation>, Map<String, List<SourceRef>>> edgesByTarget;
+  private final
+  Map<Class<? extends Annotation>, Map<String, List<SourceRef>>> edgesByTarget;
 
   private ProgrammaticAliasing(
     Map<Class<? extends Annotation>, Map<String, List<SourceRef>>> edgesByTarget) {
@@ -44,10 +46,25 @@ public final class ProgrammaticAliasing implements Aliasing {
     this.edgesByTarget = edgesByTarget;
   }
 
+  /**
+   * Returns a new builder for constructing a
+   * {@link ProgrammaticAliasing}.
+   *
+   * @return a fresh, empty builder
+   */
   public static Builder builder() {
     return new Builder();
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * <p>If no alias edges target {@code annoType}, returns empty
+   * immediately. If {@code metaContext} contains more than one
+   * annotation of the same type, only the first occurrence is
+   * considered. Returns empty if every matching source attribute
+   * holds its declared default value.
+   */
   @Override
   public <A extends Annotation> Optional<A> synthesize(
     Class<A> annoType,
@@ -61,23 +78,26 @@ public final class ProgrammaticAliasing implements Aliasing {
       return Optional.empty();
     }
 
-    Map<Class<? extends Annotation>, Annotation> contextByType = new LinkedHashMap<>();
+    Map<Class<? extends Annotation>, Annotation> contextByType =
+      new LinkedHashMap<>();
     for (Annotation a : metaContext) {
       contextByType.putIfAbsent(a.annotationType(), a);
     }
 
     Map<String, Object> overrides = new LinkedHashMap<>();
 
-    for (Map.Entry<String, List<SourceRef>> entry : attrEdges.entrySet()) {
+    for (var entry : attrEdges.entrySet()) {
       String targetAttr = entry.getKey();
+
       for (SourceRef source : entry.getValue()) {
-        Annotation sourceAnnotation = contextByType.get(source.sourceType());
-        if (sourceAnnotation == null) {
+        Annotation sourceAnno = contextByType.get(source.sourceType());
+        if (sourceAnno == null) {
           continue;
         }
 
-        Object value = invoke(sourceAnnotation, source.sourceAttr());
-        Object defaultValue = defaultValueOf(source.sourceType(), source.sourceAttr());
+        Object value = invoke(sourceAnno, source.sourceAttr());
+        Object defaultValue =
+          defaultValueOf(source.sourceType(), source.sourceAttr());
 
         if (!Objects.deepEquals(value, defaultValue)) {
           overrides.put(targetAttr, value);
@@ -96,10 +116,15 @@ public final class ProgrammaticAliasing implements Aliasing {
   private static Object invoke(Annotation annotation, String attrName) {
     try {
       Method m = annotation.annotationType().getDeclaredMethod(attrName);
-      return AnnotationInvoker.invoke(annotation, m, () -> m.invoke(annotation));
+      return AnnotationInvoker.invoke(
+        annotation,
+        m,
+        () -> m.invoke(annotation));
     } catch (NoSuchMethodException e) {
       throw new IllegalStateException(
-        "Cannot invoke " + annotation.annotationType().getName() + "." + attrName + "()", e);
+        "Cannot invoke " + annotation.annotationType().getName()
+          + "." + attrName + "()",
+        e);
     }
   }
 
@@ -120,19 +145,36 @@ public final class ProgrammaticAliasing implements Aliasing {
     String sourceAttr) {
   }
 
+  /**
+   * Builder for {@link ProgrammaticAliasing}.
+   * Obtain an instance via {@link ProgrammaticAliasing#builder()}.
+   */
   public static final class Builder {
-    private final Map<Class<? extends Annotation>, Map<String, List<SourceRef>>>
+    private final
+    Map<Class<? extends Annotation>, Map<String, List<SourceRef>>>
       edgesByTarget = new LinkedHashMap<>();
 
     private Builder() {
     }
 
     /**
-     * Declares that when synthesizing {@code targetType}, the value of
-     * {@code sourceType.sourceAttr} should supply {@code targetType.targetAttr}.
+     * Declares that when synthesizing {@code targetType}, the value
+     * of {@code sourceType.sourceAttr} should supply
+     * {@code targetType.targetAttr} (when that value is non-default).
      *
-     * @throws IllegalArgumentException if either attribute does not exist on its
-     *         annotation type, or if their return types are incompatible
+     * <p>Registering the same edge more than once has no additional
+     * behavioral effect.
+     *
+     * @param sourceType the annotation type that carries the source value
+     * @param sourceAttr the attribute on {@code sourceType} to read
+     * @param targetType the annotation type being synthesized
+     * @param targetAttr the attribute on {@code targetType} to supply
+     * @return this builder
+     * @throws NullPointerException if any argument is {@code null}
+     * @throws IllegalArgumentException if source and target identify the same
+     * attribute (self-alias), if either attribute does not exist on its
+     * annotation type, if either attribute has no declared default value,
+     * or if their return types differ
      */
     public <S extends Annotation, T extends Annotation> Builder alias(
       Class<S> sourceType,
@@ -147,7 +189,8 @@ public final class ProgrammaticAliasing implements Aliasing {
 
       if (sourceType == targetType && sourceAttr.equals(targetAttr)) {
         throw new IllegalArgumentException(
-          "Self-alias: " + sourceType.getName() + "." + sourceAttr + " cannot alias itself");
+          "Self-alias: " + sourceType.getName()
+            + "." + sourceAttr + " cannot alias itself");
       }
 
       Method sourceMethod = resolveAttr(sourceType, sourceAttr);
@@ -170,7 +213,8 @@ public final class ProgrammaticAliasing implements Aliasing {
             + sourceType.getName() + "." + sourceAttr + "() ("
             + sourceMethod.getReturnType().getName() + ") -> "
             + targetType.getName() + "." + targetAttr + "() ("
-            + targetMethod.getReturnType().getName() + "): incompatible return types");
+            + targetMethod.getReturnType().getName()
+            + "): incompatible return types");
       }
 
       edgesByTarget
@@ -181,16 +225,26 @@ public final class ProgrammaticAliasing implements Aliasing {
       return this;
     }
 
+    /**
+     * Builds an immutable {@link ProgrammaticAliasing} from the edges
+     * registered so far.
+     *
+     * @return a new {@link ProgrammaticAliasing}
+     */
     public ProgrammaticAliasing build() {
       Map<Class<? extends Annotation>, Map<String, List<SourceRef>>> copy =
         new LinkedHashMap<>();
+
       for (var outer : edgesByTarget.entrySet()) {
         Map<String, List<SourceRef>> attrMap = new LinkedHashMap<>();
+
         for (var inner : outer.getValue().entrySet()) {
           attrMap.put(inner.getKey(), List.copyOf(inner.getValue()));
         }
+
         copy.put(outer.getKey(), Map.copyOf(attrMap));
       }
+
       return new ProgrammaticAliasing(Map.copyOf(copy));
     }
 
@@ -205,10 +259,12 @@ public final class ProgrammaticAliasing implements Aliasing {
             "'" + attrName + "' on " + annoType.getName()
               + " is not a valid annotation attribute");
         }
+
         return m;
       } catch (NoSuchMethodException e) {
         throw new IllegalArgumentException(
-          "Attribute '" + attrName + "' not found on " + annoType.getName(), e);
+          "Attribute '" + attrName + "' not found on " + annoType.getName(),
+          e);
       }
     }
   }

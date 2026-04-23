@@ -9,7 +9,6 @@ import java.lang.annotation.Retention;
 import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT;
-import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -42,7 +41,7 @@ class AnnotatedPathAliasingTest {
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
     List<Annotation> all =
-      path.all(DIRECT, SpringAliasing.aliasing());
+      path.all(DIRECT, SpringAliasing.spring());
 
     List<Composed> composed =
       all.stream()
@@ -61,7 +60,7 @@ class AnnotatedPathAliasingTest {
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
     List<Base> found =
-      path.find(Base.class, META_DIRECT_OR_INDIRECT, SpringAliasing.aliasing());
+      path.find(Base.class, META_DIRECT_OR_INDIRECT, SpringAliasing.spring());
 
     assertThat(found).hasSize(2);
     assertThat(found.get(0).value()).isEqualTo("alpha");
@@ -74,7 +73,7 @@ class AnnotatedPathAliasingTest {
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
     assertThat(
-      path.findFirst(Base.class, META_DIRECT, SpringAliasing.aliasing()))
+      path.findFirst(Base.class, META_DIRECT, SpringAliasing.spring()))
       .isPresent()
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
   }
@@ -84,7 +83,7 @@ class AnnotatedPathAliasingTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.aliasing()))
+    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.spring()))
       .isPresent()
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
   }
@@ -98,7 +97,7 @@ class AnnotatedPathAliasingTest {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Unset.class, Beta.class));
 
-    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.aliasing()))
+    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.spring()))
       .isPresent()
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("beta"));
   }

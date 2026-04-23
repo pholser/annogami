@@ -1,6 +1,5 @@
 package com.pholser.annogami.contract.all;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import com.pholser.annogami.All;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,7 @@ abstract class AllAliasingContractTest {
   @Test
   final void intraAliasedValuePropagatesOnDirectlyDeclaredAnnotation() {
     List<Annotation> all =
-      subject().all(HasDirectIntra.class, SpringAliasing.aliasing());
+      subject().all(HasDirectIntra.class, SpringAliasing.spring());
 
     Intra intra = all.stream()
       .filter(a -> a.annotationType() == Intra.class)
@@ -59,7 +58,7 @@ abstract class AllAliasingContractTest {
 
   @Test
   final void intraAliasedValuePropagatesOnInheritedAnnotation() {
-    List<Annotation> all = subject().all(InhDerived.class, SpringAliasing.aliasing());
+    List<Annotation> all = subject().all(InhDerived.class, SpringAliasing.spring());
 
     Optional<Intra> maybeIntra = all.stream()
       .filter(a -> a.annotationType() == Intra.class)

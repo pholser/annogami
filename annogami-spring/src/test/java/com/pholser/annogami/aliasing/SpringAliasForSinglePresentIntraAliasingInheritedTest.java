@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ class SpringAliasForSinglePresentIntraAliasingInheritedTest {
   @Test
   void findWithAliasingPropagatesIntraAliasForInheritedAnnotation() {
     Intra intra =
-      PRESENT.find(Intra.class, InhDerived.class, SpringAliasing.aliasing())
+      PRESENT.find(Intra.class, InhDerived.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(intra.name()).isEqualTo("hello");

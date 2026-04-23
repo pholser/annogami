@@ -1,6 +1,5 @@
 package com.pholser.annogami.contract.allbytype;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import com.pholser.annogami.AllByType;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,7 @@ abstract class AllByTypeAliasingContractTest {
   @Test
   final void intraAliasedValuePropagatesOnDirectlyDeclaredAnnotation() {
     List<Intra> found =
-      subject().find(Intra.class, HasDirectIntra.class, SpringAliasing.aliasing());
+      subject().find(Intra.class, HasDirectIntra.class, SpringAliasing.spring());
 
     assertThat(found).hasSize(1);
 
@@ -54,7 +53,7 @@ abstract class AllByTypeAliasingContractTest {
   @Test
   final void intraAliasedValuePropagatesOnInheritedAnnotation() {
     List<Intra> found =
-      subject().find(Intra.class, InhDerived.class, SpringAliasing.aliasing());
+      subject().find(Intra.class, InhDerived.class, SpringAliasing.spring());
 
     assertThat(found.isEmpty()).isEqualTo(!honorsInherited());
 

@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -53,7 +52,7 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void arrayValuePropagatesFromValueToBasePackages() {
     ComponentScan cs =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(cs.value()).containsExactly("com.example", "com.other");
@@ -63,7 +62,7 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void arrayValuePropagatesFromBasePackagesToValue() {
     ComponentScan cs =
-      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(cs.basePackages()).containsExactly("com.example", "com.other");
@@ -73,7 +72,7 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void arrayValuePropagatesFromComposedToMetaAnnotation() {
     Scan scan =
-      META_DIRECT.find(Scan.class, SetViaValue.class, SpringAliasing.aliasing())
+      META_DIRECT.find(Scan.class, SetViaValue.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(scan.packages()).containsExactly("com.example", "com.other");
@@ -82,10 +81,10 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void twoSynthesizedAnnotationsWithSameArrayValueAreEqual() {
     ComponentScan cs1 =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
     ComponentScan cs2 =
-      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(cs1).isEqualTo(cs2);
@@ -94,10 +93,10 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void twoSynthesizedAnnotationsWithSameArrayValueHaveSameHashCode() {
     ComponentScan cs1 =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
     ComponentScan cs2 =
-      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(cs1.hashCode()).isEqualTo(cs2.hashCode());
@@ -106,7 +105,7 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void synthesizedAnnotationEqualsRealAnnotationWithSameValues() {
     ComponentScan synthesized =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
     ComponentScan real = SetViaBoth.class.getAnnotation(ComponentScan.class);
 
@@ -116,7 +115,7 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void realAnnotationEqualsSynthesizedAnnotationWithSameValues() {
     ComponentScan synthesized =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
     ComponentScan real = SetViaBoth.class.getAnnotation(ComponentScan.class);
 
@@ -127,7 +126,7 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void synthesizedAnnotationAndRealAnnotationWithSameValuesHaveSameHashCode() {
     ComponentScan synthesized =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.aliasing())
+      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
     ComponentScan real = SetViaBoth.class.getAnnotation(ComponentScan.class);
 

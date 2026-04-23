@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ class SpringAliasForAllByTypeTransitiveMetaOverrideTest {
   void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
     List<Level1> level1Found =
       META_DIRECT_OR_INDIRECT.find(
-        Level1.class, Subject.class, SpringAliasing.aliasing());
+        Level1.class, Subject.class, SpringAliasing.spring());
 
     Level1 level1 =
       level1Found.stream().findFirst().orElseGet(Assertions::fail);
@@ -55,7 +54,7 @@ class SpringAliasForAllByTypeTransitiveMetaOverrideTest {
 
     List<Base> baseFound =
       META_DIRECT_OR_INDIRECT.find(
-        Base.class, Subject.class, SpringAliasing.aliasing());
+        Base.class, Subject.class, SpringAliasing.spring());
 
     Base base = baseFound.stream().findFirst().orElseGet(Assertions::fail);
 

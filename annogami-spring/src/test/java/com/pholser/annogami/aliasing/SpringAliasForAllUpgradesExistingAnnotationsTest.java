@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +35,7 @@ class SpringAliasForAllUpgradesExistingAnnotationsTest {
 
   @Test
   void allWithAliasingUpgradesReturnedAnnotationInstance() {
-    List<Annotation> all = META_DIRECT.all(Subject.class, SpringAliasing.aliasing());
+    List<Annotation> all = META_DIRECT.all(Subject.class, SpringAliasing.spring());
 
     Composed composed =
       all.stream()

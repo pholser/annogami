@@ -1,11 +1,9 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
@@ -37,7 +35,7 @@ class SpringAliasForAllByTypeFindUpgradesExistingAnnotationsTest {
   void findWithAliasingUpgradesReturnedAnnotationInstance() {
     List<Base> found =
       META_DIRECT_OR_INDIRECT.find(
-        Base.class, Subject.class, SpringAliasing.aliasing());
+        Base.class, Subject.class, SpringAliasing.spring());
 
     assertThat(found).hasSize(1);
     assertThat(found.get(0).value()).isEqualTo("p");

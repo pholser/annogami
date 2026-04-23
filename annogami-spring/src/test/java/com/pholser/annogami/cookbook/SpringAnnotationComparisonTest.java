@@ -1,6 +1,5 @@
 package com.pholser.annogami.cookbook;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import com.pholser.annogami.AnnotatedPath;
 import com.pholser.annogami.AnnotatedPathBuilder;
@@ -128,7 +127,7 @@ class SpringAnnotationComparisonTest {
 
     // annogami: returns Optional — absence is explicit
     Optional<RequestMapping> annogami = META_DIRECT.find(
-      RequestMapping.class, method, SpringAliasing.aliasing());
+      RequestMapping.class, method, SpringAliasing.spring());
 
     assertThat(spring).isNotNull();
     assertThat(annogami).isPresent();

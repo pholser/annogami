@@ -10,13 +10,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SpringAliasingNamedModuleTest {
   @GetRoute("/users")
-  static class UserController {}
+  static class UserControl {}
 
   @Test
   void synthesizesRouteFromGetRouteOnNamedModuleAnnotationType() {
     assertThat(
-      META_DIRECT.find(Route.class, UserController.class, SpringAliasing.aliasing()))
-      .isPresent()
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/users"));
+      META_DIRECT.find(Route.class, UserControl.class, SpringAliasing.spring()))
+        .isPresent()
+        .hasValueSatisfying(r ->
+          assertThat(r.path()).isEqualTo("/users"));
   }
 }

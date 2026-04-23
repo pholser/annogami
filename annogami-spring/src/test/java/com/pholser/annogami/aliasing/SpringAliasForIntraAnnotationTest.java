@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +35,7 @@ class SpringAliasForIntraAnnotationTest {
   @Test
   void intraAliasReadsThroughEitherMember() {
     Intra i =
-      DIRECT.find(Intra.class, Target1.class, SpringAliasing.aliasing())
+      DIRECT.find(Intra.class, Target1.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(i.name()).isEqualTo("hello");
@@ -46,7 +45,7 @@ class SpringAliasForIntraAnnotationTest {
   @Test
   void intraAliasReadsThroughEitherDirection() {
     Intra i =
-      DIRECT.find(Intra.class, Target2.class, SpringAliasing.aliasing())
+      DIRECT.find(Intra.class, Target2.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(i.value()).isEqualTo("hello");
@@ -56,7 +55,7 @@ class SpringAliasForIntraAnnotationTest {
   @Test
   void intraAliasConflictingExplicitValuesFailFast() {
     assertThatThrownBy(() ->
-      DIRECT.find(Intra.class, TargetConflict.class, SpringAliasing.aliasing())
+      DIRECT.find(Intra.class, TargetConflict.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail)
         .value()
     ).isInstanceOf(IllegalStateException.class);

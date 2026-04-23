@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ class SpringAliasForAllByTypeMetaOverrideDefaultsToValueTest {
   void aliasForAnnotationOnlyDefaultsToTargetValue() {
     List<Base> found =
       META_DIRECT_OR_INDIRECT.find(
-        Base.class, Subject.class, SpringAliasing.aliasing());
+        Base.class, Subject.class, SpringAliasing.spring());
 
     Base base = found.stream().findFirst().orElseGet(Assertions::fail);
 

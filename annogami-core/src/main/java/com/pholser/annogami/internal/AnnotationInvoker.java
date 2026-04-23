@@ -34,19 +34,25 @@ public final class AnnotationInvoker {
    * <p>If {@code annotation} is a JVM proxy, the call is dispatched through
    * its {@link InvocationHandler} so that it executes in {@code java.base}'s
    * module context. Otherwise, {@code fallback} is called — it should perform
-   * the direct invocation and is typically the lambda {@code () -> attr.invoke(annotation)},
-   * which executes in the calling module's access context.
+   * the direct invocation and is typically the lambda
+   * {@code () -> attr.invoke(annotation)}, which executes in the calling
+   * module's access context.
    *
    * @param annotation the annotation instance to invoke on
-   * @param attr       the zero-arg attribute method to invoke
-   * @param fallback   invoked when {@code annotation} is not a JVM proxy;
-   *                   executes in the calling module's access context
+   * @param attr the zero-arg attribute method to invoke
+   * @param fallback invoked when {@code annotation} is not a JVM proxy;
+   * executes in the calling module's access context
    * @return the attribute value
    * @throws IllegalStateException if the invocation fails
    */
-  public static Object invoke(Annotation annotation, Method attr, Callable<Object> fallback) {
+  public static Object invoke(
+    Annotation annotation,
+    Method attr,
+    Callable<Object> fallback) {
+
     if (Proxy.isProxyClass(annotation.getClass())) {
       InvocationHandler h = Proxy.getInvocationHandler(annotation);
+
       try {
         return h.invoke(annotation, attr, null);
       } catch (RuntimeException | Error e) {

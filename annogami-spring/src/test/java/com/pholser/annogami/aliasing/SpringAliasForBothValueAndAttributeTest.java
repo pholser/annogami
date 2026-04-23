@@ -33,7 +33,7 @@ class SpringAliasForBothValueAndAttributeTest {
   @Test
   void throwsWhenAliasForDeclaresBoothValueAndAttribute() {
     assertThatThrownBy(() ->
-      META_DIRECT.find(Route.class, OrderHandler.class, SpringAliasing.aliasing()))
+      META_DIRECT.find(Route.class, OrderHandler.class, SpringAliasing.spring()))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("both attribute and value");
   }

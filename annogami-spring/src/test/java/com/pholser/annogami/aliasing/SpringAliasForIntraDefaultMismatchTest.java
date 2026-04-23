@@ -1,8 +1,6 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
-import com.pholser.annogami.Presences;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
@@ -28,7 +26,7 @@ class SpringAliasForIntraDefaultMismatchTest {
   @Test
   void mirroredAliasesMustHaveSameDefaultValue() {
     assertThatThrownBy(() ->
-      DIRECT.find(BrokenDefaults.class, Target.class, SpringAliasing.aliasing())
+      DIRECT.find(BrokenDefaults.class, Target.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail)
         .value()
     ).isInstanceOf(IllegalStateException.class)

@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,7 @@ class SpringAliasForAllMetaOverrideDefaultsToValueTest {
 
   @Test
   void aliasForAnnotationOnlyDefaultsToTargetValue() {
-    List<Annotation> all = META_DIRECT.all(Target.class, SpringAliasing.aliasing());
+    List<Annotation> all = META_DIRECT.all(Target.class, SpringAliasing.spring());
 
     Composed composed =
       all.stream()

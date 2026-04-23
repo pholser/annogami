@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ class SpringAliasForAllTransitiveMetaOverrideTest {
 
   @Test
   void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
-    List<Annotation> all = META_DIRECT.all(Target.class, SpringAliasing.aliasing());
+    List<Annotation> all = META_DIRECT.all(Target.class, SpringAliasing.spring());
 
     Composed composed =
       all.stream()

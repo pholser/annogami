@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
-    List<Annotation> all = DIRECT.all(TargetNameOnly.class, SpringAliasing.aliasing());
+    List<Annotation> all = DIRECT.all(TargetNameOnly.class, SpringAliasing.spring());
 
     Composed c =
       all.stream()
@@ -61,7 +60,7 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
-    List<Annotation> all = DIRECT.all(TargetValueOnly.class, SpringAliasing.aliasing());
+    List<Annotation> all = DIRECT.all(TargetValueOnly.class, SpringAliasing.spring());
 
     Composed c =
       all.stream()
@@ -77,14 +76,14 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
   @Test
   void conflictingExplicitValuesOnImplicitAliasesFailFast() {
     assertThatThrownBy(
-      () -> DIRECT.all(TargetConflict.class, SpringAliasing.aliasing()))
+      () -> DIRECT.all(TargetConflict.class, SpringAliasing.spring()))
       .isInstanceOf(IllegalStateException.class);
   }
 
   @Test
   void metaViewAlsoSeesTheResolvedValue() {
     List<Annotation> all =
-      META_DIRECT.all(TargetNameOnly.class, SpringAliasing.aliasing());
+      META_DIRECT.all(TargetNameOnly.class, SpringAliasing.spring());
 
     Composed c =
       all.stream()

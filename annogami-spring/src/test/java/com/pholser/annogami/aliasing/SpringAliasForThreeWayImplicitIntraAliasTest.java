@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -60,7 +59,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
 
   @Test
   void settingUrlPropagatesAllThreeMembers() {
-    Route r = DIRECT.find(Route.class, SetViaUrl.class, SpringAliasing.aliasing())
+    Route r = DIRECT.find(Route.class, SetViaUrl.class, SpringAliasing.spring())
       .orElseGet(Assertions::fail);
 
     assertThat(r.url()).isEqualTo("/api");
@@ -70,7 +69,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
 
   @Test
   void settingPathPropagatesAllThreeMembers() {
-    Route r = DIRECT.find(Route.class, SetViaPath.class, SpringAliasing.aliasing())
+    Route r = DIRECT.find(Route.class, SetViaPath.class, SpringAliasing.spring())
       .orElseGet(Assertions::fail);
 
     assertThat(r.url()).isEqualTo("/api");
@@ -80,7 +79,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
 
   @Test
   void settingValuePropagatesAllThreeMembers() {
-    Route r = DIRECT.find(Route.class, SetViaValue.class, SpringAliasing.aliasing())
+    Route r = DIRECT.find(Route.class, SetViaValue.class, SpringAliasing.spring())
       .orElseGet(Assertions::fail);
 
     assertThat(r.url()).isEqualTo("/api");
@@ -90,7 +89,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
 
   @Test
   void settingUrlAlsoPropagatesMetaAttribute() {
-    Base b = META_DIRECT.find(Base.class, SetViaUrl.class, SpringAliasing.aliasing())
+    Base b = META_DIRECT.find(Base.class, SetViaUrl.class, SpringAliasing.spring())
       .orElseGet(Assertions::fail);
 
     assertThat(b.value()).isEqualTo("/api");
@@ -99,7 +98,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
   @Test
   void conflictingExplicitValuesOnUrlAndPathFailFast() {
     assertThatThrownBy(() ->
-      DIRECT.find(Route.class, ConflictUrlAndPath.class, SpringAliasing.aliasing())
+      DIRECT.find(Route.class, ConflictUrlAndPath.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail)
         .url()
     ).isInstanceOf(IllegalStateException.class);
@@ -108,7 +107,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
   @Test
   void conflictingExplicitValuesOnUrlAndValueFailFast() {
     assertThatThrownBy(() ->
-      DIRECT.find(Route.class, ConflictUrlAndValue.class, SpringAliasing.aliasing())
+      DIRECT.find(Route.class, ConflictUrlAndValue.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail)
         .value()
     ).isInstanceOf(IllegalStateException.class);

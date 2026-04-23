@@ -1,8 +1,6 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
-import com.pholser.annogami.Presences;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
@@ -32,7 +30,7 @@ class SpringAliasForImplicitMetaTargetTest {
   @Test
   void aliasWithoutAnnotationDefaultsToMetaAnnotation() {
     Base b =
-      DIRECT.find(Base.class, Target.class, SpringAliasing.aliasing())
+      DIRECT.find(Base.class, Target.class, SpringAliasing.spring())
         .orElseGet(Assertions::fail);
 
     assertThat(b.value()).isEqualTo("p");

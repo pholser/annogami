@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.Aliasing;
 import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
@@ -41,7 +40,7 @@ class SpringAliasForAllTransitiveMetaOverrideCycleTest {
 
   @Test
   void cycleInAliasGraphIsDetectedAndFailsFast() {
-    assertThatThrownBy(() -> META_DIRECT.all(Target.class, SpringAliasing.aliasing()))
+    assertThatThrownBy(() -> META_DIRECT.all(Target.class, SpringAliasing.spring()))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("cycle");
   }
