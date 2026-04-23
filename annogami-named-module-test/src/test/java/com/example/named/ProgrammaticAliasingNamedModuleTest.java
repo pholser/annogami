@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ProgrammaticAliasingNamedModuleTest {
@@ -24,8 +22,9 @@ class ProgrammaticAliasingNamedModuleTest {
 
     GetMapping ann = OrderController.class.getAnnotation(GetMapping.class);
 
-    Route r = aliasing.synthesize(Route.class, List.of(ann))
-      .orElseGet(Assertions::fail);
-    assertThat(r.path()).isEqualTo("/orders");
+    assertThat(aliasing.synthesize(Route.class, List.of(ann)))
+      .isPresent()
+      .hasValueSatisfying(r ->
+        assertThat(r.path()).isEqualTo("/orders"));
   }
 }

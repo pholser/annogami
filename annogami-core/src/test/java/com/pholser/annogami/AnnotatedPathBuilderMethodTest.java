@@ -1,6 +1,5 @@
 package com.pholser.annogami;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -56,8 +55,9 @@ class AnnotatedPathBuilderMethodTest {
       .build();
 
     // Leaf.execute has no @Tag; Middle.execute has @Tag("middle")
-    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
-    assertThat(t.value()).isEqualTo("middle");
+    assertThat(path.findFirst(Tag.class, DIRECT))
+      .isPresent()
+      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("middle"));
   }
 
   @Test
@@ -81,8 +81,9 @@ class AnnotatedPathBuilderMethodTest {
       .toDepthOverridden()
       .build();
 
-    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
-    assertThat(t.value()).isEqualTo("iface");
+    assertThat(path.findFirst(Tag.class, DIRECT))
+      .isPresent()
+      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("iface"));
   }
 
   @Test
@@ -94,8 +95,8 @@ class AnnotatedPathBuilderMethodTest {
       .toDepthOverridden()
       .build();
 
-    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
-    assertThat(t.value()).isEqualTo("middle");
+    assertThat(path.findFirst(Tag.class, DIRECT))
+      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("middle"));
   }
 
   @Test
@@ -132,8 +133,9 @@ class AnnotatedPathBuilderMethodTest {
       .build();
 
     // Static methods cannot be overridden; only the method itself is in the path
-    Tag t = path.findFirst(Tag.class, DIRECT).orElseGet(Assertions::fail);
-    assertThat(t.value()).isEqualTo("static");
+    assertThat(path.findFirst(Tag.class, DIRECT))
+      .isPresent()
+      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("static"));
 
     assertThat(path.find(Tag.class, DIRECT_OR_INDIRECT)).hasSize(1);
   }

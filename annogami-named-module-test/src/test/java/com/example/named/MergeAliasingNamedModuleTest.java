@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
-
 import static com.pholser.annogami.Presences.META_DIRECT;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,8 +20,9 @@ class MergeAliasingNamedModuleTest {
   void mergeWithAliasingWorksFromNamedModule() {
     AnnotatedPath path = new AnnotatedPath(List.of(UserController.class));
 
-    Route r = path.merge(Route.class, META_DIRECT, SpringAliasing.spring())
-      .orElseGet(Assertions::fail);
-    assertThat(r.path()).isEqualTo("/users");
+    assertThat(path.merge(Route.class, META_DIRECT, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(r ->
+        assertThat(r.path()).isEqualTo("/users"));
   }
 }
