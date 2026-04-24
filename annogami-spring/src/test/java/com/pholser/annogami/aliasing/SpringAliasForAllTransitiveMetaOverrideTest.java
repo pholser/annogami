@@ -4,9 +4,12 @@ import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
+import java.util.List;
 
 import static com.pholser.annogami.Presences.META_DIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
@@ -37,7 +40,7 @@ class SpringAliasForAllTransitiveMetaOverrideTest {
 
   @Test
   void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
-    var all = META_DIRECT.all(Target.class, SpringAliasing.spring());
+    List<Annotation> all = META_DIRECT.all(Target.class, spring());
 
     assertThat(all)
       .filteredOn(a -> a.annotationType() == Composed.class)

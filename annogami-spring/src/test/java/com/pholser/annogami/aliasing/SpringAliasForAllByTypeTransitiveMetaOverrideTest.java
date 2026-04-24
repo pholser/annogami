@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,15 +43,13 @@ class SpringAliasForAllByTypeTransitiveMetaOverrideTest {
   @Test
   void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
     assertThat(
-      META_DIRECT_OR_INDIRECT.find(
-        Level1.class, Subject.class, SpringAliasing.spring()))
+      META_DIRECT_OR_INDIRECT.find(Level1.class, Subject.class, spring()))
       .singleElement()
       .extracting(Level1::x)
       .isEqualTo("hello");
 
     assertThat(
-      META_DIRECT_OR_INDIRECT.find(
-        Base.class, Subject.class, SpringAliasing.spring()))
+      META_DIRECT_OR_INDIRECT.find(Base.class, Subject.class, spring()))
       .singleElement()
       .extracting(Base::value)
       .isEqualTo("hello");

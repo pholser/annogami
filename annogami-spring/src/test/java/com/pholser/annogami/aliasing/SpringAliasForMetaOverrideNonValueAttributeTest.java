@@ -1,12 +1,12 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Retention;
 
 import static com.pholser.annogami.Presences.META_DIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,12 +31,10 @@ class SpringAliasForMetaOverrideNonValueAttributeTest {
 
   @Test
   void metaAliasForNonValueAttributeIsApplied() {
-    assertThat(
-      META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring()))
-      
-      .hasValueSatisfying(base -> {
-        assertThat(base.name()).isEqualTo("hello");
-        assertThat(base.count()).isEqualTo(42);
+    assertThat(META_DIRECT.find(Base.class, Target.class, spring()))
+      .hasValueSatisfying(b -> {
+        assertThat(b.name()).isEqualTo("hello");
+        assertThat(b.count()).isEqualTo(42);
       });
   }
 }

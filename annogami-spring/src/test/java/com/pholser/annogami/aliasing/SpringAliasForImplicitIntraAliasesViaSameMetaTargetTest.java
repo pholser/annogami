@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 
 import static com.pholser.annogami.Presences.DIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,10 +43,7 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
-    assertThat(
-      DIRECT.find(
-        Composed.class, TargetNameOnly.class, SpringAliasing.spring()))
-      
+    assertThat(DIRECT.find(Composed.class, TargetNameOnly.class, spring()))
       .hasValueSatisfying(c -> {
         assertThat(c.name()).isEqualTo("hello");
         assertThat(c.value()).isEqualTo("hello");
@@ -54,10 +52,7 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
-    assertThat(
-      DIRECT.find(
-        Composed.class, TargetValueOnly.class, SpringAliasing.spring()))
-      
+    assertThat(DIRECT.find(Composed.class, TargetValueOnly.class, spring()))
       .hasValueSatisfying(c -> {
         assertThat(c.value()).isEqualTo("hello");
         assertThat(c.name()).isEqualTo("hello");
@@ -67,7 +62,7 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
   @Test
   void conflictingExplicitValuesOnImplicitAliasesFailFast() {
     assertThatThrownBy(() ->
-      DIRECT.find(Composed.class, TargetConflict.class, SpringAliasing.spring())
+      DIRECT.find(Composed.class, TargetConflict.class, spring())
         .orElseThrow()
         .value()
     ).isInstanceOf(IllegalStateException.class);
@@ -75,10 +70,8 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void metaViewAlsoSeesTheResolvedValue() {
-    assertThat(
-      META_DIRECT.find(
-        Base.class, TargetNameOnly.class, SpringAliasing.spring()))
-      
-      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("hello"));
+    assertThat(META_DIRECT.find(Base.class, TargetNameOnly.class, spring()))
+      .hasValueSatisfying(b ->
+        assertThat(b.value()).isEqualTo("hello"));
   }
 }

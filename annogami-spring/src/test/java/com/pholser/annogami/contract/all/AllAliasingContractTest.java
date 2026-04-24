@@ -1,6 +1,5 @@
 package com.pholser.annogami.contract.all;
 
-import com.pholser.annogami.spring.SpringAliasing;
 import com.pholser.annogami.All;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
@@ -12,6 +11,7 @@ import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Optional;
 
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,27 +43,29 @@ abstract class AllAliasingContractTest {
 
   @Test
   final void intraAliasedValuePropagatesOnDirectlyDeclaredAnnotation() {
-    List<Annotation> all =
-      subject().all(HasDirectIntra.class, SpringAliasing.spring());
+    List<Annotation> all = subject().all(HasDirectIntra.class, spring());
 
-    Intra intra = all.stream()
-      .filter(a -> a.annotationType() == Intra.class)
-      .map(Intra.class::cast)
-      .findFirst()
-      .orElseThrow();
+    Optional<Intra> intra =
+      all.stream()
+        .filter(a -> a.annotationType() == Intra.class)
+        .map(Intra.class::cast)
+        .findFirst();
 
-    assertThat(intra.name()).isEqualTo("hello");
-    assertThat(intra.value()).isEqualTo("hello");
+    assertThat(intra).hasValueSatisfying(i -> {
+      assertThat(i.name()).isEqualTo("hello");
+      assertThat(i.value()).isEqualTo("hello");
+    });
   }
 
   @Test
   final void intraAliasedValuePropagatesOnInheritedAnnotation() {
-    List<Annotation> all = subject().all(InhDerived.class, SpringAliasing.spring());
+    List<Annotation> all = subject().all(InhDerived.class, spring());
 
-    Optional<Intra> maybeIntra = all.stream()
-      .filter(a -> a.annotationType() == Intra.class)
-      .map(Intra.class::cast)
-      .findFirst();
+    Optional<Intra> maybeIntra =
+      all.stream()
+        .filter(a -> a.annotationType() == Intra.class)
+        .map(Intra.class::cast)
+        .findFirst();
 
     assertThat(maybeIntra.isPresent()).isEqualTo(honorsInherited());
 

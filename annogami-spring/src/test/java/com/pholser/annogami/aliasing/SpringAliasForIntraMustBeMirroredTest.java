@@ -1,12 +1,12 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Retention;
 
 import static com.pholser.annogami.Presences.DIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -25,7 +25,7 @@ class SpringAliasForIntraMustBeMirroredTest {
   @Test
   void intraAliasMustBeReciprocal() {
     assertThatThrownBy(() ->
-      DIRECT.find(Broken.class, Target.class, SpringAliasing.spring())
+      DIRECT.find(Broken.class, Target.class, spring())
         .orElseThrow()
         .name() // force resolution
     ).isInstanceOf(IllegalStateException.class)

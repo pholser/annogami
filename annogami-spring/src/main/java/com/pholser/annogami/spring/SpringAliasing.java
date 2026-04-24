@@ -21,10 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public final class SpringAliasing implements Aliasing {
-  public static Aliasing spring() {
-    return new SpringAliasing();
-  }
-
   private static final String ALIAS_FOR_FQCN =
     "org.springframework.core.annotation.AliasFor";
 
@@ -39,6 +35,13 @@ public final class SpringAliasing implements Aliasing {
   private record OverrideKey(
     Class<? extends Annotation> annoType,
     String attrName) {
+  }
+
+  private SpringAliasing() {
+  }
+
+  public static Aliasing spring() {
+    return new SpringAliasing();
   }
 
   @Override
@@ -194,7 +197,7 @@ public final class SpringAliasing implements Aliasing {
     }
 
     List<Class<? extends Annotation>> matches =
-      implicitMetaTargetsFromContext(
+      implicitMetaTargets(
         declaring,
         targetAttr,
         metaContext);
@@ -215,8 +218,7 @@ public final class SpringAliasing implements Aliasing {
     return matches.get(0);
   }
 
-  private static List<Class<? extends Annotation>>
-  implicitMetaTargetsFromContext(
+  private static List<Class<? extends Annotation>> implicitMetaTargets(
     Class<? extends Annotation> declaring,
     String targetAttr,
     List<Annotation> metaContext) {

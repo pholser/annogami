@@ -1,6 +1,5 @@
 package com.pholser.annogami.contract.allbytype;
 
-import com.pholser.annogami.spring.SpringAliasing;
 import com.pholser.annogami.AllByType;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
@@ -10,6 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
 
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,8 +41,7 @@ abstract class AllByTypeAliasingContractTest {
 
   @Test
   final void intraAliasedValuePropagatesOnDirectlyDeclaredAnnotation() {
-    assertThat(
-      subject().find(Intra.class, HasDirectIntra.class, SpringAliasing.spring()))
+    assertThat(subject().find(Intra.class, HasDirectIntra.class, spring()))
       .singleElement()
       .satisfies(intra -> {
         assertThat(intra.name()).isEqualTo("hello");
@@ -52,8 +51,7 @@ abstract class AllByTypeAliasingContractTest {
 
   @Test
   final void intraAliasedValuePropagatesOnInheritedAnnotation() {
-    List<Intra> found =
-      subject().find(Intra.class, InhDerived.class, SpringAliasing.spring());
+    List<Intra> found = subject().find(Intra.class, InhDerived.class, spring());
 
     assertThat(found.isEmpty()).isEqualTo(!honorsInherited());
 

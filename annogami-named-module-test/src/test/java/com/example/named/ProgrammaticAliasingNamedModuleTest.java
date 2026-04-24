@@ -15,15 +15,14 @@ class ProgrammaticAliasingNamedModuleTest {
 
   @Test
   void synthesizesRouteFromGetMappingOnNamedModuleAnnotationType() {
-    var aliasing =
+    ProgrammaticAliasing aliasing =
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, "value", Route.class, "path")
         .build();
 
-    GetMapping ann = OrderController.class.getAnnotation(GetMapping.class);
+    GetMapping g = OrderController.class.getAnnotation(GetMapping.class);
 
-    assertThat(aliasing.synthesize(Route.class, List.of(ann)))
-      
+    assertThat(aliasing.synthesize(Route.class, List.of(g)))
       .hasValueSatisfying(r ->
         assertThat(r.path()).isEqualTo("/orders"));
   }

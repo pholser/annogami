@@ -1,12 +1,12 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Retention;
 
 import static com.pholser.annogami.Presences.META_DIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -31,9 +31,9 @@ class SpringAliasForBothValueAndAttributeTest {
   }
 
   @Test
-  void throwsWhenAliasForDeclaresBoothValueAndAttribute() {
+  void whenAliasForDeclaresBoothValueAndAttribute() {
     assertThatThrownBy(() ->
-      META_DIRECT.find(Route.class, OrderHandler.class, SpringAliasing.spring()))
+      META_DIRECT.find(Route.class, OrderHandler.class, spring()))
       .isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("both attribute and value");
   }

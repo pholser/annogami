@@ -1,6 +1,5 @@
 package com.pholser.annogami;
 
-import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -11,6 +10,7 @@ import java.util.List;
 import static com.pholser.annogami.Presences.DIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,11 +37,9 @@ class AnnotatedPathAliasingTest {
 
   @Test
   void allWithAliasingAppliesAliasesToEachElement() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Alpha.class, Beta.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    List<Annotation> all =
-      path.all(DIRECT, SpringAliasing.spring());
+    List<Annotation> all = path.all(DIRECT, spring());
 
     List<Composed> composed =
       all.stream()
@@ -56,11 +54,9 @@ class AnnotatedPathAliasingTest {
 
   @Test
   void findWithAliasingAppliesAliasesToEachElement() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Alpha.class, Beta.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    List<Base> found =
-      path.find(Base.class, META_DIRECT_OR_INDIRECT, SpringAliasing.spring());
+    List<Base> found = path.find(Base.class, META_DIRECT_OR_INDIRECT, spring());
 
     assertThat(found).hasSize(2);
     assertThat(found.get(0).value()).isEqualTo("alpha");
@@ -68,24 +64,21 @@ class AnnotatedPathAliasingTest {
   }
 
   @Test
-  void findFirstWithAliasingReturnsFirstSynthesizedMatch() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Alpha.class, Beta.class));
+  void findFirstWithAliasingGivesFirstSynthesizedMatch() {
+    AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    assertThat(
-      path.findFirst(Base.class, META_DIRECT, SpringAliasing.spring()))
-      
-      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
+    assertThat(path.findFirst(Base.class, META_DIRECT, spring()))
+      .hasValueSatisfying(b ->
+        assertThat(b.value()).isEqualTo("alpha"));
   }
 
   @Test
   void mergeWithAliasingFirstNonDefaultValueWins() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Alpha.class, Beta.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
-    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.spring()))
-      
-      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
+    assertThat(path.merge(Base.class, META_DIRECT, spring()))
+      .hasValueSatisfying(b ->
+        assertThat(b.value()).isEqualTo("alpha"));
   }
 
   @Composed(name = "")
@@ -94,11 +87,10 @@ class AnnotatedPathAliasingTest {
 
   @Test
   void mergeWithAliasingLaterElementFillsDefaultAttribute() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Unset.class, Beta.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(Unset.class, Beta.class));
 
-    assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.spring()))
-      
-      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("beta"));
+    assertThat(path.merge(Base.class, META_DIRECT, spring()))
+      .hasValueSatisfying(b ->
+        assertThat(b.value()).isEqualTo("beta"));
   }
 }

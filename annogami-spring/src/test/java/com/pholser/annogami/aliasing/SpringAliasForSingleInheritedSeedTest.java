@@ -1,6 +1,5 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.spring.SpringAliasing;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -9,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static com.pholser.annogami.Presences.META_PRESENT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,11 +38,8 @@ class SpringAliasForSingleInheritedSeedTest {
 
   @Test
   void findWithAliasingUpgradesMetaAnnotationFromInheritedSeed() {
-    assertThat(
-      META_PRESENT.find(
-        Base.class, InhDerived.class, SpringAliasing.spring()))
-      
-      .hasValueSatisfying(
-        base -> assertThat(base.value()).isEqualTo("hello"));
+    assertThat(META_PRESENT.find(Base.class, InhDerived.class, spring()))
+      .hasValueSatisfying(b ->
+        assertThat(b.value()).isEqualTo("hello"));
   }
 }

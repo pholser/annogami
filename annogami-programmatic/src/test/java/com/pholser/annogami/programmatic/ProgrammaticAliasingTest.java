@@ -25,45 +25,46 @@ class ProgrammaticAliasingTest {
     String path() default "";
   }
 
-  // --- Basic propagation ---
-
   @Test
   void nonDefaultValuePropagatesFromSourceToTarget() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
-    Optional<Route> result = aliasing.synthesize(
-      Route.class,
-      List.of(fakeGetMapping("/users", "")));
+    Optional<Route> result =
+      aliasing.synthesize(
+        Route.class,
+        List.of(fakeGetMapping("/users", "")));
 
     assertThat(result)
-      
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/users"));
+      .hasValueSatisfying(r ->
+        assertThat(r.path()).isEqualTo("/users"));
   }
 
   @Test
   void defaultValueIsNotPropagated() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
-    Optional<Route> result = aliasing.synthesize(
-      Route.class,
-      List.of(fakeGetMapping("", "")));
+    Optional<Route> result =
+      aliasing.synthesize(
+        Route.class,
+        List.of(fakeGetMapping("", "")));
 
     assertThat(result).isEmpty();
   }
 
   @Test
-  void returnsEmptyWhenSourceAnnotationAbsentFromContext() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+  void whenSourceAnnotationAbsentFromContext() {
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
-    Optional<Route> result = aliasing.synthesize(
-      Route.class,
-      List.of());
+    Optional<Route> result = aliasing.synthesize(Route.class, List.of());
 
     assertThat(result).isEmpty();
   }
@@ -74,19 +75,19 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void returnsEmptyWhenNoEdgesTargetTheRequestedType() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+  void whenNoEdgesTargetRequestedType() {
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
-    Optional<Other> result = aliasing.synthesize(
-      Other.class,
-      List.of(fakeGetMapping("/users", "")));
+    Optional<Other> result =
+      aliasing.synthesize(
+        Other.class,
+        List.of(fakeGetMapping("/users", "")));
 
     assertThat(result).isEmpty();
   }
-
-  // --- Multiple sources for the same target attribute: first non-default wins ---
 
   @Retention(RUNTIME)
   @interface PostMapping {
@@ -95,39 +96,45 @@ class ProgrammaticAliasingTest {
 
   @Test
   void firstNonDefaultSourceValueWins() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .alias(PostMapping.class, "value", Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .alias(PostMapping.class, "value", Route.class, "path")
+        .build();
 
     // GetMapping has a non-default value; PostMapping also does.
     // GetMapping appears first in the context list.
-    Optional<Route> result = aliasing.synthesize(
-      Route.class,
-      List.of(fakeGetMapping("/get", ""), fakePostMapping("/post")));
+    Optional<Route> result =
+      aliasing.synthesize(
+        Route.class,
+        List.of(
+          fakeGetMapping("/get", ""),
+          fakePostMapping("/post")));
 
     assertThat(result)
-      
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/get"));
+      .hasValueSatisfying(r ->
+        assertThat(r.path()).isEqualTo("/get"));
   }
 
   @Test
   void secondSourceUsedWhenFirstSourceValueIsDefault() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .alias(PostMapping.class, "value", Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .alias(PostMapping.class, "value", Route.class, "path")
+        .build();
 
-    Optional<Route> result = aliasing.synthesize(
-      Route.class,
-      List.of(fakeGetMapping("", ""), fakePostMapping("/post")));
+    Optional<Route> result =
+      aliasing.synthesize(
+        Route.class,
+        List.of(
+          fakeGetMapping("", ""),
+          fakePostMapping("/post")));
 
     assertThat(result)
-      
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/post"));
+      .hasValueSatisfying(r ->
+        assertThat(r.path()).isEqualTo("/post"));
   }
-
-  // --- Multiple target attributes ---
 
   @Retention(RUNTIME)
   @interface Http {
@@ -160,10 +167,11 @@ class ProgrammaticAliasingTest {
 
   @Test
   void multipleTargetAttributesEachPropagatedIndependently() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(Http.class, "verb", Endpoint.class, "method")
-      .alias(Http.class, "url", Endpoint.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(Http.class, "verb", Endpoint.class, "method")
+        .alias(Http.class, "url", Endpoint.class, "path")
+        .build();
 
     Http http = new Http() {
       public String verb() { return "GET"; }
@@ -174,17 +182,14 @@ class ProgrammaticAliasingTest {
     Optional<Endpoint> result = aliasing.synthesize(Endpoint.class, List.of(http));
 
     assertThat(result)
-      
       .hasValueSatisfying(e -> {
         assertThat(e.method()).isEqualTo("GET");
         assertThat(e.path()).isEqualTo("/items");
       });
   }
 
-  // --- Validation at build time ---
-
   @Test
-  void throwsWhenSourceAttributeDoesNotExist() {
+  void whenSourceAttributeDoesNotExist() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, "nonexistent", Route.class, "path")
@@ -194,7 +199,7 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void throwsWhenTargetAttributeDoesNotExist() {
+  void whenTargetAttributeDoesNotExist() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, "value", Route.class, "nonexistent")
@@ -204,7 +209,7 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void throwsWhenSourceAttributeHasNoDefault() {
+  void whenSourceAttributeHasNoDefault() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(RequiredSource.class, "value", Route.class, "path")
@@ -214,7 +219,7 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void throwsWhenTargetAttributeHasNoDefault() {
+  void whenTargetAttributeHasNoDefault() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, "value", RequiredTarget.class, "path")
@@ -224,7 +229,7 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void throwsWhenSourceAndTargetAttributeTypesAreIncompatible() {
+  void whenSourceAndTargetAttributeTypesAreIncompatible() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, "value", Typed.class, "count")
@@ -233,49 +238,52 @@ class ProgrammaticAliasingTest {
       .hasMessageContaining("incompatible");
   }
 
-  // --- Alias graph shapes ---
-
   @Test
   void registeringSameEdgeTwiceIsIdempotent() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
-    Optional<Route> result = aliasing.synthesize(
-      Route.class,
-      List.of(fakeGetMapping("/users", "")));
+    Optional<Route> result =
+      aliasing.synthesize(
+        Route.class,
+        List.of(fakeGetMapping("/users", "")));
 
     assertThat(result)
-      
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/users"));
+      .hasValueSatisfying(r ->
+        assertThat(r.path()).isEqualTo("/users"));
   }
 
   @Test
   void twoSourceAttributesOnSameTypeCanFeedSameTargetAttribute() {
     // GetMapping.value and GetMapping.path both alias to Route.path;
     // value is default, path is non-default — path should win
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .alias(GetMapping.class, "path",  Route.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .alias(GetMapping.class, "path",  Route.class, "path")
+        .build();
 
-    Optional<Route> result = aliasing.synthesize(
-      Route.class,
-      List.of(fakeGetMapping("", "/items")));
+    Optional<Route> result =
+      aliasing.synthesize(
+        Route.class,
+        List.of(fakeGetMapping("", "/items")));
 
     assertThat(result)
-      
-      .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/items"));
+      .hasValueSatisfying(r ->
+        assertThat(r.path()).isEqualTo("/items"));
   }
 
   @Test
   void oneSourceAttributeCanFeedTwoTargetAttributes() {
     // GetMapping.value feeds both Endpoint.method and Endpoint.path
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Endpoint.class, "method")
-      .alias(GetMapping.class, "value", Endpoint.class, "path")
-      .build();
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Endpoint.class, "method")
+        .alias(GetMapping.class, "value", Endpoint.class, "path")
+        .build();
 
     Http http = new Http() {
       public String verb() { return ""; }
@@ -283,22 +291,20 @@ class ProgrammaticAliasingTest {
       public Class<? extends Annotation> annotationType() { return Http.class; }
     };
 
-    Optional<Endpoint> result = aliasing.synthesize(
-      Endpoint.class,
-      List.of(fakeGetMapping("/orders", ""), http));
+    Optional<Endpoint> result =
+      aliasing.synthesize(
+        Endpoint.class,
+        List.of(fakeGetMapping("/orders", ""), http));
 
     assertThat(result)
-      
       .hasValueSatisfying(e -> {
         assertThat(e.method()).isEqualTo("/orders");
         assertThat(e.path()).isEqualTo("/orders");
       });
   }
 
-  // --- Null and self-alias defenses ---
-
   @Test
-  void throwsOnNullSourceTypeInAlias() {
+  void nullSourceTypeInAlias() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(null, "value", Route.class, "path")
@@ -307,7 +313,7 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void throwsOnNullSourceAttrInAlias() {
+  void nullSourceAttrInAlias() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, null, Route.class, "path")
@@ -316,7 +322,7 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void throwsOnNullTargetTypeInAlias() {
+  void nullTargetTypeInAlias() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, "value", null, "path")
@@ -325,7 +331,7 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void throwsOnNullTargetAttrInAlias() {
+  void nullTargetAttrInAlias() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, "value", Route.class, null)
@@ -334,27 +340,29 @@ class ProgrammaticAliasingTest {
   }
 
   @Test
-  void throwsOnNullAnnoTypeInSynthesize() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+  void nullAnnoTypeInSynthesize() {
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
     assertThatThrownBy(() -> aliasing.synthesize(null, List.of()))
       .isInstanceOf(NullPointerException.class);
   }
 
   @Test
-  void throwsOnNullMetaContextInSynthesize() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+  void nullMetaContextInSynthesize() {
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
     assertThatThrownBy(() -> aliasing.synthesize(Route.class, null))
       .isInstanceOf(NullPointerException.class);
   }
 
   @Test
-  void throwsOnSelfAlias() {
+  void selfAlias() {
     assertThatThrownBy(() ->
       ProgrammaticAliasing.builder()
         .alias(GetMapping.class, "value", GetMapping.class, "value")
@@ -362,18 +370,19 @@ class ProgrammaticAliasingTest {
       .isInstanceOf(IllegalArgumentException.class);
   }
 
-  // --- toString ---
-
   @Test
-  void toStringFollowsAnnotationToStringConvention() {
-    Aliasing aliasing = ProgrammaticAliasing.builder()
-      .alias(GetMapping.class, "value", Route.class, "path")
-      .build();
+  void toStringFollowsAnnotationConvention() {
+    Aliasing aliasing =
+      ProgrammaticAliasing.builder()
+        .alias(GetMapping.class, "value", Route.class, "path")
+        .build();
 
-    assertThat(
+    Optional<Route> route =
       aliasing.synthesize(
-        Route.class, List.of(fakeGetMapping("/users", ""))))
-      
+        Route.class,
+        List.of(fakeGetMapping("/users", "")));
+
+    assertThat(route)
       .hasValueSatisfying(synthesized -> {
         String s = synthesized.toString();
         assertThat(s)
@@ -383,20 +392,22 @@ class ProgrammaticAliasingTest {
       });
   }
 
-  // --- Helpers ---
-
   private static GetMapping fakeGetMapping(String value, String path) {
     return new GetMapping() {
       public String value() { return value; }
       public String path() { return path; }
-      public Class<? extends Annotation> annotationType() { return GetMapping.class; }
+      public Class<? extends Annotation> annotationType() {
+        return GetMapping.class;
+      }
     };
   }
 
   private static PostMapping fakePostMapping(String value) {
     return new PostMapping() {
       public String value() { return value; }
-      public Class<? extends Annotation> annotationType() { return PostMapping.class; }
+      public Class<? extends Annotation> annotationType() {
+        return PostMapping.class;
+      }
     };
   }
 }

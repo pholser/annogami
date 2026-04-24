@@ -1,6 +1,5 @@
 package com.pholser.annogami.cookbook;
 
-import com.pholser.annogami.spring.SpringAliasing;
 import com.pholser.annogami.AnnotatedPath;
 import com.pholser.annogami.AnnotatedPathBuilder;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,7 @@ import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.Presences.META_ASSOCIATED;
 import static com.pholser.annogami.Presences.META_DIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -30,9 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * using real Spring annotation types.
  */
 class SpringAnnotationComparisonTest {
-
-  // --- test subjects ---
-
   @Service
   static class MyService {
   }
@@ -60,19 +57,16 @@ class SpringAnnotationComparisonTest {
     }
   }
 
-  // --- tests ---
-
   @Test
   void componentOnDirectClass_springAndAnnogamiAgree() {
-    boolean spring = AnnotatedElementUtils
-      .hasAnnotation(MyService.class, Component.class);
+    boolean spring =
+      AnnotatedElementUtils.hasAnnotation(MyService.class, Component.class);
 
-    boolean annogami = !META_DIRECT_OR_INDIRECT
-      .find(Component.class, MyService.class)
-      .isEmpty();
+    boolean annogami =
+      !META_DIRECT_OR_INDIRECT.find(Component.class, MyService.class).isEmpty();
 
     assertThat(spring).isTrue();
-    assertThat(annogami).isEqualTo(spring);
+    assertThat(annogami).isTrue();
   }
 
   @Test
@@ -81,13 +75,13 @@ class SpringAnnotationComparisonTest {
     // explicitly walks the class hierarchy regardless of @Inherited.
     // META_ASSOCIATED only follows annotations marked @Inherited at the
     // JVM level, so it cannot reach @Service on the superclass.
-    boolean spring = MergedAnnotations
-      .from(DerivedService.class, SearchStrategy.TYPE_HIERARCHY)
-      .isPresent(Component.class);
+    boolean spring =
+      MergedAnnotations
+        .from(DerivedService.class, SearchStrategy.TYPE_HIERARCHY)
+        .isPresent(Component.class);
 
-    boolean annogami = !META_ASSOCIATED
-      .find(Component.class, DerivedService.class)
-      .isEmpty();
+    boolean annogami =
+      !META_ASSOCIATED.find(Component.class, DerivedService.class).isEmpty();
 
     assertThat(spring).isTrue();
     assertThat(annogami).isFalse(); // META_ASSOCIATED cannot reach it
@@ -98,36 +92,36 @@ class SpringAnnotationComparisonTest {
     // For annotations not marked @Inherited on superclasses, use an
     // explicit AnnotatedPath over the class hierarchy to replicate
     // Spring's TYPE_HIERARCHY behaviour.
-    AnnotatedPath path = AnnotatedPathBuilder
-      .fromClass(DerivedService.class)
-      .toDepthHierarchy()
-      .build();
+    AnnotatedPath path =
+      AnnotatedPathBuilder
+        .fromClass(DerivedService.class)
+        .toDepthHierarchy()
+        .build();
 
-    boolean spring = MergedAnnotations
-      .from(DerivedService.class, SearchStrategy.TYPE_HIERARCHY)
+    boolean spring =
+      MergedAnnotations.from(
+        DerivedService.class,
+        SearchStrategy.TYPE_HIERARCHY)
       .isPresent(Component.class);
 
-    boolean annogami = !path
-      .find(Component.class, META_DIRECT_OR_INDIRECT)
-      .isEmpty();
+    boolean annogami =
+      !path.find(Component.class, META_DIRECT_OR_INDIRECT).isEmpty();
 
     assertThat(spring).isTrue();
-    assertThat(annogami).isEqualTo(spring);
+    assertThat(annogami).isTrue();
   }
 
   @Test
-  void attributeSynthesis_springAndAnnogamiAgree()
-    throws Exception {
-    Method method = MappedController.class
-      .getDeclaredMethod("listOrders");
+  void attributeSynthesis_springAndAnnogamiAgree() throws Exception {
+    Method m = MappedController.class.getDeclaredMethod("listOrders");
 
     // Spring: returns null if absent; synthesized proxy if found
-    RequestMapping spring = AnnotatedElementUtils
-      .findMergedAnnotation(method, RequestMapping.class);
+    RequestMapping spring =
+      AnnotatedElementUtils.findMergedAnnotation(m, RequestMapping.class);
 
     // annogami: returns Optional — absence is explicit
-    Optional<RequestMapping> annogami = META_DIRECT.find(
-      RequestMapping.class, method, SpringAliasing.spring());
+    Optional<RequestMapping> annogami =
+      META_DIRECT.find(RequestMapping.class, m, spring());
 
     assertThat(spring).isNotNull();
     assertThat(annogami).isPresent();
@@ -137,60 +131,56 @@ class SpringAnnotationComparisonTest {
   }
 
   @Test
-  void springFindMergedReturnsNearestWholeAnnotation()
-    throws Exception {
-    Method method = TxService.class.getDeclaredMethod("readData");
+  void springFindMergedReturnsNearestWholeAnnotation() throws Exception {
+    Method m = TxService.class.getDeclaredMethod("readData");
 
     // Spring finds the method-level @Transactional and returns it
     // as-is. The class-level timeout=30 is not consulted.
-    Transactional tx = AnnotatedElementUtils
-      .findMergedAnnotation(method, Transactional.class);
+    Transactional tx =
+      AnnotatedElementUtils.findMergedAnnotation(m, Transactional.class);
 
-    assertThat(tx.readOnly()).isTrue();       // from method
-    assertThat(tx.timeout()).isEqualTo(-1);   // method default; class ignored
+    assertThat(tx.readOnly()).isTrue();
+    assertThat(tx.timeout()).isEqualTo(-1);
   }
 
   @Test
-  void annogamiMergeFillsAttributesAcrossPathElements()
-    throws Exception {
-    Method method = TxService.class.getDeclaredMethod("readData");
+  void annogamiMergeFillsAttributesAcrossPathElements() throws Exception {
+    Method m = TxService.class.getDeclaredMethod("readData");
 
-    AnnotatedPath path = AnnotatedPathBuilder
-      .fromMethod(method)
-      .toDeclaringClass()
-      .build();
+    AnnotatedPath path =
+      AnnotatedPathBuilder.fromMethod(m)
+        .toDeclaringClass()
+        .build();
 
     // Method's readOnly=true wins (non-default).
     // Class fills in timeout=30 for the attribute left at default.
-    Optional<Transactional> tx = path.merge(
-      Transactional.class, DIRECT);
+    Optional<Transactional> tx = path.merge(Transactional.class, DIRECT);
 
     assertThat(tx).isPresent();
-    assertThat(tx.get().readOnly()).isTrue();      // from method
-    assertThat(tx.get().timeout()).isEqualTo(30);  // filled from class
+    assertThat(tx.get().readOnly()).isTrue();
+    assertThat(tx.get().timeout()).isEqualTo(30);
   }
 
   @Test
-  void springReturnsOneMatch_annogamiPathReturnsAll()
-    throws Exception {
-    Method method = TxService.class.getDeclaredMethod("readData");
+  void springReturnsOneMatch_annogamiPathReturnsAll() throws Exception {
+    Method m = TxService.class.getDeclaredMethod("readData");
 
     // Spring returns the nearest (method-level) occurrence only
-    Transactional spring = AnnotatedElementUtils
-      .findMergedAnnotation(method, Transactional.class);
+    Transactional spring =
+      AnnotatedElementUtils.findMergedAnnotation(m, Transactional.class);
     assertThat(spring.readOnly()).isTrue();
 
     // annogami returns every occurrence along the path, in order
-    AnnotatedPath path = AnnotatedPathBuilder
-      .fromMethod(method)
-      .toDeclaringClass()
-      .build();
+    AnnotatedPath path =
+      AnnotatedPathBuilder.fromMethod(m)
+        .toDeclaringClass()
+        .build();
 
-    List<Transactional> all = path.find(
-      Transactional.class, DIRECT_OR_INDIRECT);
+    List<Transactional> all =
+      path.find(Transactional.class, DIRECT_OR_INDIRECT);
 
     assertThat(all).hasSize(2);
-    assertThat(all.get(0).readOnly()).isTrue();     // method
-    assertThat(all.get(1).timeout()).isEqualTo(30); // class
+    assertThat(all.get(0).readOnly()).isTrue();
+    assertThat(all.get(1).timeout()).isEqualTo(30);
   }
 }
