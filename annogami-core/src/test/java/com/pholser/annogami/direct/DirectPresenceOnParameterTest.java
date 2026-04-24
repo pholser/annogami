@@ -40,28 +40,32 @@ class DirectPresenceOnParameterTest {
 
   @Test
   void findsDirectlyPresent() throws Exception {
-    assertThat(DIRECT.find(A.class, parameterOf("p1")))
-      
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1000));
+    assertThat(
+      DIRECT.find(
+        A.class,
+        parameterOf("p1")))
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(1000));
   }
 
   @Test
   void missesNotDeclared() throws Exception {
-    assertThat(DIRECT.find(A.class, parameterOf("p3")))
-      .isEmpty();
+    assertThat(DIRECT.find(A.class, parameterOf("p3"))).isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() throws Exception {
-    assertThat(DIRECT.find(B.class, parameterOf("p2")))
-      .isEmpty();
+    assertThat(DIRECT.find(B.class, parameterOf("p2"))).isEmpty();
   }
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
-    assertThat(DIRECT.find(Bs.class, parameterOf("p2")))
-      
-      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
+    assertThat(
+      DIRECT.find(
+        Bs.class,
+        parameterOf("p2")))
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value()).hasSize(2));
   }
 
   private static Parameter parameterOf(String methodName)

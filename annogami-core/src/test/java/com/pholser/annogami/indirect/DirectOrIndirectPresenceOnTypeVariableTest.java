@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.TypeVariable;
 import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
@@ -25,9 +24,7 @@ class DirectOrIndirectPresenceOnTypeVariableTest {
 
   @Test
   void findsOnTypeVariableDeclaration() {
-    @SuppressWarnings("rawtypes")
-    TypeVariable<Class<GenericClass>>[] typeVars =
-      GenericClass.class.getTypeParameters();
+    var typeVars = GenericClass.class.getTypeParameters();
 
     assertThat(DIRECT_OR_INDIRECT.find(TP.class, typeVars[0]))
       .singleElement()

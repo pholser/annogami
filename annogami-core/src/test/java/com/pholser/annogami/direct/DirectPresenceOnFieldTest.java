@@ -38,28 +38,38 @@ class DirectPresenceOnFieldTest {
   @Test
   void findsDirectlyPresent() throws Exception {
     assertThat(
-      DIRECT.find(A.class, FieldHaver.class.getDeclaredField("a")))
-      
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
+      DIRECT.find(
+        A.class,
+        FieldHaver.class.getDeclaredField("a")))
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(1));
   }
 
   @Test
   void missesNotDeclaredOnField() throws Exception {
-    assertThat(DIRECT.find(A.class, FieldHaver.class.getDeclaredField("none")))
+    assertThat(
+      DIRECT.find(
+        A.class,
+        FieldHaver.class.getDeclaredField("none")))
       .isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() throws Exception {
-    assertThat(DIRECT.find(B.class, FieldHaver.class.getDeclaredField("manyBs")))
+    assertThat(
+      DIRECT.find(
+        B.class,
+        FieldHaver.class.getDeclaredField("manyBs")))
       .isEmpty();
   }
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     assertThat(
-      DIRECT.find(Bs.class, FieldHaver.class.getDeclaredField("manyBs")))
-      
-      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
+      DIRECT.find(
+        Bs.class,
+        FieldHaver.class.getDeclaredField("manyBs")))
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value()).hasSize(2));
   }
 }

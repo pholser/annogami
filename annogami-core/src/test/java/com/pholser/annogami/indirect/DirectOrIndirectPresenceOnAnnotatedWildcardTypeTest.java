@@ -48,8 +48,6 @@ class DirectOrIndirectPresenceOnAnnotatedWildcardTypeTest {
       (AnnotatedParameterizedType) f.getAnnotatedType();
     AnnotatedType typeArg = paramType.getAnnotatedActualTypeArguments()[0];
 
-    List<A> as = DIRECT_OR_INDIRECT.find(A.class, typeArg);
-
-    assertThat(as).isEmpty();
+    assertThat(DIRECT_OR_INDIRECT.find(A.class, typeArg)).isEmpty();
   }
 }

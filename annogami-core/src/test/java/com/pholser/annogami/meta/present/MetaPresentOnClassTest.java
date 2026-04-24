@@ -47,23 +47,21 @@ class MetaPresentOnClassTest {
   @Test
   void findsMetaPresentOnClass() {
     assertThat(META_PRESENT.find(A.class, AHaverViaMeta.class))
-      
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
   void findsThroughInheritedSeedOnSubclass() {
     assertThat(META_PRESENT.find(D.class, DDerived.class))
-      
-      .hasValueSatisfying(d -> assertThat(d.value()).isEqualTo(9));
+      .hasValueSatisfying(d ->
+        assertThat(d.value()).isEqualTo(9));
   }
 
   @Test
   void allIncludesStartPresentAnnotationsAndMetaAnnotations() {
-    List<Annotation> all = META_PRESENT.all(DDerived.class);
-
     List<String> types =
-      all.stream()
+      META_PRESENT.all(DDerived.class).stream()
         .map(a -> a.annotationType().getName())
         .toList();
 

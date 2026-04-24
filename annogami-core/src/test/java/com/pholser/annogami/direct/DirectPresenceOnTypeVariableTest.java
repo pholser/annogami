@@ -24,20 +24,17 @@ class DirectPresenceOnTypeVariableTest {
 
   @Test
   void findsOnTypeVariableDeclaration() {
-    @SuppressWarnings("rawtypes")
-    TypeVariable<Class<GenericClass>>[] typeVars =
-      GenericClass.class.getTypeParameters();
+    var typeVars = GenericClass.class.getTypeParameters();
 
     assertThat(DIRECT.find(TP.class, typeVars[0]))
-      
-      .hasValueSatisfying(tp -> assertThat(tp.value()).isEqualTo(1));
+      .hasValueSatisfying(tp ->
+        assertThat(tp.value()).isEqualTo(1));
   }
 
   @Test
   void missesOnGenericDeclarationWhenAnnotationIsOnTypeParameter() {
     GenericDeclaration decl = GenericClass.class;
 
-    assertThat(DIRECT.find(TP.class, decl))
-      .isEmpty();
+    assertThat(DIRECT.find(TP.class, decl)).isEmpty();
   }
 }

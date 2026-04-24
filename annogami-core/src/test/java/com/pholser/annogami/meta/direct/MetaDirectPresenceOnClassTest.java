@@ -2,7 +2,6 @@ package com.pholser.annogami.meta.direct;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -83,10 +82,8 @@ class MetaDirectPresenceOnClassTest {
 
   @Test
   void allEmitsDuplicateMetaReachedViaDifferentPaths() {
-    List<Annotation> all = META_DIRECT.all(TwoPathsToA.class);
-
     long count =
-      all.stream()
+      META_DIRECT.all(TwoPathsToA.class).stream()
         .filter(a -> a.annotationType().equals(A.class))
         .count();
 
@@ -95,10 +92,8 @@ class MetaDirectPresenceOnClassTest {
 
   @Test
   void allEmitsDistinctMetaReachedViaDifferentPaths() {
-    List<Annotation> all = META_DIRECT.all(TwoPathsToA.class);
-
     List<Integer> aValues =
-      all.stream()
+      META_DIRECT.all(TwoPathsToA.class).stream()
         .filter(a -> a.annotationType().equals(A.class))
         .map(a -> ((A) a).value())
         .toList();
@@ -146,13 +141,12 @@ class MetaDirectPresenceOnClassTest {
   @Test
   void findsMetaPresentOnClass() {
     assertThat(META_DIRECT.find(A.class, AHaverViaMeta.class))
-      
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
   void missesInheritedSeedBecauseDeclaredStartDoesNotSeeIt() {
-    assertThat(META_DIRECT.find(C.class, CDerived.class))
-      .isEmpty();
+    assertThat(META_DIRECT.find(C.class, CDerived.class)).isEmpty();
   }
 }

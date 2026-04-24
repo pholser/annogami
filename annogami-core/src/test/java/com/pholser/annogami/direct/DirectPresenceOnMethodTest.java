@@ -43,28 +43,38 @@ class DirectPresenceOnMethodTest {
   @Test
   void findsDirectlyPresent() throws Exception {
     assertThat(
-      DIRECT.find(A.class, MethodHaver.class.getDeclaredMethod("m1")))
-      
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(10));
+      DIRECT.find(
+        A.class,
+        MethodHaver.class.getDeclaredMethod("m1")))
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(10));
   }
 
   @Test
   void missesNotDeclared() throws Exception {
-    assertThat(DIRECT.find(A.class, MethodHaver.class.getDeclaredMethod("m3")))
+    assertThat(
+      DIRECT.find(
+        A.class,
+        MethodHaver.class.getDeclaredMethod("m3")))
       .isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() throws Exception {
-    assertThat(DIRECT.find(B.class, MethodHaver.class.getDeclaredMethod("m2")))
+    assertThat(
+      DIRECT.find(
+        B.class,
+        MethodHaver.class.getDeclaredMethod("m2")))
       .isEmpty();
   }
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     assertThat(
-      DIRECT.find(Bs.class, MethodHaver.class.getDeclaredMethod("m2")))
-      
-      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
+      DIRECT.find(
+        Bs.class,
+        MethodHaver.class.getDeclaredMethod("m2")))
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value()).hasSize(2));
   }
 }

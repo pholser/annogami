@@ -37,15 +37,15 @@ class DirectPresenceOnRecordComponentTest {
   @Test
   void findsDirectlyPresent() {
     assertThat(DIRECT.find(A.class, R.class.getRecordComponents()[0]))
-      
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(1));
   }
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() {
     assertThat(DIRECT.find(Bs.class, R.class.getRecordComponents()[1]))
-      
-      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value()).hasSize(2));
   }
 
   @Test

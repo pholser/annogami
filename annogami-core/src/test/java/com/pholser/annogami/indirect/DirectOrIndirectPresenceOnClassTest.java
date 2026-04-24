@@ -74,16 +74,12 @@ class DirectOrIndirectPresenceOnClassTest {
 
   @Test
   void missesNotDeclared() {
-    List<A> as = DIRECT_OR_INDIRECT.find(A.class, ManyBHaver.class);
-
-    assertThat(as).isEmpty();
+    assertThat(DIRECT_OR_INDIRECT.find(A.class, ManyBHaver.class)).isEmpty();
   }
 
   @Test
   void findsRepeatableDeclared() {
-    List<B> bs = DIRECT_OR_INDIRECT.find(B.class, ManyBHaver.class);
-
-    assertThat(bs)
+    assertThat(DIRECT_OR_INDIRECT.find(B.class, ManyBHaver.class))
       .extracting(B::value)
       .containsExactlyInAnyOrder(4, 5);
   }
@@ -102,9 +98,7 @@ class DirectOrIndirectPresenceOnClassTest {
 
   @Test
   void missesInheritedNonRepeatableOnSubclass() {
-    List<C> cs = DIRECT_OR_INDIRECT.find(C.class, Derived.class);
-
-    assertThat(cs).isEmpty();
+    assertThat(DIRECT_OR_INDIRECT.find(C.class, Derived.class)).isEmpty();
   }
 
   @Test
@@ -117,25 +111,19 @@ class DirectOrIndirectPresenceOnClassTest {
 
   @Test
   void missesInheritedRepeatableOnSubclass() {
-    List<D> ds = DIRECT_OR_INDIRECT.find(D.class, Derived.class);
-
-    assertThat(ds).isEmpty();
+    assertThat(DIRECT_OR_INDIRECT.find(D.class, Derived.class)).isEmpty();
   }
 
   @Test
   void findsRepeatableDeclaredOnBaseClassItself() {
-    List<D> ds = DIRECT_OR_INDIRECT.find(D.class, Base.class);
-
-    assertThat(ds)
+    assertThat(DIRECT_OR_INDIRECT.find(D.class, Base.class))
       .extracting(D::value)
       .containsExactlyInAnyOrder(7, 8);
   }
 
   @Test
   void missesInheritedContainerOnSubclass() {
-    List<Ds> containers = DIRECT_OR_INDIRECT.find(Ds.class, Derived.class);
-
-    assertThat(containers).isEmpty();
+    assertThat(DIRECT_OR_INDIRECT.find(Ds.class, Derived.class)).isEmpty();
   }
 
   @Test
@@ -154,8 +142,6 @@ class DirectOrIndirectPresenceOnClassTest {
 
   @Test
   void annotationTypeUnrelatedToTarget() {
-    List<Unused> unused = DIRECT_OR_INDIRECT.find(Unused.class, AHaver.class);
-
-    assertThat(unused).isEmpty();
+    assertThat(DIRECT_OR_INDIRECT.find(Unused.class, AHaver.class)).isEmpty();
   }
 }

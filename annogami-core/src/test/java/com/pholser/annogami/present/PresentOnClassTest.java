@@ -84,26 +84,23 @@ class PresentOnClassTest {
   @Test
   void findsSingleNonRepeatable() {
     assertThat(PRESENT.find(A.class, AHaver.class))
-      
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
   void missesNonDeclaredNonRepeatable() {
-    assertThat(PRESENT.find(A.class, ManyBHaver.class))
-      .isEmpty();
+    assertThat(PRESENT.find(A.class, ManyBHaver.class)).isEmpty();
   }
 
   @Test
   void missesRepeatableWhenOnlyContainerIsPresent() {
-    assertThat(PRESENT.find(B.class, ManyBHaver.class))
-      .isEmpty();
+    assertThat(PRESENT.find(B.class, ManyBHaver.class)).isEmpty();
   }
 
   @Test
   void findsContainerAnnotationForRepeatable() {
     assertThat(PRESENT.find(Bs.class, ManyBHaver.class))
-      
       .hasValueSatisfying(bs ->
         assertThat(bs.value())
           .extracting(B::value)
@@ -113,31 +110,29 @@ class PresentOnClassTest {
   @Test
   void findsInheritedNonRepeatableOnSubclass() {
     assertThat(PRESENT.find(C.class, CDerived.class))
-      
-      .hasValueSatisfying(c -> assertThat(c.value()).isEqualTo(6));
+      .hasValueSatisfying(c ->
+        assertThat(c.value()).isEqualTo(6));
   }
 
   @Test
   void findsDirectAnnotationOnBaseClassItself() {
     assertThat(PRESENT.find(C.class, CBase.class))
-      
-      .hasValueSatisfying(c -> assertThat(c.value()).isEqualTo(6));
+      .hasValueSatisfying(c ->
+        assertThat(c.value()).isEqualTo(6));
   }
 
   @Test
   void doesNotInheritNonInheritedAnnotationToSubclass() {
-    assertThat(PRESENT.find(E.class, ENonInheritedDerived.class))
-      .isEmpty();
+    assertThat(PRESENT.find(E.class, ENonInheritedDerived.class)).isEmpty();
 
     assertThat(PRESENT.find(E.class, ENonInheritedBase.class))
-      
-      .hasValueSatisfying(base -> assertThat(base.value()).isEqualTo(9));
+      .hasValueSatisfying(base ->
+        assertThat(base.value()).isEqualTo(9));
   }
 
   @Test
   void inheritedContainerAnnotationIsPresentOnSubclass() {
     assertThat(PRESENT.find(Ds.class, DDerived.class))
-      
       .hasValueSatisfying(dsOnDerived ->
         assertThat(dsOnDerived.value())
           .extracting(D::value)
@@ -146,15 +141,11 @@ class PresentOnClassTest {
 
   @Test
   void elementTypeOfRepeatableIsNotItselfInherited() {
-    assertThat(PRESENT.find(D.class, DDerived.class))
-      .isEmpty();
+    assertThat(PRESENT.find(D.class, DDerived.class)).isEmpty();
 
-    assertThat(PRESENT.find(D.class, DBase.class))
-
-      .isEmpty();
+    assertThat(PRESENT.find(D.class, DBase.class)).isEmpty();
 
     assertThat(PRESENT.find(Ds.class, DBase.class))
-      
       .hasValueSatisfying(dsOnBase ->
         assertThat(dsOnBase.value())
           .extracting(D::value)

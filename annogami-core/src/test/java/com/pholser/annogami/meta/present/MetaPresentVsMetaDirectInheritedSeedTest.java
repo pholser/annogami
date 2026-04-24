@@ -31,11 +31,10 @@ class MetaPresentVsMetaDirectInheritedSeedTest {
 
   @Test
   void metaPresentSeesInheritedSeedButMetaDirectDoesNot() {
-    assertThat(META_DIRECT.find(A.class, Derived.class))
-      .isEmpty();
+    assertThat(META_DIRECT.find(A.class, Derived.class)).isEmpty();
 
     assertThat(META_PRESENT.find(A.class, Derived.class))
-      
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(1));
   }
 }
