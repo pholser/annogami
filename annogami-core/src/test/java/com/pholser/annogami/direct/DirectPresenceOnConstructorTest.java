@@ -43,20 +43,28 @@ class DirectPresenceOnConstructorTest {
   @Test
   void findsDirectlyPresent() throws Exception {
     assertThat(
-      DIRECT.find(A.class, CtorHaver.class.getDeclaredConstructor()))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(100));
+      DIRECT.find(
+        A.class,
+        CtorHaver.class.getDeclaredConstructor()))
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(100));
   }
 
   @Test
   void missesNotDeclared() throws Exception {
-    assertThat(DIRECT.find(A.class, CtorHaver.class.getDeclaredConstructor(String.class)))
+    assertThat(
+      DIRECT.find(
+        A.class,
+        CtorHaver.class.getDeclaredConstructor(String.class)))
       .isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() throws Exception {
-    assertThat(DIRECT.find(B.class, CtorHaver.class.getDeclaredConstructor(int.class)))
+    assertThat(
+      DIRECT.find(
+        B.class,
+        CtorHaver.class.getDeclaredConstructor(int.class)))
       .isEmpty();
   }
 
@@ -64,8 +72,8 @@ class DirectPresenceOnConstructorTest {
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     assertThat(
       DIRECT.find(
-        Bs.class, CtorHaver.class.getDeclaredConstructor(int.class)))
-      .isPresent()
+        Bs.class,
+        CtorHaver.class.getDeclaredConstructor(int.class)))
       .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 }

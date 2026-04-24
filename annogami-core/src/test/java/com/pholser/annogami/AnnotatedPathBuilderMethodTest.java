@@ -54,7 +54,7 @@ class AnnotatedPathBuilderMethodTest {
         .build();
 
     assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
+      
       .hasValueSatisfying(t ->
         assertThat(t.value()).isEqualTo("middle"));
   }

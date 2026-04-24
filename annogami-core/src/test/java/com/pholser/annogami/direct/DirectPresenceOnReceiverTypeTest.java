@@ -33,7 +33,7 @@ class DirectPresenceOnReceiverTypeTest {
     AnnotatedType receiver = m.getAnnotatedReceiverType();
 
     assertThat(DIRECT.find(A.class, receiver))
-      .isPresent()
+      
       .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
   }
 

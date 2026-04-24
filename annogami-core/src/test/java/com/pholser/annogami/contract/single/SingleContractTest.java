@@ -76,8 +76,8 @@ abstract class SingleContractTest {
   @Test
   final void findsDirectlyPresentAnnotationOnClass() {
     assertThat(subject().find(A.class, HasA.class))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
@@ -93,19 +93,19 @@ abstract class SingleContractTest {
   @Test
   final void repeatableContainerIsDirectlyPresent() {
     assertThat(subject().find(Bs.class, HasRepeatableB.class))
-      .isPresent()
-      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value()).hasSize(2));
   }
 
   @Test
   final void metaAnnotationIsFoundOnlyByMetaSingles() {
-    boolean found = subject().find(Base.class, HasComposed.class).isPresent();
-    assertThat(found).isEqualTo(supportsMeta());
+    assertThat(subject().find(Base.class, HasComposed.class).isPresent())
+      .isEqualTo(supportsMeta());
   }
 
   @Test
   final void inheritedAnnotationIsFoundOnlyByPresentSingles() {
-    boolean found = subject().find(Inh.class, InhDerived.class).isPresent();
-    assertThat(found).isEqualTo(honorsInherited());
+    assertThat(subject().find(Inh.class, InhDerived.class).isPresent())
+      .isEqualTo(honorsInherited());
   }
 }

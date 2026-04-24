@@ -29,7 +29,7 @@ class DirectPresenceOnTypeVariableTest {
       GenericClass.class.getTypeParameters();
 
     assertThat(DIRECT.find(TP.class, typeVars[0]))
-      .isPresent()
+      
       .hasValueSatisfying(tp -> assertThat(tp.value()).isEqualTo(1));
   }
 

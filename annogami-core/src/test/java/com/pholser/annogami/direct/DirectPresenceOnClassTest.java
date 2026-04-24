@@ -66,52 +66,47 @@ class DirectPresenceOnClassTest {
   @Test
   void findsDirectlyPresent() {
     assertThat(DIRECT.find(A.class, AHaver.class))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
   void missesNotDeclared() {
-    assertThat(DIRECT.find(A.class, ManyBHaver.class))
-      .isEmpty();
+    assertThat(DIRECT.find(A.class, ManyBHaver.class)).isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() {
-    assertThat(DIRECT.find(B.class, ManyBHaver.class))
-      .isEmpty();
+    assertThat(DIRECT.find(B.class, ManyBHaver.class)).isEmpty();
   }
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() {
     assertThat(DIRECT.find(Bs.class, ManyBHaver.class))
-      .isPresent()
-      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value()).hasSize(2));
   }
 
   @Test
   void missesPresent() {
-    assertThat(DIRECT.find(C.class, Derived.class))
-      .isEmpty();
+    assertThat(DIRECT.find(C.class, Derived.class)).isEmpty();
   }
 
   @Test
   void missesAssociated() {
-    assertThat(DIRECT.find(D.class, Derived.class))
-      .isEmpty();
+    assertThat(DIRECT.find(D.class, Derived.class)).isEmpty();
   }
 
   @Test
   void missesContainerAnnotationOfAssociated() {
-    assertThat(DIRECT.find(Ds.class, Derived.class))
-      .isEmpty();
+    assertThat(DIRECT.find(Ds.class, Derived.class)).isEmpty();
   }
 
   @Test
   void findsAll() {
     assertThat(DIRECT.all(AHaver.class))
-      .hasSize(1)
-      .allSatisfy(a -> assertThat(a.annotationType()).isEqualTo(A.class));
+      .singleElement()
+      .satisfies(a -> assertThat(a.annotationType()).isEqualTo(A.class));
   }
 
   @Test

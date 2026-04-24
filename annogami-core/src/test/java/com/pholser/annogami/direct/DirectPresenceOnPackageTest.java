@@ -14,7 +14,7 @@ class DirectPresenceOnPackageTest {
         "com.pholser.annogami.pkg");
 
     assertThat(DIRECT.find(A.class, pkg))
-      .isPresent()
+      
       .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(42));
   }
 

@@ -35,7 +35,7 @@ class MetaPresentVsMetaDirectInheritedSeedTest {
       .isEmpty();
 
     assertThat(META_PRESENT.find(A.class, Derived.class))
-      .isPresent()
+      
       .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
   }
 }

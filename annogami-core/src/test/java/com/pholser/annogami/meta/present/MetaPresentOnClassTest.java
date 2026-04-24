@@ -47,14 +47,14 @@ class MetaPresentOnClassTest {
   @Test
   void findsMetaPresentOnClass() {
     assertThat(META_PRESENT.find(A.class, AHaverViaMeta.class))
-      .isPresent()
+      
       .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
   void findsThroughInheritedSeedOnSubclass() {
     assertThat(META_PRESENT.find(D.class, DDerived.class))
-      .isPresent()
+      
       .hasValueSatisfying(d -> assertThat(d.value()).isEqualTo(9));
   }
 

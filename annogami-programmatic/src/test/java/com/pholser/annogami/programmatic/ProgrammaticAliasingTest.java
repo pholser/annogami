@@ -38,7 +38,7 @@ class ProgrammaticAliasingTest {
       List.of(fakeGetMapping("/users", "")));
 
     assertThat(result)
-      .isPresent()
+      
       .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/users"));
   }
 
@@ -107,7 +107,7 @@ class ProgrammaticAliasingTest {
       List.of(fakeGetMapping("/get", ""), fakePostMapping("/post")));
 
     assertThat(result)
-      .isPresent()
+      
       .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/get"));
   }
 
@@ -123,7 +123,7 @@ class ProgrammaticAliasingTest {
       List.of(fakeGetMapping("", ""), fakePostMapping("/post")));
 
     assertThat(result)
-      .isPresent()
+      
       .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/post"));
   }
 
@@ -174,7 +174,7 @@ class ProgrammaticAliasingTest {
     Optional<Endpoint> result = aliasing.synthesize(Endpoint.class, List.of(http));
 
     assertThat(result)
-      .isPresent()
+      
       .hasValueSatisfying(e -> {
         assertThat(e.method()).isEqualTo("GET");
         assertThat(e.path()).isEqualTo("/items");
@@ -247,7 +247,7 @@ class ProgrammaticAliasingTest {
       List.of(fakeGetMapping("/users", "")));
 
     assertThat(result)
-      .isPresent()
+      
       .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/users"));
   }
 
@@ -265,7 +265,7 @@ class ProgrammaticAliasingTest {
       List.of(fakeGetMapping("", "/items")));
 
     assertThat(result)
-      .isPresent()
+      
       .hasValueSatisfying(r -> assertThat(r.path()).isEqualTo("/items"));
   }
 
@@ -288,7 +288,7 @@ class ProgrammaticAliasingTest {
       List.of(fakeGetMapping("/orders", ""), http));
 
     assertThat(result)
-      .isPresent()
+      
       .hasValueSatisfying(e -> {
         assertThat(e.method()).isEqualTo("/orders");
         assertThat(e.path()).isEqualTo("/orders");
@@ -373,7 +373,7 @@ class ProgrammaticAliasingTest {
     assertThat(
       aliasing.synthesize(
         Route.class, List.of(fakeGetMapping("/users", ""))))
-      .isPresent()
+      
       .hasValueSatisfying(synthesized -> {
         String s = synthesized.toString();
         assertThat(s)

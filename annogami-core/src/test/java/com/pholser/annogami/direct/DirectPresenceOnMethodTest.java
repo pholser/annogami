@@ -44,7 +44,7 @@ class DirectPresenceOnMethodTest {
   void findsDirectlyPresent() throws Exception {
     assertThat(
       DIRECT.find(A.class, MethodHaver.class.getDeclaredMethod("m1")))
-      .isPresent()
+      
       .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(10));
   }
 
@@ -64,7 +64,7 @@ class DirectPresenceOnMethodTest {
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     assertThat(
       DIRECT.find(Bs.class, MethodHaver.class.getDeclaredMethod("m2")))
-      .isPresent()
+      
       .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 }

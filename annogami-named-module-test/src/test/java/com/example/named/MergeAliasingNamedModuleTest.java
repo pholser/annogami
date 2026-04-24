@@ -21,7 +21,7 @@ class MergeAliasingNamedModuleTest {
     AnnotatedPath path = new AnnotatedPath(List.of(UserController.class));
 
     assertThat(path.merge(Route.class, META_DIRECT, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(r ->
         assertThat(r.path()).isEqualTo("/users"));
   }

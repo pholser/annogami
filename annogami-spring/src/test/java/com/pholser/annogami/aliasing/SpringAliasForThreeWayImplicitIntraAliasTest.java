@@ -60,7 +60,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
   void settingUrlPropagatesAllThreeMembers() {
     assertThat(
       DIRECT.find(Route.class, SetViaUrl.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(r -> {
         assertThat(r.url()).isEqualTo("/api");
         assertThat(r.path()).isEqualTo("/api");
@@ -72,7 +72,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
   void settingPathPropagatesAllThreeMembers() {
     assertThat(
       DIRECT.find(Route.class, SetViaPath.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(r -> {
         assertThat(r.url()).isEqualTo("/api");
         assertThat(r.path()).isEqualTo("/api");
@@ -84,7 +84,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
   void settingValuePropagatesAllThreeMembers() {
     assertThat(
       DIRECT.find(Route.class, SetViaValue.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(r -> {
         assertThat(r.url()).isEqualTo("/api");
         assertThat(r.path()).isEqualTo("/api");
@@ -96,7 +96,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
   void settingUrlAlsoPropagatesMetaAttribute() {
     assertThat(
       META_DIRECT.find(Base.class, SetViaUrl.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("/api"));
   }
 

@@ -95,15 +95,19 @@ abstract class AllContractTest {
 
   @Test
   final void metaAnnotationsFoundOnlyByMetaImplementations() {
-    boolean hasBase = subject().all(HasComposed.class).stream()
-      .anyMatch(a -> a.annotationType() == Base.class);
+    boolean hasBase =
+      subject().all(HasComposed.class).stream()
+        .anyMatch(a -> a.annotationType() == Base.class);
+
     assertThat(hasBase).isEqualTo(supportsMeta());
   }
 
   @Test
   final void inheritedAnnotationsFoundOnlyByPresentImplementations() {
-    boolean hasInh = subject().all(InhDerived.class).stream()
-      .anyMatch(a -> a.annotationType() == Inh.class);
+    boolean hasInh =
+      subject().all(InhDerived.class).stream()
+        .anyMatch(a -> a.annotationType() == Inh.class);
+
     assertThat(hasInh).isEqualTo(honorsInherited());
   }
 }

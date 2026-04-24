@@ -31,7 +31,7 @@ class SpringAliasForMetaOverrideTest {
   void findsValueFromComposedAttribute() {
     assertThat(
       META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("hello"));
   }
 }

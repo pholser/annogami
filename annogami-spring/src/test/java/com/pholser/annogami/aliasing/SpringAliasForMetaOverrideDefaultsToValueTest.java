@@ -30,7 +30,7 @@ class SpringAliasForMetaOverrideDefaultsToValueTest {
   void aliasForAnnotationOnlyDefaultsToTargetValue() {
     assertThat(
       META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(
         base -> assertThat(base.value()).isEqualTo("hello"));
   }

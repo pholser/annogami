@@ -33,7 +33,7 @@ class SpringAliasForMetaOverrideNonValueAttributeTest {
   void metaAliasForNonValueAttributeIsApplied() {
     assertThat(
       META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(base -> {
         assertThat(base.name()).isEqualTo("hello");
         assertThat(base.count()).isEqualTo(42);

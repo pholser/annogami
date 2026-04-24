@@ -45,7 +45,7 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(
       DIRECT.find(
         Composed.class, TargetNameOnly.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(c -> {
         assertThat(c.name()).isEqualTo("hello");
         assertThat(c.value()).isEqualTo("hello");
@@ -57,7 +57,7 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(
       DIRECT.find(
         Composed.class, TargetValueOnly.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(c -> {
         assertThat(c.value()).isEqualTo("hello");
         assertThat(c.name()).isEqualTo("hello");
@@ -78,7 +78,7 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
     assertThat(
       META_DIRECT.find(
         Base.class, TargetNameOnly.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("hello"));
   }
 }

@@ -134,8 +134,6 @@ class AssociatedOnClassTest {
 
   @Test
   void missesRepeatableAnnotationsOnSubclassViaInheritedContainer() {
-    List<D> ds = ASSOCIATED.find(D.class, DDerived.class);
-
-    assertThat(ds).isEmpty();
+    assertThat(ASSOCIATED.find(D.class, DDerived.class)).isEmpty();
   }
 }

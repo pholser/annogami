@@ -78,13 +78,16 @@ class JUnitAnnotationComparisonTest {
   @Test
   void extensionDiscovery_bothFindThroughComposed() {
     // JUnit: findRepeatableAnnotations follows composed annotations
-    List<ExtendWith> junit = AnnotationSupport
-      .findRepeatableAnnotations(
-        ExtendedSubject.class, ExtendWith.class);
+    List<ExtendWith> junit =
+      AnnotationSupport.findRepeatableAnnotations(
+        ExtendedSubject.class,
+        ExtendWith.class);
 
     // annogami: META_DIRECT_OR_INDIRECT walks the meta-annotation chain
-    List<ExtendWith> annogami = META_DIRECT_OR_INDIRECT
-      .find(ExtendWith.class, ExtendedSubject.class);
+    List<ExtendWith> annogami =
+      META_DIRECT_OR_INDIRECT.find(
+        ExtendWith.class,
+        ExtendedSubject.class);
 
     // Both surface the same extension class
     assertThat(junit)
@@ -99,16 +102,14 @@ class JUnitAnnotationComparisonTest {
 
   @Test
   void testDetection_bothFindThroughComposed() throws Exception {
-    Method method = ComposedSubject.class
-      .getDeclaredMethod("myTest");
+    Method m = ComposedSubject.class.getDeclaredMethod("myTest");
 
     // JUnit: isAnnotated follows composed annotations
-    boolean junit = AnnotationSupport.isAnnotated(method, Test.class);
+    boolean junit = AnnotationSupport.isAnnotated(m, Test.class);
 
     // annogami: META_DIRECT_OR_INDIRECT walks the meta-annotation chain
-    boolean annogami = !META_DIRECT_OR_INDIRECT
-      .find(Test.class, method)
-      .isEmpty();
+    boolean annogami =
+      !META_DIRECT_OR_INDIRECT.find(Test.class, m).isEmpty();
 
     assertThat(junit).isTrue();
     assertThat(annogami).isEqualTo(junit);
@@ -116,17 +117,14 @@ class JUnitAnnotationComparisonTest {
 
   @Test
   void tagDiscovery_bothFindThroughComposed() throws Exception {
-    Method method = ComposedSubject.class
-      .getDeclaredMethod("myTest");
+    Method m = ComposedSubject.class.getDeclaredMethod("myTest");
 
     // JUnit: findRepeatableAnnotations unwraps @Repeatable containers
     // and follows composed annotations
-    List<Tag> junit = AnnotationSupport
-      .findRepeatableAnnotations(method, Tag.class);
+    List<Tag> junit = AnnotationSupport.findRepeatableAnnotations(m, Tag.class);
 
     // annogami: META_DIRECT_OR_INDIRECT walks the meta-annotation chain
-    List<Tag> annogami = META_DIRECT_OR_INDIRECT
-      .find(Tag.class, method);
+    List<Tag> annogami = META_DIRECT_OR_INDIRECT.find(Tag.class, m);
 
     // Both find both @Tag values from @FastTest
     assertThat(junit)
@@ -142,12 +140,12 @@ class JUnitAnnotationComparisonTest {
     // JUnit's question: which methods in this class hierarchy carry
     // @BeforeEach? It searches the class structure and returns the
     // annotated method, which may be in a superclass.
-    boolean junitFindsItOnBase = AnnotationSupport
-      .isAnnotated(
+    boolean junitFindsItOnBase =
+      AnnotationSupport.isAnnotated(
         LifecycleBase.class.getDeclaredMethod("setUp"),
         BeforeEach.class);
-    boolean junitFindsItOnDerived = AnnotationSupport
-      .isAnnotated(
+    boolean junitFindsItOnDerived =
+      AnnotationSupport.isAnnotated(
         LifecycleDerived.class.getDeclaredMethod("setUp"),
         BeforeEach.class);
 
@@ -159,17 +157,13 @@ class JUnitAnnotationComparisonTest {
     // annogami's question: does this specific method, or any method
     // it overrides, carry @BeforeEach? The path follows the override
     // chain and finds it on the superclass method.
-    Method derived = LifecycleDerived.class
-      .getDeclaredMethod("setUp");
+    Method derived = LifecycleDerived.class.getDeclaredMethod("setUp");
 
-    AnnotatedPath path = AnnotatedPathBuilder
-      .fromMethod(derived)
-      .toDepthOverridden()
-      .build();
+    AnnotatedPath path =
+      AnnotatedPathBuilder.fromMethod(derived)
+        .toDepthOverridden()
+        .build();
 
-    Optional<BeforeEach> annogami =
-      path.findFirst(BeforeEach.class, DIRECT);
-
-    assertThat(annogami).isPresent();
+    assertThat(path.findFirst(BeforeEach.class, DIRECT)).isPresent();
   }
 }

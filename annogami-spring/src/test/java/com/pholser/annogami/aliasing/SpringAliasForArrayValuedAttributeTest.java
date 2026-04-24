@@ -53,7 +53,7 @@ class SpringAliasForArrayValuedAttributeTest {
     assertThat(
       DIRECT.find(
         ComponentScan.class, SetViaValue.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(cs -> {
         assertThat(cs.value())
           .containsExactly("com.example", "com.other");
@@ -69,7 +69,7 @@ class SpringAliasForArrayValuedAttributeTest {
         ComponentScan.class,
         SetViaBasePackages.class,
         SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(cs -> {
         assertThat(cs.basePackages())
           .containsExactly("com.example", "com.other");
@@ -83,7 +83,7 @@ class SpringAliasForArrayValuedAttributeTest {
     assertThat(
       META_DIRECT.find(
         Scan.class, SetViaValue.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(scan ->
         assertThat(scan.packages())
           .containsExactly("com.example", "com.other"));
@@ -127,7 +127,7 @@ class SpringAliasForArrayValuedAttributeTest {
     assertThat(
       DIRECT.find(
         ComponentScan.class, SetViaValue.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(synthesized ->
         assertThat(synthesized).isEqualTo(real));
   }
@@ -138,7 +138,7 @@ class SpringAliasForArrayValuedAttributeTest {
     assertThat(
       DIRECT.find(
         ComponentScan.class, SetViaValue.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(synthesized -> {
         // Symmetry: the JVM's AnnotationInvocationHandler must also
         // consider them equal.
@@ -152,7 +152,7 @@ class SpringAliasForArrayValuedAttributeTest {
     assertThat(
       DIRECT.find(
         ComponentScan.class, SetViaValue.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(synthesized ->
         assertThat(synthesized.hashCode()).isEqualTo(real.hashCode()));
   }

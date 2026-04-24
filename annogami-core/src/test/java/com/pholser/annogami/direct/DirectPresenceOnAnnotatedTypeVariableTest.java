@@ -29,15 +29,15 @@ class DirectPresenceOnAnnotatedTypeVariableTest {
       DIRECT.find(
         A.class,
         TypeUseHaver.class.getDeclaredField("field").getAnnotatedType()))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(1));
   }
 
   @Test
   void missesOnAnnotatedTypeVariableNotDeclared() throws Exception {
     assertThat(DIRECT.find(
       A.class,
-      TypeUseHaver.class.getDeclaredField("plain").getAnnotatedType()
-    )).isEmpty();
+      TypeUseHaver.class.getDeclaredField("plain").getAnnotatedType()))
+      .isEmpty();
   }
 }

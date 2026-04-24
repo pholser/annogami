@@ -34,8 +34,8 @@ class DirectPresenceOnAnnotatedWildcardTypeTest {
     AnnotatedType wildcard = paramType.getAnnotatedActualTypeArguments()[0];
 
     assertThat(DIRECT.find(A.class, wildcard))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(1));
   }
 
   @Test
@@ -45,7 +45,6 @@ class DirectPresenceOnAnnotatedWildcardTypeTest {
       (AnnotatedParameterizedType) f.getAnnotatedType();
     AnnotatedType arg = paramType.getAnnotatedActualTypeArguments()[0];
 
-    assertThat(DIRECT.find(A.class, arg))
-      .isEmpty();
+    assertThat(DIRECT.find(A.class, arg)).isEmpty();
   }
 }

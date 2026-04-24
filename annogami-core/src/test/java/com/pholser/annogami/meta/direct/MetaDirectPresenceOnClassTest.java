@@ -146,7 +146,7 @@ class MetaDirectPresenceOnClassTest {
   @Test
   void findsMetaPresentOnClass() {
     assertThat(META_DIRECT.find(A.class, AHaverViaMeta.class))
-      .isPresent()
+      
       .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
   }
 

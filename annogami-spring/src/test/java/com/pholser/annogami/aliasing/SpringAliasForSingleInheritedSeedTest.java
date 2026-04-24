@@ -41,7 +41,7 @@ class SpringAliasForSingleInheritedSeedTest {
     assertThat(
       META_PRESENT.find(
         Base.class, InhDerived.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(
         base -> assertThat(base.value()).isEqualTo("hello"));
   }

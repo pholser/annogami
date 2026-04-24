@@ -74,7 +74,7 @@ class AnnotatedPathAliasingTest {
 
     assertThat(
       path.findFirst(Base.class, META_DIRECT, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
   }
 
@@ -84,7 +84,7 @@ class AnnotatedPathAliasingTest {
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
     assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("alpha"));
   }
 
@@ -98,7 +98,7 @@ class AnnotatedPathAliasingTest {
       new AnnotatedPath(List.of(Unset.class, Beta.class));
 
     assertThat(path.merge(Base.class, META_DIRECT, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("beta"));
   }
 }

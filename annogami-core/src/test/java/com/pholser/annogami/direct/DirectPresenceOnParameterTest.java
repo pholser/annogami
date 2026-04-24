@@ -41,7 +41,7 @@ class DirectPresenceOnParameterTest {
   @Test
   void findsDirectlyPresent() throws Exception {
     assertThat(DIRECT.find(A.class, parameterOf("p1")))
-      .isPresent()
+      
       .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1000));
   }
 
@@ -60,7 +60,7 @@ class DirectPresenceOnParameterTest {
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     assertThat(DIRECT.find(Bs.class, parameterOf("p2")))
-      .isPresent()
+      
       .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 

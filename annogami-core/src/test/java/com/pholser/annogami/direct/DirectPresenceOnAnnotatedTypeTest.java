@@ -53,24 +53,26 @@ class DirectPresenceOnAnnotatedTypeTest {
       DIRECT.find(
         A.class,
         Holder.class.getDeclaredField("array").getAnnotatedType()))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(1));
   }
 
   @Test
   void missesOnAnnotatedArrayTypeNotDeclared() throws Exception {
-    assertThat(DIRECT.find(
-      A.class,
-      Holder.class.getDeclaredField("plain").getAnnotatedType()
-    )).isEmpty();
+    assertThat(
+      DIRECT.find(
+        A.class,
+        Holder.class.getDeclaredField("plain").getAnnotatedType())
+    ).isEmpty();
   }
 
   @Test
   void missesOnAnnotatedArrayTypeIndirectlyPresent() throws Exception {
-    assertThat(DIRECT.find(
-      B.class,
-      Holder.class.getDeclaredField("repeatArray").getAnnotatedType()
-    )).isEmpty();
+    assertThat(
+      DIRECT.find(
+        B.class,
+        Holder.class.getDeclaredField("repeatArray").getAnnotatedType())
+    ).isEmpty();
   }
 
   @Test
@@ -79,8 +81,8 @@ class DirectPresenceOnAnnotatedTypeTest {
       DIRECT.find(
         Bs.class,
         Holder.class.getDeclaredField("repeatArray").getAnnotatedType()))
-      .isPresent()
-      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value()).hasSize(2));
   }
 
   @Test
@@ -89,8 +91,8 @@ class DirectPresenceOnAnnotatedTypeTest {
       DIRECT.find(
         A.class,
         Holder.class.getDeclaredField("param").getAnnotatedType()))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(4));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(4));
   }
 
   @Test
@@ -99,8 +101,8 @@ class DirectPresenceOnAnnotatedTypeTest {
       DIRECT.find(
         Bs.class,
         Holder.class.getDeclaredField("repeatParam").getAnnotatedType()))
-      .isPresent()
-      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value()).hasSize(2));
   }
 
   @Test
@@ -111,7 +113,7 @@ class DirectPresenceOnAnnotatedTypeTest {
     AnnotatedType argType = paramType.getAnnotatedActualTypeArguments()[0];
 
     assertThat(DIRECT.find(A.class, argType))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(7));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(7));
   }
 }

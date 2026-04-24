@@ -76,8 +76,9 @@ abstract class AllByTypeContractTest {
 
   @Test
   final void findsDirectlyPresentAnnotationByType() {
-    List<A> found = subject().find(A.class, HasA.class);
-    assertThat(found).extracting(A::value).containsExactly(3);
+    assertThat(subject().find(A.class, HasA.class))
+      .extracting(A::value)
+      .containsExactly(3);
   }
 
   @Test
@@ -87,19 +88,20 @@ abstract class AllByTypeContractTest {
 
   @Test
   final void expandsRepeatableIntoIndividualElements() {
-    List<B> found = subject().find(B.class, HasRepeatableB.class);
-    assertThat(found).extracting(B::value).containsExactlyInAnyOrder(4, 5);
+    assertThat(subject().find(B.class, HasRepeatableB.class))
+      .extracting(B::value)
+      .containsExactlyInAnyOrder(4, 5);
   }
 
   @Test
   final void metaAnnotationsFoundOnlyByMetaImplementations() {
-    List<Base> found = subject().find(Base.class, HasComposed.class);
-    assertThat(found.isEmpty()).isEqualTo(!supportsMeta());
+    assertThat(subject().find(Base.class, HasComposed.class).isEmpty())
+      .isEqualTo(!supportsMeta());
   }
 
   @Test
   final void inheritedAnnotationsFoundOnlyByAssociatedImplementations() {
-    List<Inh> found = subject().find(Inh.class, InhDerived.class);
-    assertThat(found.isEmpty()).isEqualTo(!honorsInherited());
+    assertThat(subject().find(Inh.class, InhDerived.class).isEmpty())
+      .isEqualTo(!honorsInherited());
   }
 }

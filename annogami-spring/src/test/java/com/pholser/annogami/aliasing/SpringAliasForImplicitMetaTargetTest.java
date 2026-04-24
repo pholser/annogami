@@ -30,7 +30,7 @@ class SpringAliasForImplicitMetaTargetTest {
   void aliasWithoutAnnotationDefaultsToMetaAnnotation() {
     assertThat(
       DIRECT.find(Base.class, Target.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("p"));
   }
 }

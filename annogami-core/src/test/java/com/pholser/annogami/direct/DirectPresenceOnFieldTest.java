@@ -39,7 +39,7 @@ class DirectPresenceOnFieldTest {
   void findsDirectlyPresent() throws Exception {
     assertThat(
       DIRECT.find(A.class, FieldHaver.class.getDeclaredField("a")))
-      .isPresent()
+      
       .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
   }
 
@@ -59,7 +59,7 @@ class DirectPresenceOnFieldTest {
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
     assertThat(
       DIRECT.find(Bs.class, FieldHaver.class.getDeclaredField("manyBs")))
-      .isPresent()
+      
       .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 }

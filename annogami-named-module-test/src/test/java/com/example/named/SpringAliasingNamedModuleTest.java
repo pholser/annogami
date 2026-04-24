@@ -16,7 +16,7 @@ class SpringAliasingNamedModuleTest {
   void synthesizesRouteFromGetRouteOnNamedModuleAnnotationType() {
     assertThat(
       META_DIRECT.find(Route.class, UserControl.class, SpringAliasing.spring()))
-        .isPresent()
+        
         .hasValueSatisfying(r ->
           assertThat(r.path()).isEqualTo("/users"));
   }

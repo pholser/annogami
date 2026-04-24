@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.TypeVariable;
 
 import static com.pholser.annogami.Presences.DIRECT;
 import static java.lang.annotation.ElementType.TYPE_USE;
@@ -27,25 +26,21 @@ class DirectPresenceOnAnnotatedTypeBoundsTest {
 
   @Test
   void findsDirectlyPresent() {
-    @SuppressWarnings("rawtypes")
-    TypeVariable<Class<BoundsHaver>>[] vars =
-      BoundsHaver.class.getTypeParameters();
+    var vars = BoundsHaver.class.getTypeParameters();
+
     AnnotatedType[] bounds = vars[0].getAnnotatedBounds();
 
     assertThat(DIRECT.find(A.class, bounds[0]))
-      .isPresent()
-      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(2));
+      .hasValueSatisfying(a ->
+        assertThat(a.value()).isEqualTo(2));
   }
 
   @Test
   void missesWhenNotAnnotated() {
-    @SuppressWarnings("rawtypes")
-    TypeVariable<Class<NoAnnotatedBounds>>[] vars =
-      NoAnnotatedBounds.class.getTypeParameters();
+    var vars = NoAnnotatedBounds.class.getTypeParameters();
+
     AnnotatedType[] bounds = vars[0].getAnnotatedBounds();
 
-    assertThat(DIRECT.find(A.class, bounds[0]))
-
-      .isEmpty();
+    assertThat(DIRECT.find(A.class, bounds[0])).isEmpty();
   }
 }

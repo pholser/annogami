@@ -23,7 +23,7 @@ class ProgrammaticAliasingNamedModuleTest {
     GetMapping ann = OrderController.class.getAnnotation(GetMapping.class);
 
     assertThat(aliasing.synthesize(Route.class, List.of(ann)))
-      .isPresent()
+      
       .hasValueSatisfying(r ->
         assertThat(r.path()).isEqualTo("/orders"));
   }

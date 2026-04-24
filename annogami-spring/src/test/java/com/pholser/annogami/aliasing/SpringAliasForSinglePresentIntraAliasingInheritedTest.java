@@ -34,7 +34,7 @@ class SpringAliasForSinglePresentIntraAliasingInheritedTest {
   void findWithAliasingPropagatesIntraAliasForInheritedAnnotation() {
     assertThat(
       PRESENT.find(Intra.class, InhDerived.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(intra -> {
         assertThat(intra.name()).isEqualTo("hello");
         assertThat(intra.value()).isEqualTo("hello");

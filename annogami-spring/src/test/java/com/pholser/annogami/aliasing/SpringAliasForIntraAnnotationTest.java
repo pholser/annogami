@@ -35,7 +35,7 @@ class SpringAliasForIntraAnnotationTest {
   void intraAliasReadsThroughEitherMember() {
     assertThat(
       DIRECT.find(Intra.class, Target1.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(i -> {
         assertThat(i.name()).isEqualTo("hello");
         assertThat(i.value()).isEqualTo("hello");
@@ -46,7 +46,7 @@ class SpringAliasForIntraAnnotationTest {
   void intraAliasReadsThroughEitherDirection() {
     assertThat(
       DIRECT.find(Intra.class, Target2.class, SpringAliasing.spring()))
-      .isPresent()
+      
       .hasValueSatisfying(i -> {
         assertThat(i.value()).isEqualTo("hello");
         assertThat(i.name()).isEqualTo("hello");
