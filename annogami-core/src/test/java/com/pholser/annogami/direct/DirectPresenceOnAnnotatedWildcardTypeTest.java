@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -46,6 +45,7 @@ class DirectPresenceOnAnnotatedWildcardTypeTest {
       (AnnotatedParameterizedType) f.getAnnotatedType();
     AnnotatedType arg = paramType.getAnnotatedActualTypeArguments()[0];
 
-    DIRECT.find(A.class, arg).ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(A.class, arg))
+      .isEmpty();
   }
 }

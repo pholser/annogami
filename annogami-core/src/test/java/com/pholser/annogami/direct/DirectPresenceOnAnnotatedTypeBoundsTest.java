@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -45,7 +44,8 @@ class DirectPresenceOnAnnotatedTypeBoundsTest {
       NoAnnotatedBounds.class.getTypeParameters();
     AnnotatedType[] bounds = vars[0].getAnnotatedBounds();
 
-    DIRECT.find(A.class, bounds[0])
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(A.class, bounds[0]))
+
+      .isEmpty();
   }
 }

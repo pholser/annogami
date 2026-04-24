@@ -1,6 +1,5 @@
 package com.pholser.annogami.present;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Inherited;
@@ -91,14 +90,14 @@ class PresentOnClassTest {
 
   @Test
   void missesNonDeclaredNonRepeatable() {
-    PRESENT.find(A.class, ManyBHaver.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(PRESENT.find(A.class, ManyBHaver.class))
+      .isEmpty();
   }
 
   @Test
   void missesRepeatableWhenOnlyContainerIsPresent() {
-    PRESENT.find(B.class, ManyBHaver.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(PRESENT.find(B.class, ManyBHaver.class))
+      .isEmpty();
   }
 
   @Test
@@ -127,8 +126,8 @@ class PresentOnClassTest {
 
   @Test
   void doesNotInheritNonInheritedAnnotationToSubclass() {
-    PRESENT.find(E.class, ENonInheritedDerived.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(PRESENT.find(E.class, ENonInheritedDerived.class))
+      .isEmpty();
 
     assertThat(PRESENT.find(E.class, ENonInheritedBase.class))
       .isPresent()
@@ -147,11 +146,12 @@ class PresentOnClassTest {
 
   @Test
   void elementTypeOfRepeatableIsNotItselfInherited() {
-    PRESENT.find(D.class, DDerived.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(PRESENT.find(D.class, DDerived.class))
+      .isEmpty();
 
-    PRESENT.find(D.class, DBase.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(PRESENT.find(D.class, DBase.class))
+
+      .isEmpty();
 
     assertThat(PRESENT.find(Ds.class, DBase.class))
       .isPresent()

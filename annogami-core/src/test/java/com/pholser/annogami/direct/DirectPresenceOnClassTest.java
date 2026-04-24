@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Inherited;
@@ -73,14 +72,14 @@ class DirectPresenceOnClassTest {
 
   @Test
   void missesNotDeclared() {
-    DIRECT.find(A.class, ManyBHaver.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(A.class, ManyBHaver.class))
+      .isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() {
-    DIRECT.find(B.class, ManyBHaver.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(B.class, ManyBHaver.class))
+      .isEmpty();
   }
 
   @Test
@@ -92,20 +91,20 @@ class DirectPresenceOnClassTest {
 
   @Test
   void missesPresent() {
-    DIRECT.find(C.class, Derived.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(C.class, Derived.class))
+      .isEmpty();
   }
 
   @Test
   void missesAssociated() {
-    DIRECT.find(D.class, Derived.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(D.class, Derived.class))
+      .isEmpty();
   }
 
   @Test
   void missesContainerAnnotationOfAssociated() {
-    DIRECT.find(Ds.class, Derived.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(Ds.class, Derived.class))
+      .isEmpty();
   }
 
   @Test

@@ -1,6 +1,5 @@
 package com.pholser.annogami.associated;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Inherited;
@@ -85,20 +84,18 @@ class AssociatedOnClassTest {
 
   @Test
   void findsSingleNonRepeatable() {
-    List<A> as = ASSOCIATED.find(A.class, AHaver.class);
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(3);
+    assertThat(ASSOCIATED.find(A.class, AHaver.class))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(3);
   }
 
   @Test
   void findsInheritedNonRepeatableOnSubclass() {
-    List<C> cs = ASSOCIATED.find(C.class, CDerived.class);
-    assertThat(cs).hasSize(1);
-
-    C c = cs.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(c.value()).isEqualTo(6);
+    assertThat(ASSOCIATED.find(C.class, CDerived.class))
+      .singleElement()
+      .extracting(C::value)
+      .isEqualTo(6);
   }
 
   @Test
@@ -119,24 +116,20 @@ class AssociatedOnClassTest {
 
   @Test
   void findsContainerAnnotation() {
-    List<Bs> containers = ASSOCIATED.find(Bs.class, ManyBHaver.class);
-    assertThat(containers).hasSize(1);
-
-    Bs bs = containers.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(bs.value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(4, 5);
+    assertThat(ASSOCIATED.find(Bs.class, ManyBHaver.class))
+      .singleElement()
+      .satisfies(bs -> assertThat(bs.value())
+        .extracting(B::value)
+        .containsExactlyInAnyOrder(4, 5));
   }
 
   @Test
   void findsInheritedContainerAnnotationOnSubclass() {
-    List<Ds> containers = ASSOCIATED.find(Ds.class, DDerived.class);
-    assertThat(containers).hasSize(1);
-
-    Ds ds = containers.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(ds.value())
-      .extracting(D::value)
-      .containsExactlyInAnyOrder(7, 8);
+    assertThat(ASSOCIATED.find(Ds.class, DDerived.class))
+      .singleElement()
+      .satisfies(ds -> assertThat(ds.value())
+        .extracting(D::value)
+        .containsExactlyInAnyOrder(7, 8));
   }
 
   @Test

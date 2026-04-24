@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -51,14 +50,14 @@ class DirectPresenceOnMethodTest {
 
   @Test
   void missesNotDeclared() throws Exception {
-    DIRECT.find(A.class, MethodHaver.class.getDeclaredMethod("m3"))
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(A.class, MethodHaver.class.getDeclaredMethod("m3")))
+      .isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() throws Exception {
-    DIRECT.find(B.class, MethodHaver.class.getDeclaredMethod("m2"))
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(B.class, MethodHaver.class.getDeclaredMethod("m2")))
+      .isEmpty();
   }
 
   @Test

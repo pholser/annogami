@@ -4,21 +4,22 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import java.util.Optional;
 
 import static com.pholser.annogami.Presences.META_DIRECT;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * The default meta-walk config prevents descent into {@code java.lang.annotation.*}
- * types. Observable effects through the public API:
+ * The default meta-walk config prevents descent into
+ * {@code java.lang.annotation.*} types. Observable effects through the public
+ * API:
  * <ul>
  *   <li>Self-referential annotations like {@code @Documented} do not cause
  *       infinite traversal — the filter prevents re-entering the JDK type.</li>
- *   <li>Custom meta-annotation types separated by {@code java.lang.annotation.*}
- *       types in the chain are still reachable because the walker visits the
- *       CUSTOM nodes in the chain before reaching any JDK type.</li>
+ *   <li>Custom meta-annotation types separated by
+ *       {@code java.lang.annotation.*} types in the chain are still reachable
+ *       because the walker visits the CUSTOM nodes in the chain before reaching
+ *       any JDK type.</li>
  *   <li>A java.lang.annotation.* type that is only reachable by descending
  *       THROUGH another java.lang.annotation.* node (not by being annotated on
  *       a custom node) won't appear in the walk results.</li>
@@ -48,19 +49,17 @@ class BreadthFirstMetaWalkerJavaLangAnnotationFilterTest {
   @Test
   void metaWalkTerminatesEvenWithSelfReferentialDocumentedInChain() {
     // @Framework has @Documented on it. @Documented has @Documented on itself.
-    // If descent into java.lang.annotation.* were not blocked, this would recurse.
-    Optional<Framework> found =
-      META_DIRECT.find(Framework.class, MyController.class);
+    // If descent into java.lang.annotation.* were not blocked, this would
+    // recurse.
 
-    assertThat(found).isPresent();
+    assertThat(META_DIRECT.find(Framework.class, MyController.class))
+      .isPresent();
   }
 
   @Test
   void customMetaAnnotationIsReachableThroughChainContainingJdkTypes() {
-    Optional<Controller> found =
-      META_DIRECT.find(Controller.class, MyController.class);
-
-    assertThat(found).isPresent();
+    assertThat(META_DIRECT.find(Controller.class, MyController.class))
+      .isPresent();
   }
 
   // --- Type only reachable through a JDK node is not found ---

@@ -1,6 +1,5 @@
 package com.pholser.annogami.meta.present;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Inherited;
@@ -32,8 +31,8 @@ class MetaPresentVsMetaDirectInheritedSeedTest {
 
   @Test
   void metaPresentSeesInheritedSeedButMetaDirectDoesNot() {
-    META_DIRECT.find(A.class, Derived.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(META_DIRECT.find(A.class, Derived.class))
+      .isEmpty();
 
     assertThat(META_PRESENT.find(A.class, Derived.class))
       .isPresent()

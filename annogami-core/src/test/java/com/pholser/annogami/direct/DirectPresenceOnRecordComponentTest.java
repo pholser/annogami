@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -51,7 +50,7 @@ class DirectPresenceOnRecordComponentTest {
 
   @Test
   void missesNotDeclared() {
-    DIRECT.find(A.class, R.class.getRecordComponents()[2])
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(A.class, R.class.getRecordComponents()[2]))
+      .isEmpty();
   }
 }

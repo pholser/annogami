@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -51,14 +50,14 @@ class DirectPresenceOnConstructorTest {
 
   @Test
   void missesNotDeclared() throws Exception {
-    DIRECT.find(A.class, CtorHaver.class.getDeclaredConstructor(String.class))
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(A.class, CtorHaver.class.getDeclaredConstructor(String.class)))
+      .isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() throws Exception {
-    DIRECT.find(B.class, CtorHaver.class.getDeclaredConstructor(int.class))
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(B.class, CtorHaver.class.getDeclaredConstructor(int.class)))
+      .isEmpty();
   }
 
   @Test

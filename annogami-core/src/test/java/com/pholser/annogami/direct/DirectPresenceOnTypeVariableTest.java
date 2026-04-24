@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -38,6 +37,7 @@ class DirectPresenceOnTypeVariableTest {
   void missesOnGenericDeclarationWhenAnnotationIsOnTypeParameter() {
     GenericDeclaration decl = GenericClass.class;
 
-    DIRECT.find(TP.class, decl).ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(TP.class, decl))
+      .isEmpty();
   }
 }

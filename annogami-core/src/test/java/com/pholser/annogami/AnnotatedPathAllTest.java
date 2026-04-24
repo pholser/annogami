@@ -25,7 +25,7 @@ class AnnotatedPathAllTest {
   }
 
   @Test
-  void singleElementPathReturnsItsAnnotations() {
+  void singleElementPath() {
     AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class));
 
     List<Annotation> all = path.all(DIRECT);
@@ -35,7 +35,7 @@ class AnnotatedPathAllTest {
   }
 
   @Test
-  void multiElementPathConcatenatesAnnotationsInOrder() {
+  void multiElementPath() {
     AnnotatedPath path =
       new AnnotatedPath(List.of(Alpha.class, Beta.class));
 

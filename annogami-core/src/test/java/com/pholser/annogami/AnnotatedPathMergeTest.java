@@ -33,11 +33,10 @@ class AnnotatedPathMergeTest {
   }
 
   @Test
-  void mergeOnSingleElementReturnsItsValues() {
+  void mergeOnSingleElement() {
     AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class));
 
     assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
       .hasValueSatisfying(c -> {
         assertThat(c.host()).isEqualTo("alpha.example.com");
         assertThat(c.port()).isEqualTo(8080);
@@ -46,22 +45,18 @@ class AnnotatedPathMergeTest {
 
   @Test
   void earlierElementValueWinsForSameAttribute() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Alpha.class, Gamma.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class, Gamma.class));
 
     assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
       .hasValueSatisfying(c ->
         assertThat(c.host()).isEqualTo("alpha.example.com"));
   }
 
   @Test
   void laterElementFillsInAttributeLeftAtDefault() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Alpha.class, Beta.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
     assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
       .hasValueSatisfying(c -> {
         assertThat(c.host()).isEqualTo("alpha.example.com");
         assertThat(c.port()).isEqualTo(9090);
@@ -69,9 +64,8 @@ class AnnotatedPathMergeTest {
   }
 
   @Test
-  void returnsEmptyWhenNoElementHasTheAnnotation() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(NoAnnotation.class));
+  void whenNoElementHasTheAnnotation() {
+    AnnotatedPath path = new AnnotatedPath(List.of(NoAnnotation.class));
 
     assertThat(path.merge(Config.class, DIRECT)).isEmpty();
   }
@@ -81,11 +75,10 @@ class AnnotatedPathMergeTest {
   }
 
   @Test
-  void mergeWhenAllAttributesAreAtDefaultReturnsAnnotationWithDefaults() {
+  void mergeWhenAllAttributesAreAtDefault() {
     AnnotatedPath path = new AnnotatedPath(List.of(AllDefaults.class));
 
     assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
       .hasValueSatisfying(c -> {
         assertThat(c.host()).isEqualTo("localhost");
         assertThat(c.port()).isEqualTo(8080);
@@ -94,11 +87,11 @@ class AnnotatedPathMergeTest {
 
   @Test
   void mergeSkipsUnannotatedElementsAndFallsBackToAnnotatedOnes() {
-    AnnotatedPath path = new AnnotatedPath(List.of(NoAnnotation.class, Beta.class));
+    AnnotatedPath path =
+      new AnnotatedPath(List.of(NoAnnotation.class, Beta.class));
 
     assertThat(path.merge(Config.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(c -> assertThat(c.port()).isEqualTo(9090));
+      .hasValueSatisfying(c ->
+        assertThat(c.port()).isEqualTo(9090));
   }
-
 }

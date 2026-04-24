@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -60,18 +59,18 @@ class DirectPresenceOnAnnotatedTypeTest {
 
   @Test
   void missesOnAnnotatedArrayTypeNotDeclared() throws Exception {
-    DIRECT.find(
+    assertThat(DIRECT.find(
       A.class,
       Holder.class.getDeclaredField("plain").getAnnotatedType()
-    ).ifPresent(AnnotationAssertions::falseFind);
+    )).isEmpty();
   }
 
   @Test
   void missesOnAnnotatedArrayTypeIndirectlyPresent() throws Exception {
-    DIRECT.find(
+    assertThat(DIRECT.find(
       B.class,
       Holder.class.getDeclaredField("repeatArray").getAnnotatedType()
-    ).ifPresent(AnnotationAssertions::falseFind);
+    )).isEmpty();
   }
 
   @Test

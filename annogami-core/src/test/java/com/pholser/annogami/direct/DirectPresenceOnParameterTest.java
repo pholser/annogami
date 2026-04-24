@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -48,14 +47,14 @@ class DirectPresenceOnParameterTest {
 
   @Test
   void missesNotDeclared() throws Exception {
-    DIRECT.find(A.class, parameterOf("p3"))
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(A.class, parameterOf("p3")))
+      .isEmpty();
   }
 
   @Test
   void missesIndirectlyPresent() throws Exception {
-    DIRECT.find(B.class, parameterOf("p2"))
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(B.class, parameterOf("p2")))
+      .isEmpty();
   }
 
   @Test

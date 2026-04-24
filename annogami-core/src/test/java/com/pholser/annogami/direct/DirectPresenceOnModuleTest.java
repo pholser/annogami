@@ -1,10 +1,10 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import com.pholser.annogami.ModuleMarker;
 import org.junit.jupiter.api.Test;
 
 import static com.pholser.annogami.Presences.DIRECT;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectPresenceOnModuleTest {
   // When we add in JPMS modularity for annogami,
@@ -12,7 +12,7 @@ class DirectPresenceOnModuleTest {
 
   @Test
   void missesNotDeclared() {
-    DIRECT.find(ModuleMarker.class, String.class.getModule())
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(ModuleMarker.class, String.class.getModule()))
+      .isEmpty();
   }
 }

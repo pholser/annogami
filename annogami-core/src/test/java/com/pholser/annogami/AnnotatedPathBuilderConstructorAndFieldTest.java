@@ -3,6 +3,8 @@ package com.pholser.annogami;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT;
@@ -27,54 +29,52 @@ class AnnotatedPathBuilderConstructorAndFieldTest {
     }
   }
 
-  // --- fromConstructor ---
-
   @Test
   void constructorPathIncludesConstructorItself() throws Exception {
-    var c = Widget.class.getDeclaredConstructor(String.class);
+    Constructor<Widget> c = Widget.class.getDeclaredConstructor(String.class);
 
     AnnotatedPath path = AnnotatedPathBuilder.fromConstructor(c).build();
 
     assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("constructor-level"));
+      .hasValueSatisfying(t ->
+        assertThat(t.value()).isEqualTo("constructor-level"));
   }
 
   @Test
-  void toDeclaringClassFromConstructorExtendsPathToItsClass() throws Exception {
-    var c = Widget.class.getDeclaredConstructor(String.class);
+  void toDeclaringClassFromConstructor() throws Exception {
+    Constructor<Widget> c = Widget.class.getDeclaredConstructor(String.class);
 
-    List<Tag> tags = AnnotatedPathBuilder.fromConstructor(c)
-      .toDeclaringClass()
-      .build()
-      .find(Tag.class, DIRECT_OR_INDIRECT);
+    List<Tag> tags =
+      AnnotatedPathBuilder.fromConstructor(c)
+        .toDeclaringClass()
+        .build()
+        .find(Tag.class, DIRECT_OR_INDIRECT);
 
     assertThat(tags)
       .extracting(Tag::value)
       .containsExactly("constructor-level", "class-level");
   }
 
-  // --- fromField ---
-
   @Test
   void fieldPathIncludesFieldItself() throws Exception {
-    var f = Widget.class.getDeclaredField("name");
+    Field f = Widget.class.getDeclaredField("name");
 
     AnnotatedPath path = AnnotatedPathBuilder.fromField(f).build();
 
     assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("field-level"));
+      .hasValueSatisfying(t ->
+        assertThat(t.value()).isEqualTo("field-level"));
   }
 
   @Test
-  void toDeclaringClassFromFieldExtendsPathToItsClass() throws Exception {
-    var f = Widget.class.getDeclaredField("name");
+  void toDeclaringClassFromField() throws Exception {
+    Field f = Widget.class.getDeclaredField("name");
 
-    List<Tag> tags = AnnotatedPathBuilder.fromField(f)
-      .toDeclaringClass()
-      .build()
-      .find(Tag.class, DIRECT_OR_INDIRECT);
+    List<Tag> tags =
+      AnnotatedPathBuilder.fromField(f)
+        .toDeclaringClass()
+        .build()
+        .find(Tag.class, DIRECT_OR_INDIRECT);
 
     assertThat(tags)
       .extracting(Tag::value)

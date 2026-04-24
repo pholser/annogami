@@ -29,31 +29,30 @@ class AnnotatedPathBuilderParameterTest {
     }
   }
 
-  // --- fromParameter → toDeclaringMethod ---
-
   @Test
   void parameterPathIncludesParameterItself() throws Exception {
-    Parameter p = Service.class
-      .getDeclaredMethod("perform", String.class)
-      .getParameters()[0];
+    Parameter p =
+      Service.class.getDeclaredMethod("perform", String.class)
+        .getParameters()[0];
 
     AnnotatedPath path = AnnotatedPathBuilder.fromParameter(p).build();
 
     assertThat(path.findFirst(Tag.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(t -> assertThat(t.value()).isEqualTo("param-level"));
+      .hasValueSatisfying(t ->
+        assertThat(t.value()).isEqualTo("param-level"));
   }
 
   @Test
   void toDeclaringMethodExtendsPathFromParameterToItsMethod() throws Exception {
-    Parameter p = Service.class
-      .getDeclaredMethod("perform", String.class)
-      .getParameters()[0];
+    Parameter p =
+      Service.class.getDeclaredMethod("perform", String.class)
+        .getParameters()[0];
 
-    List<Tag> tags = AnnotatedPathBuilder.fromParameter(p)
-      .toDeclaringMethod()
-      .build()
-      .find(Tag.class, DIRECT_OR_INDIRECT);
+    List<Tag> tags =
+      AnnotatedPathBuilder.fromParameter(p)
+        .toDeclaringMethod()
+        .build()
+        .find(Tag.class, DIRECT_OR_INDIRECT);
 
     assertThat(tags)
       .extracting(Tag::value)
@@ -61,16 +60,17 @@ class AnnotatedPathBuilderParameterTest {
   }
 
   @Test
-  void toDeclaringMethodThenToDeclaringClassBuildsFullChain() throws Exception {
-    Parameter p = Service.class
-      .getDeclaredMethod("perform", String.class)
-      .getParameters()[0];
+  void toDeclaringMethodThenToDeclaringClass() throws Exception {
+    Parameter p =
+      Service.class.getDeclaredMethod("perform", String.class)
+        .getParameters()[0];
 
-    List<Tag> tags = AnnotatedPathBuilder.fromParameter(p)
-      .toDeclaringMethod()
-      .toDeclaringClass()
-      .build()
-      .find(Tag.class, DIRECT_OR_INDIRECT);
+    List<Tag> tags =
+      AnnotatedPathBuilder.fromParameter(p)
+        .toDeclaringMethod()
+        .toDeclaringClass()
+        .build()
+        .find(Tag.class, DIRECT_OR_INDIRECT);
 
     assertThat(tags)
       .extracting(Tag::value)
@@ -78,30 +78,29 @@ class AnnotatedPathBuilderParameterTest {
   }
 
   @Test
-  void toDeclaringMethodThrowsWhenParameterIsOnConstructor() throws Exception {
-    Parameter p = Service.class
-      .getDeclaredConstructor(int.class)
-      .getParameters()[0];
+  void toDeclaringMethodWhenParameterIsOnConstructor() throws Exception {
+    Parameter p =
+      Service.class.getDeclaredConstructor(int.class)
+        .getParameters()[0];
 
     assertThatThrownBy(
       () -> AnnotatedPathBuilder.fromParameter(p).toDeclaringMethod()
     ).isInstanceOf(IllegalStateException.class);
   }
 
-  // --- fromParameter → toDeclaringConstructor ---
-
   @Test
   void toDeclaringConstructorExtendsPathFromParameterToItsConstructor()
     throws Exception {
 
-    Parameter p = Service.class
-      .getDeclaredConstructor(int.class)
-      .getParameters()[0];
+    Parameter p =
+      Service.class.getDeclaredConstructor(int.class)
+        .getParameters()[0];
 
-    List<Tag> tags = AnnotatedPathBuilder.fromParameter(p)
-      .toDeclaringConstructor()
-      .build()
-      .find(Tag.class, DIRECT_OR_INDIRECT);
+    List<Tag> tags =
+      AnnotatedPathBuilder.fromParameter(p)
+        .toDeclaringConstructor()
+        .build()
+        .find(Tag.class, DIRECT_OR_INDIRECT);
 
     assertThat(tags)
       .extracting(Tag::value)
@@ -109,10 +108,10 @@ class AnnotatedPathBuilderParameterTest {
   }
 
   @Test
-  void toDeclaringConstructorThrowsWhenParameterIsOnMethod() throws Exception {
-    Parameter p = Service.class
-      .getDeclaredMethod("perform", String.class)
-      .getParameters()[0];
+  void toDeclaringConstructorWhenParameterIsOnMethod() throws Exception {
+    Parameter p =
+      Service.class.getDeclaredMethod("perform", String.class)
+        .getParameters()[0];
 
     assertThatThrownBy(
       () -> AnnotatedPathBuilder.fromParameter(p).toDeclaringConstructor()

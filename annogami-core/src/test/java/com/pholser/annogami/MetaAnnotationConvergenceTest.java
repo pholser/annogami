@@ -54,13 +54,13 @@ class MetaAnnotationConvergenceTest {
   }
 
   @Test
-  void directMetaAnnotationsOnTargetAreFound() {
+  void directMetaAnnotationsOnTarget() {
     assertThat(META_DIRECT.find(AWithB.class, Target.class)).isPresent();
     assertThat(META_DIRECT.find(BWithA.class, Target.class)).isPresent();
   }
 
   @Test
-  void deeperTypesReachableOnlyThroughSharedNodeAreFound() {
+  void deeperTypesReachableOnlyThroughSharedNode() {
     // B and A are only reachable through AWithB → B → A.
     // If the walker re-scanned AWithB when reaching it a second time (via BWithA),
     // these would still be found, but the walk should still terminate.
@@ -118,7 +118,7 @@ class MetaAnnotationConvergenceTest {
     // UsesSelfRef → SelfRef. SelfRef has no further custom meta-annotations.
     // This verifies that finding a type that would re-enter the same node
     // (were the visited-set absent) terminates normally.
-    Optional<SelfRef> found = META_DIRECT.find(SelfRef.class, SelfRefTarget.class);
-    assertThat(found).isPresent();
+    assertThat(META_DIRECT.find(SelfRef.class, SelfRefTarget.class))
+      .isPresent();
   }
 }

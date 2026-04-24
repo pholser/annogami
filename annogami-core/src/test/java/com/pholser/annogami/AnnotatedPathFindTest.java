@@ -43,8 +43,7 @@ class AnnotatedPathFindTest {
 
   @Test
   void multiElementPathConcatenatesMatchingAnnotationsInOrder() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Alpha.class, Beta.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
     List<Foo> found = path.find(Foo.class, DIRECT_OR_INDIRECT);
 
@@ -63,5 +62,4 @@ class AnnotatedPathFindTest {
     assertThat(found).hasSize(1);
     assertThat(found.get(0).value()).isEqualTo("alpha");
   }
-
 }

@@ -33,30 +33,26 @@ class AnnotatedPathFindFirstTest {
 
   @Test
   void findsAnnotationOnFirstMatchingElement() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(Alpha.class, Beta.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class, Beta.class));
 
     assertThat(path.findFirst(Foo.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(f -> assertThat(f.value()).isEqualTo("alpha"));
+      .hasValueSatisfying(f ->
+        assertThat(f.value()).isEqualTo("alpha"));
   }
 
   @Test
   void skipsElementsWithoutTheAnnotation() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(WithBar.class, Beta.class));
+    AnnotatedPath path = new AnnotatedPath(List.of(WithBar.class, Beta.class));
 
     assertThat(path.findFirst(Foo.class, DIRECT))
-      .isPresent()
-      .hasValueSatisfying(f -> assertThat(f.value()).isEqualTo("beta"));
+      .hasValueSatisfying(f ->
+        assertThat(f.value()).isEqualTo("beta"));
   }
 
   @Test
-  void returnsEmptyWhenNoElementHasTheAnnotation() {
-    AnnotatedPath path =
-      new AnnotatedPath(List.of(WithBar.class));
+  void whenNoElementHasTheAnnotation() {
+    AnnotatedPath path = new AnnotatedPath(List.of(WithBar.class));
 
     assertThat(path.findFirst(Foo.class, DIRECT)).isEmpty();
   }
-
 }

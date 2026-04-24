@@ -1,6 +1,5 @@
 package com.pholser.annogami.meta.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -153,7 +152,7 @@ class MetaDirectPresenceOnClassTest {
 
   @Test
   void missesInheritedSeedBecauseDeclaredStartDoesNotSeeIt() {
-    META_DIRECT.find(C.class, CDerived.class)
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(META_DIRECT.find(C.class, CDerived.class))
+      .isEmpty();
   }
 }

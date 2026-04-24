@@ -19,23 +19,22 @@ class AnnotatedPathEmptyTest {
   private final AnnotatedPath empty = new AnnotatedPath(List.of());
 
   @Test
-  void findFirstOnEmptyPathReturnsEmpty() {
+  void findFirstOnEmptyPath() {
     assertThat(empty.findFirst(Foo.class, DIRECT)).isEmpty();
   }
 
   @Test
-  void mergeOnEmptyPathReturnsEmpty() {
+  void mergeOnEmptyPath() {
     assertThat(empty.merge(Foo.class, DIRECT)).isEmpty();
   }
 
   @Test
-  void allOnEmptyPathReturnsEmptyList() {
+  void allOnEmptyPath() {
     assertThat(empty.all(DIRECT)).isEmpty();
   }
 
   @Test
-  void findByTypeOnEmptyPathReturnsEmptyList() {
+  void findByTypeOnEmptyPath() {
     assertThat(empty.find(Foo.class, DIRECT_OR_INDIRECT)).isEmpty();
   }
-
 }

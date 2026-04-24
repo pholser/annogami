@@ -1,6 +1,5 @@
 package com.pholser.annogami.direct;
 
-import com.pholser.annogami.AnnotationAssertions;
 import com.pholser.annogami.pkg.A;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +20,7 @@ class DirectPresenceOnPackageTest {
 
   @Test
   void missesNotDeclared() {
-    DIRECT.find(A.class, getClass().getPackage())
-      .ifPresent(AnnotationAssertions::falseFind);
+    assertThat(DIRECT.find(A.class, getClass().getPackage()))
+      .isEmpty();
   }
 }
