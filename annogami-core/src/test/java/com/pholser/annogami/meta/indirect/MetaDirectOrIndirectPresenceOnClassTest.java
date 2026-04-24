@@ -43,11 +43,11 @@ class MetaDirectOrIndirectPresenceOnClassTest {
 
   @Test
   void findsContainerAnnotationViaMetaWalkWhenRequested() {
-    List<Bs> containers = META_DIRECT_OR_INDIRECT.find(Bs.class, Target.class);
-
-    assertThat(containers).hasSize(1);
-    assertThat(containers.get(0).value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(1, 2);
+    assertThat(META_DIRECT_OR_INDIRECT.find(Bs.class, Target.class))
+      .singleElement()
+      .satisfies(bs ->
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(1, 2));
   }
 }

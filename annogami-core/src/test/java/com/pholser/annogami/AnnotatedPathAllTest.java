@@ -9,6 +9,7 @@ import java.util.List;
 import static com.pholser.annogami.Presences.DIRECT;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 class AnnotatedPathAllTest {
   @Retention(RUNTIME)
@@ -28,10 +29,10 @@ class AnnotatedPathAllTest {
   void singleElementPath() {
     AnnotatedPath path = new AnnotatedPath(List.of(Alpha.class));
 
-    List<Annotation> all = path.all(DIRECT);
-
-    assertThat(all).hasSize(1);
-    assertThat(((Foo) all.get(0)).value()).isEqualTo("alpha");
+    assertThat(path.all(DIRECT))
+      .singleElement(type(Foo.class))
+      .extracting(Foo::value)
+      .isEqualTo("alpha");
   }
 
   @Test

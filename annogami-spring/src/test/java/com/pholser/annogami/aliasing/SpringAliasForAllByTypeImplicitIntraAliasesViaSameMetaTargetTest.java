@@ -1,13 +1,11 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT_OR_INDIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
@@ -48,26 +46,26 @@ class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
-    List<Composed> found =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
-        Composed.class, TargetNameOnly.class, SpringAliasing.spring());
-
-    Composed c = found.stream().findFirst().orElseGet(Assertions::fail);
-
-    assertThat(c.name()).isEqualTo("hello");
-    assertThat(c.value()).isEqualTo("hello");
+        Composed.class, TargetNameOnly.class, SpringAliasing.spring()))
+      .singleElement()
+      .satisfies(c -> {
+        assertThat(c.name()).isEqualTo("hello");
+        assertThat(c.value()).isEqualTo("hello");
+      });
   }
 
   @Test
   void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
-    List<Composed> found =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
-        Composed.class, TargetValueOnly.class, SpringAliasing.spring());
-
-    Composed c = found.stream().findFirst().orElseGet(Assertions::fail);
-
-    assertThat(c.value()).isEqualTo("hello");
-    assertThat(c.name()).isEqualTo("hello");
+        Composed.class, TargetValueOnly.class, SpringAliasing.spring()))
+      .singleElement()
+      .satisfies(c -> {
+        assertThat(c.value()).isEqualTo("hello");
+        assertThat(c.name()).isEqualTo("hello");
+      });
   }
 
   @Test
@@ -80,12 +78,11 @@ class SpringAliasForAllByTypeImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void metaViewAlsoSeesTheResolvedValue() {
-    List<Base> found =
+    assertThat(
       META_DIRECT_OR_INDIRECT.find(
-        Base.class, TargetNameOnly.class, SpringAliasing.spring());
-
-    Base b = found.stream().findFirst().orElseGet(Assertions::fail);
-
-    assertThat(b.value()).isEqualTo("hello");
+        Base.class, TargetNameOnly.class, SpringAliasing.spring()))
+      .singleElement()
+      .extracting(Base::value)
+      .isEqualTo("hello");
   }
 }

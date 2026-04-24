@@ -1,6 +1,5 @@
 package com.pholser.annogami.indirect;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Inherited;
@@ -67,11 +66,10 @@ class DirectOrIndirectPresenceOnClassTest {
 
   @Test
   void findsDeclared() {
-    List<A> as = DIRECT_OR_INDIRECT.find(A.class, AHaver.class);
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(3);
+    assertThat(DIRECT_OR_INDIRECT.find(A.class, AHaver.class))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(3);
   }
 
   @Test
@@ -92,14 +90,14 @@ class DirectOrIndirectPresenceOnClassTest {
 
   @Test
   void findsContainerForRepeatable() {
-    List<Bs> containers = DIRECT_OR_INDIRECT.find(Bs.class, ManyBHaver.class);
-
-    Bs bs = containers.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(containers).hasSize(1);
-    assertThat(bs.value()).hasSize(2);
-    assertThat(bs.value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(4, 5);
+    assertThat(DIRECT_OR_INDIRECT.find(Bs.class, ManyBHaver.class))
+      .singleElement()
+      .satisfies(bs -> {
+        assertThat(bs.value()).hasSize(2);
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(4, 5);
+      });
   }
 
   @Test
@@ -111,11 +109,10 @@ class DirectOrIndirectPresenceOnClassTest {
 
   @Test
   void findsInheritedNonRepeatableOnBaseClassItself() {
-    List<C> cs = DIRECT_OR_INDIRECT.find(C.class, Base.class);
-
-    C c = cs.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(cs).hasSize(1);
-    assertThat(c.value()).isEqualTo(6);
+    assertThat(DIRECT_OR_INDIRECT.find(C.class, Base.class))
+      .singleElement()
+      .extracting(C::value)
+      .isEqualTo(6);
   }
 
   @Test
@@ -143,13 +140,12 @@ class DirectOrIndirectPresenceOnClassTest {
 
   @Test
   void seesContainerDeclaredOnBaseClassItself() {
-    List<Ds> containers = DIRECT_OR_INDIRECT.find(Ds.class, Base.class);
-
-    Ds ds = containers.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(containers).hasSize(1);
-    assertThat(ds.value())
-      .extracting(D::value)
-      .containsExactlyInAnyOrder(7, 8);
+    assertThat(DIRECT_OR_INDIRECT.find(Ds.class, Base.class))
+      .singleElement()
+      .satisfies(ds ->
+        assertThat(ds.value())
+          .extracting(D::value)
+          .containsExactlyInAnyOrder(7, 8));
   }
 
   @Retention(RUNTIME)

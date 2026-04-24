@@ -41,13 +41,13 @@ abstract class AllByTypeAliasingContractTest {
 
   @Test
   final void intraAliasedValuePropagatesOnDirectlyDeclaredAnnotation() {
-    List<Intra> found =
-      subject().find(Intra.class, HasDirectIntra.class, SpringAliasing.spring());
-
-    assertThat(found).hasSize(1);
-
-    assertThat(found.get(0).name()).isEqualTo("hello");
-    assertThat(found.get(0).value()).isEqualTo("hello");
+    assertThat(
+      subject().find(Intra.class, HasDirectIntra.class, SpringAliasing.spring()))
+      .singleElement()
+      .satisfies(intra -> {
+        assertThat(intra.name()).isEqualTo("hello");
+        assertThat(intra.value()).isEqualTo("hello");
+      });
   }
 
   @Test
@@ -58,9 +58,12 @@ abstract class AllByTypeAliasingContractTest {
     assertThat(found.isEmpty()).isEqualTo(!honorsInherited());
 
     if (honorsInherited()) {
-      assertThat(found).hasSize(1);
-      assertThat(found.get(0).name()).isEqualTo("hello");
-      assertThat(found.get(0).value()).isEqualTo("hello");
+      assertThat(found)
+        .singleElement()
+        .satisfies(intra -> {
+          assertThat(intra.name()).isEqualTo("hello");
+          assertThat(intra.value()).isEqualTo("hello");
+        });
     }
   }
 }

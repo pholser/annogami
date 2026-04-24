@@ -86,14 +86,15 @@ class JUnitAnnotationComparisonTest {
     List<ExtendWith> annogami = META_DIRECT_OR_INDIRECT
       .find(ExtendWith.class, ExtendedSubject.class);
 
-    assertThat(junit).hasSize(1);
-    assertThat(annogami).hasSize(1);
-
     // Both surface the same extension class
-    assertThat(junit.get(0).value())
-      .containsExactly(NoOpExtension.class);
-    assertThat(annogami.get(0).value())
-      .containsExactly(NoOpExtension.class);
+    assertThat(junit)
+      .singleElement()
+      .satisfies(e ->
+        assertThat(e.value()).containsExactly(NoOpExtension.class));
+    assertThat(annogami)
+      .singleElement()
+      .satisfies(e ->
+        assertThat(e.value()).containsExactly(NoOpExtension.class));
   }
 
   @Test

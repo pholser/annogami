@@ -48,11 +48,11 @@ class MetaAssociatedPresenceOnClassTest {
 
   @Test
   void findsContainerAnnotationWhenRequested() {
-    List<Bs> containers = META_ASSOCIATED.find(Bs.class, Derived.class);
-
-    assertThat(containers).hasSize(1);
-    assertThat(containers.get(0).value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(4, 5);
+    assertThat(META_ASSOCIATED.find(Bs.class, Derived.class))
+      .singleElement()
+      .satisfies(bs ->
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(4, 5));
   }
 }

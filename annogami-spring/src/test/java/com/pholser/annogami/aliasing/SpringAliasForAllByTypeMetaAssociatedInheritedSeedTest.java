@@ -1,14 +1,12 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.List;
 
 import static com.pholser.annogami.Presences.META_ASSOCIATED;
 import static java.lang.annotation.ElementType.TYPE;
@@ -40,11 +38,10 @@ class SpringAliasForAllByTypeMetaAssociatedInheritedSeedTest {
 
   @Test
   void findWithAliasingUpgradesMetaAnnotationFromInheritedSeed() {
-    List<Base> found =
-      META_ASSOCIATED.find(Base.class, InhDerived.class, SpringAliasing.spring());
-
-    Base base = found.stream().findFirst().orElseGet(Assertions::fail);
-
-    assertThat(base.value()).isEqualTo("hello");
+    assertThat(
+      META_ASSOCIATED.find(Base.class, InhDerived.class, SpringAliasing.spring()))
+      .singleElement()
+      .extracting(Base::value)
+      .isEqualTo("hello");
   }
 }

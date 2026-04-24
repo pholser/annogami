@@ -1,6 +1,5 @@
 package com.pholser.annogami.indirect;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -50,14 +49,13 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
 
   @Test
   void findsOnAnnotatedArrayType() throws Exception {
-    List<A> as =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
         A.class,
-        Holder.class.getDeclaredField("array").getAnnotatedType());
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(1);
+        Holder.class.getDeclaredField("array").getAnnotatedType()))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(1);
   }
 
   @Test
@@ -74,28 +72,26 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
 
   @Test
   void findsContainerOnAnnotatedArrayType() throws Exception {
-    List<Bs> containers =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
         Bs.class,
-        Holder.class.getDeclaredField("repeatArray").getAnnotatedType());
-    assertThat(containers).hasSize(1);
-
-    Bs bs = containers.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(bs.value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(2, 3);
+        Holder.class.getDeclaredField("repeatArray").getAnnotatedType()))
+      .singleElement()
+      .satisfies(bs ->
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(2, 3));
   }
 
   @Test
   void findsOnAnnotatedParameterizedType() throws Exception {
-    List<A> as =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
         A.class,
-        Holder.class.getDeclaredField("param").getAnnotatedType());
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(4);
+        Holder.class.getDeclaredField("param").getAnnotatedType()))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(4);
   }
 
   @Test
@@ -112,16 +108,15 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
 
   @Test
   void findsContainerOnAnnotatedParameterizedType() throws Exception {
-    List<Bs> containers =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
         Bs.class,
-        Holder.class.getDeclaredField("repeatParam").getAnnotatedType());
-    assertThat(containers).hasSize(1);
-
-    Bs bs = containers.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(bs.value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(5, 6);
+        Holder.class.getDeclaredField("repeatParam").getAnnotatedType()))
+      .singleElement()
+      .satisfies(bs ->
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(5, 6));
   }
 
   @Test
@@ -131,11 +126,10 @@ class DirectOrIndirectPresenceOnAnnotatedTypeTest {
       (AnnotatedParameterizedType) f.getAnnotatedType();
     AnnotatedType typeArg = paramType.getAnnotatedActualTypeArguments()[0];
 
-    List<A> as = DIRECT_OR_INDIRECT.find(A.class, typeArg);
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(7);
+    assertThat(DIRECT_OR_INDIRECT.find(A.class, typeArg))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(7);
   }
 
   @Test

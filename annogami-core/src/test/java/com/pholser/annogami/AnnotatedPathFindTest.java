@@ -37,8 +37,10 @@ class AnnotatedPathFindTest {
 
     List<Foo> found = path.find(Foo.class, DIRECT_OR_INDIRECT);
 
-    assertThat(found).hasSize(1);
-    assertThat(found.get(0).value()).isEqualTo("alpha");
+    assertThat(found)
+      .singleElement()
+      .extracting(Foo::value)
+      .isEqualTo("alpha");
   }
 
   @Test
@@ -59,7 +61,9 @@ class AnnotatedPathFindTest {
 
     List<Foo> found = path.find(Foo.class, DIRECT_OR_INDIRECT);
 
-    assertThat(found).hasSize(1);
-    assertThat(found.get(0).value()).isEqualTo("alpha");
+    assertThat(found)
+      .singleElement()
+      .extracting(Foo::value)
+      .isEqualTo("alpha");
   }
 }

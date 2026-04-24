@@ -1,6 +1,5 @@
 package com.pholser.annogami.indirect;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -36,11 +35,10 @@ class DirectOrIndirectPresenceOnAnnotatedWildcardTypeTest {
     AnnotatedType typeArg = paramType.getAnnotatedActualTypeArguments()[0];
     AnnotatedWildcardType wildcard = (AnnotatedWildcardType) typeArg;
 
-    List<A> as = DIRECT_OR_INDIRECT.find(A.class, wildcard);
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(1);
+    assertThat(DIRECT_OR_INDIRECT.find(A.class, wildcard))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(1);
   }
 
   @Test

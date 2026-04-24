@@ -1,6 +1,5 @@
 package com.pholser.annogami.indirect;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -44,14 +43,13 @@ class DirectOrIndirectPresenceOnConstructorTest {
 
   @Test
   void findsSingleNonRepeatable() throws Exception {
-    List<A> as =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
         A.class,
-        CtorHaver.class.getDeclaredConstructor());
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(100);
+        CtorHaver.class.getDeclaredConstructor()))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(100);
   }
 
   @Test
@@ -78,16 +76,14 @@ class DirectOrIndirectPresenceOnConstructorTest {
 
   @Test
   void findsContainerAnnotation() throws Exception {
-    List<Bs> containers =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
         Bs.class,
-        CtorHaver.class.getDeclaredConstructor(int.class));
-    assertThat(containers).hasSize(1);
-
-    Bs bs = containers.stream().findFirst().orElseGet(Assertions::fail);
-
-    assertThat(bs.value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(200, 300);
+        CtorHaver.class.getDeclaredConstructor(int.class)))
+      .singleElement()
+      .satisfies(bs ->
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(200, 300));
   }
 }

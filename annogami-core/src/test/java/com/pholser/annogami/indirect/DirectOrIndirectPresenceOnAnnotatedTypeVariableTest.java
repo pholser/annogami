@@ -1,6 +1,5 @@
 package com.pholser.annogami.indirect;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -34,11 +33,10 @@ class DirectOrIndirectPresenceOnAnnotatedTypeVariableTest {
     AnnotatedType annotatedType = f.getAnnotatedType();
     AnnotatedTypeVariable typeVar = (AnnotatedTypeVariable) annotatedType;
 
-    List<A> as = DIRECT_OR_INDIRECT.find(A.class, typeVar);
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(1);
+    assertThat(DIRECT_OR_INDIRECT.find(A.class, typeVar))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(1);
   }
 
   @Test

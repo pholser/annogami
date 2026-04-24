@@ -1,6 +1,5 @@
 package com.pholser.annogami.indirect;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -44,14 +43,13 @@ public class DirectOrIndirectPresenceOnMethodTest {
 
   @Test
   void findsSingleNonRepeatable() throws Exception {
-    List<A> as =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
         A.class,
-        MethodHaver.class.getDeclaredMethod("m1"));
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(10);
+        MethodHaver.class.getDeclaredMethod("m1")))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(10);
   }
 
   @Test
@@ -78,15 +76,14 @@ public class DirectOrIndirectPresenceOnMethodTest {
 
   @Test
   void findsContainerAnnotationOfRepeatable() throws Exception {
-    List<Bs> containers =
+    assertThat(
       DIRECT_OR_INDIRECT.find(
         Bs.class,
-        MethodHaver.class.getDeclaredMethod("m2"));
-    assertThat(containers).hasSize(1);
-
-    Bs bs = containers.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(bs.value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(20, 30);
+        MethodHaver.class.getDeclaredMethod("m2")))
+      .singleElement()
+      .satisfies(bs ->
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(20, 30));
   }
 }

@@ -1,13 +1,11 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.List;
 
 import static com.pholser.annogami.Presences.META_DIRECT_OR_INDIRECT;
 import static java.lang.annotation.ElementType.TYPE;
@@ -37,13 +35,13 @@ class SpringAliasForAllByTypeMetaOverrideNonValueAttributeTest {
 
   @Test
   void metaAliasForNonValueAttributeIsApplied() {
-    List<Base> found =
+    assertThat(
       META_DIRECT_OR_INDIRECT.find(
-        Base.class, Subject.class, SpringAliasing.spring());
-
-    Base base = found.stream().findFirst().orElseGet(Assertions::fail);
-
-    assertThat(base.name()).isEqualTo("hello");
-    assertThat(base.count()).isEqualTo(42);
+        Base.class, Subject.class, SpringAliasing.spring()))
+      .singleElement()
+      .satisfies(base -> {
+        assertThat(base.name()).isEqualTo("hello");
+        assertThat(base.count()).isEqualTo(42);
+      });
   }
 }

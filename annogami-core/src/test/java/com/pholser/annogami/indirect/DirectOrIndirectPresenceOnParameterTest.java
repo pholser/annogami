@@ -1,6 +1,5 @@
 package com.pholser.annogami.indirect;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -43,11 +42,10 @@ class DirectOrIndirectPresenceOnParameterTest {
 
   @Test
   void findsSingleNonRepeatable() throws Exception {
-    List<A> as = DIRECT_OR_INDIRECT.find(A.class, parameterOf("p1"));
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(1000);
+    assertThat(DIRECT_OR_INDIRECT.find(A.class, parameterOf("p1")))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(1000);
   }
 
   @Test
@@ -68,13 +66,12 @@ class DirectOrIndirectPresenceOnParameterTest {
 
   @Test
   void findsContainerAnnotationOfRepeatable() throws Exception {
-    List<Bs> containers = DIRECT_OR_INDIRECT.find(Bs.class, parameterOf("p2"));
-    assertThat(containers).hasSize(1);
-
-    Bs bs = containers.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(bs.value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(2000, 3000);
+    assertThat(DIRECT_OR_INDIRECT.find(Bs.class, parameterOf("p2")))
+      .singleElement()
+      .satisfies(bs ->
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(2000, 3000));
   }
 
   private static Parameter parameterOf(String methodName)

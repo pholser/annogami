@@ -1,7 +1,6 @@
 package com.pholser.annogami.indirect;
 
 import com.pholser.annogami.pkg.A;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,11 +15,10 @@ class DirectOrIndirectPresenceOnPackageTest {
       getClass().getClassLoader().getDefinedPackage(
         "com.pholser.annogami.pkg");
 
-    List<A> as = DIRECT_OR_INDIRECT.find(A.class, pkg);
-    assertThat(as).hasSize(1);
-
-    A a = as.stream().findFirst().orElseGet(Assertions::fail);
-    assertThat(a.value()).isEqualTo(42);
+    assertThat(DIRECT_OR_INDIRECT.find(A.class, pkg))
+      .singleElement()
+      .extracting(A::value)
+      .isEqualTo(42);
   }
 
   @Test
