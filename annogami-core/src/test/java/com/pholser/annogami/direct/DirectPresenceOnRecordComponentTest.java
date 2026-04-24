@@ -1,7 +1,6 @@
 package com.pholser.annogami.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -38,20 +37,16 @@ class DirectPresenceOnRecordComponentTest {
 
   @Test
   void findsDirectlyPresent() {
-    A a =
-      DIRECT.find(A.class, R.class.getRecordComponents()[0])
-        .orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(1);
+    assertThat(DIRECT.find(A.class, R.class.getRecordComponents()[0]))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
   }
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() {
-    Bs bs =
-      DIRECT.find(Bs.class, R.class.getRecordComponents()[1])
-        .orElseGet(Assertions::fail);
-
-    assertThat(bs.value()).hasSize(2);
+    assertThat(DIRECT.find(Bs.class, R.class.getRecordComponents()[1]))
+      .isPresent()
+      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 
   @Test

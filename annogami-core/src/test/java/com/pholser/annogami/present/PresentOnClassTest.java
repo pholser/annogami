@@ -1,7 +1,6 @@
 package com.pholser.annogami.present;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Inherited;
@@ -85,9 +84,9 @@ class PresentOnClassTest {
 
   @Test
   void findsSingleNonRepeatable() {
-    A a = PRESENT.find(A.class, AHaver.class).orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(3);
+    assertThat(PRESENT.find(A.class, AHaver.class))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
@@ -104,27 +103,26 @@ class PresentOnClassTest {
 
   @Test
   void findsContainerAnnotationForRepeatable() {
-    Bs bs =
-      PRESENT.find(Bs.class, ManyBHaver.class)
-        .orElseGet(Assertions::fail);
-
-    assertThat(bs.value())
-      .extracting(B::value)
-      .containsExactlyInAnyOrder(4, 5);
+    assertThat(PRESENT.find(Bs.class, ManyBHaver.class))
+      .isPresent()
+      .hasValueSatisfying(bs ->
+        assertThat(bs.value())
+          .extracting(B::value)
+          .containsExactlyInAnyOrder(4, 5));
   }
 
   @Test
   void findsInheritedNonRepeatableOnSubclass() {
-    C c = PRESENT.find(C.class, CDerived.class).orElseGet(Assertions::fail);
-
-    assertThat(c.value()).isEqualTo(6);
+    assertThat(PRESENT.find(C.class, CDerived.class))
+      .isPresent()
+      .hasValueSatisfying(c -> assertThat(c.value()).isEqualTo(6));
   }
 
   @Test
   void findsDirectAnnotationOnBaseClassItself() {
-    C c = PRESENT.find(C.class, CBase.class).orElseGet(Assertions::fail);
-
-    assertThat(c.value()).isEqualTo(6);
+    assertThat(PRESENT.find(C.class, CBase.class))
+      .isPresent()
+      .hasValueSatisfying(c -> assertThat(c.value()).isEqualTo(6));
   }
 
   @Test
@@ -132,21 +130,19 @@ class PresentOnClassTest {
     PRESENT.find(E.class, ENonInheritedDerived.class)
       .ifPresent(AnnotationAssertions::falseFind);
 
-    E base =
-      PRESENT.find(E.class, ENonInheritedBase.class)
-        .orElseGet(Assertions::fail);
-    assertThat(base.value()).isEqualTo(9);
+    assertThat(PRESENT.find(E.class, ENonInheritedBase.class))
+      .isPresent()
+      .hasValueSatisfying(base -> assertThat(base.value()).isEqualTo(9));
   }
 
   @Test
   void inheritedContainerAnnotationIsPresentOnSubclass() {
-    Ds dsOnDerived =
-      PRESENT.find(Ds.class, DDerived.class)
-        .orElseGet(Assertions::fail);
-
-    assertThat(dsOnDerived.value())
-      .extracting(D::value)
-      .containsExactlyInAnyOrder(7, 8);
+    assertThat(PRESENT.find(Ds.class, DDerived.class))
+      .isPresent()
+      .hasValueSatisfying(dsOnDerived ->
+        assertThat(dsOnDerived.value())
+          .extracting(D::value)
+          .containsExactlyInAnyOrder(7, 8));
   }
 
   @Test
@@ -157,13 +153,12 @@ class PresentOnClassTest {
     PRESENT.find(D.class, DBase.class)
       .ifPresent(AnnotationAssertions::falseFind);
 
-    Ds dsOnBase =
-      PRESENT.find(Ds.class, DBase.class)
-        .orElseGet(Assertions::fail);
-
-    assertThat(dsOnBase.value())
-      .extracting(D::value)
-      .containsExactlyInAnyOrder(7, 8);
+    assertThat(PRESENT.find(Ds.class, DBase.class))
+      .isPresent()
+      .hasValueSatisfying(dsOnBase ->
+        assertThat(dsOnBase.value())
+          .extracting(D::value)
+          .containsExactlyInAnyOrder(7, 8));
   }
 
   @Test

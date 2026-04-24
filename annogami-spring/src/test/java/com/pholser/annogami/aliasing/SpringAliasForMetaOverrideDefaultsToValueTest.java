@@ -1,7 +1,6 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -29,11 +28,10 @@ class SpringAliasForMetaOverrideDefaultsToValueTest {
 
   @Test
   void aliasForAnnotationOnlyDefaultsToTargetValue() {
-    Base base =
-      META_DIRECT
-        .find(Base.class, Target.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(base.value()).isEqualTo("hello");
+    assertThat(
+      META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(
+        base -> assertThat(base.value()).isEqualTo("hello"));
   }
 }

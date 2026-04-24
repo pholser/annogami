@@ -1,7 +1,6 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -34,29 +33,31 @@ class SpringAliasForIntraAnnotationTest {
 
   @Test
   void intraAliasReadsThroughEitherMember() {
-    Intra i =
-      DIRECT.find(Intra.class, Target1.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(i.name()).isEqualTo("hello");
-    assertThat(i.value()).isEqualTo("hello");
+    assertThat(
+      DIRECT.find(Intra.class, Target1.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(i -> {
+        assertThat(i.name()).isEqualTo("hello");
+        assertThat(i.value()).isEqualTo("hello");
+      });
   }
 
   @Test
   void intraAliasReadsThroughEitherDirection() {
-    Intra i =
-      DIRECT.find(Intra.class, Target2.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(i.value()).isEqualTo("hello");
-    assertThat(i.name()).isEqualTo("hello");
+    assertThat(
+      DIRECT.find(Intra.class, Target2.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(i -> {
+        assertThat(i.value()).isEqualTo("hello");
+        assertThat(i.name()).isEqualTo("hello");
+      });
   }
 
   @Test
   void intraAliasConflictingExplicitValuesFailFast() {
     assertThatThrownBy(() ->
       DIRECT.find(Intra.class, TargetConflict.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail)
+        .orElseThrow()
         .value()
     ).isInstanceOf(IllegalStateException.class);
   }

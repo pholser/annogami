@@ -1,7 +1,6 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -27,7 +26,7 @@ class SpringAliasForIntraTypeMismatchTest {
   void mirroredAliasesMustHaveSameReturnType() {
     assertThatThrownBy(() ->
       DIRECT.find(BrokenTypes.class, Target.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail)
+        .orElseThrow()
         .value()
     ).isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("return type");

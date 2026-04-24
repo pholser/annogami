@@ -1,7 +1,6 @@
 package com.pholser.annogami.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -39,11 +38,10 @@ class DirectPresenceOnFieldTest {
 
   @Test
   void findsDirectlyPresent() throws Exception {
-    A a =
-      DIRECT.find(A.class, FieldHaver.class.getDeclaredField("a"))
-        .orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(1);
+    assertThat(
+      DIRECT.find(A.class, FieldHaver.class.getDeclaredField("a")))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
   }
 
   @Test
@@ -60,10 +58,9 @@ class DirectPresenceOnFieldTest {
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
-    Bs bs =
-      DIRECT.find(Bs.class, FieldHaver.class.getDeclaredField("manyBs"))
-        .orElseGet(Assertions::fail);
-
-    assertThat(bs.value()).hasSize(2);
+    assertThat(
+      DIRECT.find(Bs.class, FieldHaver.class.getDeclaredField("manyBs")))
+      .isPresent()
+      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 }

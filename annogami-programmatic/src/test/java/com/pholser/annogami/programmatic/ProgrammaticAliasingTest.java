@@ -370,16 +370,17 @@ class ProgrammaticAliasingTest {
       .alias(GetMapping.class, "value", Route.class, "path")
       .build();
 
-    Route synthesized = aliasing.synthesize(
-        Route.class, List.of(fakeGetMapping("/users", "")))
-      .orElseThrow();
-
-    String s = synthesized.toString();
-
-    assertThat(s)
-      .startsWith("@" + Route.class.getName() + "(")
-      .endsWith(")")
-      .contains("path=\"/users\"");
+    assertThat(
+      aliasing.synthesize(
+        Route.class, List.of(fakeGetMapping("/users", ""))))
+      .isPresent()
+      .hasValueSatisfying(synthesized -> {
+        String s = synthesized.toString();
+        assertThat(s)
+          .startsWith("@" + Route.class.getName() + "(")
+          .endsWith(")")
+          .contains("path=\"/users\"");
+      });
   }
 
   // --- Helpers ---

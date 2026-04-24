@@ -1,6 +1,5 @@
 package com.pholser.annogami.meta.present;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -47,20 +46,16 @@ class MetaPresentOnClassTest {
 
   @Test
   void findsMetaPresentOnClass() {
-    A a =
-      META_PRESENT.find(A.class, AHaverViaMeta.class)
-        .orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(3);
+    assertThat(META_PRESENT.find(A.class, AHaverViaMeta.class))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
   void findsThroughInheritedSeedOnSubclass() {
-    D d =
-      META_PRESENT.find(D.class, DDerived.class)
-        .orElseGet(Assertions::fail);
-
-    assertThat(d.value()).isEqualTo(9);
+    assertThat(META_PRESENT.find(D.class, DDerived.class))
+      .isPresent()
+      .hasValueSatisfying(d -> assertThat(d.value()).isEqualTo(9));
   }
 
   @Test

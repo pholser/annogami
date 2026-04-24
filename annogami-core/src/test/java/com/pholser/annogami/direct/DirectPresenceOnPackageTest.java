@@ -2,7 +2,6 @@ package com.pholser.annogami.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
 import com.pholser.annogami.pkg.A;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.pholser.annogami.Presences.DIRECT;
@@ -15,9 +14,9 @@ class DirectPresenceOnPackageTest {
       getClass().getClassLoader().getDefinedPackage(
         "com.pholser.annogami.pkg");
 
-    A a = DIRECT.find(A.class, pkg).orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(42);
+    assertThat(DIRECT.find(A.class, pkg))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(42));
   }
 
   @Test

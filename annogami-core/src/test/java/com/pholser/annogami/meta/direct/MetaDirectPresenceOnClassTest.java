@@ -1,7 +1,6 @@
 package com.pholser.annogami.meta.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -147,11 +146,9 @@ class MetaDirectPresenceOnClassTest {
 
   @Test
   void findsMetaPresentOnClass() {
-    A a =
-      META_DIRECT.find(A.class, AHaverViaMeta.class)
-        .orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(3);
+    assertThat(META_DIRECT.find(A.class, AHaverViaMeta.class))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
   }
 
   @Test

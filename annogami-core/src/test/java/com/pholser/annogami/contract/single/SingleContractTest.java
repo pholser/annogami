@@ -75,8 +75,9 @@ abstract class SingleContractTest {
 
   @Test
   final void findsDirectlyPresentAnnotationOnClass() {
-    A a = subject().find(A.class, HasA.class).orElseThrow();
-    assertThat(a.value()).isEqualTo(3);
+    assertThat(subject().find(A.class, HasA.class))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
@@ -91,8 +92,9 @@ abstract class SingleContractTest {
 
   @Test
   final void repeatableContainerIsDirectlyPresent() {
-    Bs bs = subject().find(Bs.class, HasRepeatableB.class).orElseThrow();
-    assertThat(bs.value()).hasSize(2);
+    assertThat(subject().find(Bs.class, HasRepeatableB.class))
+      .isPresent()
+      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 
   @Test

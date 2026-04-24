@@ -1,7 +1,6 @@
 package com.pholser.annogami.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -51,13 +50,12 @@ class DirectPresenceOnAnnotatedTypeTest {
 
   @Test
   void findsOnAnnotatedArrayType() throws Exception {
-    A a =
+    assertThat(
       DIRECT.find(
         A.class,
-        Holder.class.getDeclaredField("array").getAnnotatedType()
-      ).orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(1);
+        Holder.class.getDeclaredField("array").getAnnotatedType()))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
   }
 
   @Test
@@ -78,35 +76,32 @@ class DirectPresenceOnAnnotatedTypeTest {
 
   @Test
   void findsContainerOnAnnotatedArrayType() throws Exception {
-    Bs bs =
+    assertThat(
       DIRECT.find(
         Bs.class,
-        Holder.class.getDeclaredField("repeatArray").getAnnotatedType()
-      ).orElseGet(Assertions::fail);
-
-    assertThat(bs.value()).hasSize(2);
+        Holder.class.getDeclaredField("repeatArray").getAnnotatedType()))
+      .isPresent()
+      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 
   @Test
   void findsOnAnnotatedParameterizedType() throws Exception {
-    A a =
+    assertThat(
       DIRECT.find(
         A.class,
-        Holder.class.getDeclaredField("param").getAnnotatedType()
-      ).orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(4);
+        Holder.class.getDeclaredField("param").getAnnotatedType()))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(4));
   }
 
   @Test
   void findsContainerOnAnnotatedParameterizedType() throws Exception {
-    Bs bs =
+    assertThat(
       DIRECT.find(
         Bs.class,
-        Holder.class.getDeclaredField("repeatParam").getAnnotatedType()
-      ).orElseGet(Assertions::fail);
-
-    assertThat(bs.value()).hasSize(2);
+        Holder.class.getDeclaredField("repeatParam").getAnnotatedType()))
+      .isPresent()
+      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 
   @Test
@@ -116,8 +111,8 @@ class DirectPresenceOnAnnotatedTypeTest {
       (AnnotatedParameterizedType) f.getAnnotatedType();
     AnnotatedType argType = paramType.getAnnotatedActualTypeArguments()[0];
 
-    A a = DIRECT.find(A.class, argType).orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(7);
+    assertThat(DIRECT.find(A.class, argType))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(7));
   }
 }

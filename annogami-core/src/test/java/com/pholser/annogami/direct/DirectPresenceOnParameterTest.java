@@ -1,7 +1,6 @@
 package com.pholser.annogami.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Repeatable;
@@ -42,11 +41,9 @@ class DirectPresenceOnParameterTest {
 
   @Test
   void findsDirectlyPresent() throws Exception {
-    A a =
-      DIRECT.find(A.class, parameterOf("p1"))
-        .orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(1000);
+    assertThat(DIRECT.find(A.class, parameterOf("p1")))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1000));
   }
 
   @Test
@@ -63,11 +60,9 @@ class DirectPresenceOnParameterTest {
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() throws Exception {
-    Bs bs =
-      DIRECT.find(Bs.class, parameterOf("p2"))
-        .orElseGet(Assertions::fail);
-
-    assertThat(bs.value()).hasSize(2);
+    assertThat(DIRECT.find(Bs.class, parameterOf("p2")))
+      .isPresent()
+      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 
   private static Parameter parameterOf(String methodName)

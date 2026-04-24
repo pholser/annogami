@@ -1,7 +1,6 @@
 package com.pholser.annogami.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -27,13 +26,12 @@ class DirectPresenceOnAnnotatedTypeVariableTest {
 
   @Test
   void findsOnAnnotatedTypeVariable() throws Exception {
-    A a =
+    assertThat(
       DIRECT.find(
         A.class,
-        TypeUseHaver.class.getDeclaredField("field").getAnnotatedType()
-      ).orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(1);
+        TypeUseHaver.class.getDeclaredField("field").getAnnotatedType()))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
   }
 
   @Test

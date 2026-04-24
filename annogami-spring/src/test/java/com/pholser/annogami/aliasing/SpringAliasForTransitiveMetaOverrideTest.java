@@ -36,10 +36,9 @@ class SpringAliasForTransitiveMetaOverrideTest {
 
   @Test
   void transitiveAliasOverridesBaseThroughIntermediateMetaAnnotation() {
-    Base b =
-      META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring())
-        .orElseThrow();
-
-    assertThat(b.value()).isEqualTo("hello");
+    assertThat(
+      META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("hello"));
   }
 }

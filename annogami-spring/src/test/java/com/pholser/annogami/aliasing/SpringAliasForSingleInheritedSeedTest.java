@@ -1,7 +1,6 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -39,10 +38,11 @@ class SpringAliasForSingleInheritedSeedTest {
 
   @Test
   void findWithAliasingUpgradesMetaAnnotationFromInheritedSeed() {
-    Base base =
-      META_PRESENT.find(Base.class, InhDerived.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(base.value()).isEqualTo("hello");
+    assertThat(
+      META_PRESENT.find(
+        Base.class, InhDerived.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(
+        base -> assertThat(base.value()).isEqualTo("hello"));
   }
 }

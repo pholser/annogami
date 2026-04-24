@@ -59,5 +59,4 @@ class AnnotatedPathAllTest {
         .count())
       .isEqualTo(2);
   }
-
 }

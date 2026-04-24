@@ -1,7 +1,6 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -43,39 +42,43 @@ class SpringAliasForImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
-    Composed c =
-      DIRECT.find(Composed.class, TargetNameOnly.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(c.name()).isEqualTo("hello");
-    assertThat(c.value()).isEqualTo("hello");
+    assertThat(
+      DIRECT.find(
+        Composed.class, TargetNameOnly.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(c -> {
+        assertThat(c.name()).isEqualTo("hello");
+        assertThat(c.value()).isEqualTo("hello");
+      });
   }
 
   @Test
   void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
-    Composed c =
-      DIRECT.find(Composed.class, TargetValueOnly.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(c.value()).isEqualTo("hello");
-    assertThat(c.name()).isEqualTo("hello");
+    assertThat(
+      DIRECT.find(
+        Composed.class, TargetValueOnly.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(c -> {
+        assertThat(c.value()).isEqualTo("hello");
+        assertThat(c.name()).isEqualTo("hello");
+      });
   }
 
   @Test
   void conflictingExplicitValuesOnImplicitAliasesFailFast() {
     assertThatThrownBy(() ->
       DIRECT.find(Composed.class, TargetConflict.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail)
+        .orElseThrow()
         .value()
     ).isInstanceOf(IllegalStateException.class);
   }
 
   @Test
   void metaViewAlsoSeesTheResolvedValue() {
-    Base b =
-      META_DIRECT.find(Base.class, TargetNameOnly.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(b.value()).isEqualTo("hello");
+    assertThat(
+      META_DIRECT.find(
+        Base.class, TargetNameOnly.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("hello"));
   }
 }

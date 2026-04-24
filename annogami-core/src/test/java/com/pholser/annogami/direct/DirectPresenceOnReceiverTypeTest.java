@@ -1,7 +1,6 @@
 package com.pholser.annogami.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
@@ -34,9 +33,9 @@ class DirectPresenceOnReceiverTypeTest {
     Method m = ReceiverHaver.class.getDeclaredMethod("m");
     AnnotatedType receiver = m.getAnnotatedReceiverType();
 
-    A a = DIRECT.find(A.class, receiver).orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(1);
+    assertThat(DIRECT.find(A.class, receiver))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(1));
   }
 
   @Test

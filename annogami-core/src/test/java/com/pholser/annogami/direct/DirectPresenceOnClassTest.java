@@ -1,7 +1,6 @@
 package com.pholser.annogami.direct;
 
 import com.pholser.annogami.AnnotationAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Inherited;
@@ -67,11 +66,9 @@ class DirectPresenceOnClassTest {
 
   @Test
   void findsDirectlyPresent() {
-    A a =
-      DIRECT.find(A.class, AHaver.class)
-        .orElseGet(Assertions::fail);
-
-    assertThat(a.value()).isEqualTo(3);
+    assertThat(DIRECT.find(A.class, AHaver.class))
+      .isPresent()
+      .hasValueSatisfying(a -> assertThat(a.value()).isEqualTo(3));
   }
 
   @Test
@@ -88,11 +85,9 @@ class DirectPresenceOnClassTest {
 
   @Test
   void findsContainerAnnotationOfIndirectlyPresent() {
-    Bs bs =
-      DIRECT.find(Bs.class, ManyBHaver.class)
-        .orElseGet(Assertions::fail);
-
-    assertThat(bs.value()).hasSize(2);
+    assertThat(DIRECT.find(Bs.class, ManyBHaver.class))
+      .isPresent()
+      .hasValueSatisfying(bs -> assertThat(bs.value()).hasSize(2));
   }
 
   @Test

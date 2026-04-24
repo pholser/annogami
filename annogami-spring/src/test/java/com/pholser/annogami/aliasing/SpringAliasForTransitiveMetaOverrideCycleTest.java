@@ -2,7 +2,6 @@ package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
 import com.pholser.annogami.Presences;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -44,7 +43,7 @@ class SpringAliasForTransitiveMetaOverrideCycleTest {
     assertThatThrownBy(() ->
       Presences.META_DIRECT
         .find(Base.class, Target.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail)
+        .orElseThrow()
         .value() // force proxy creation / member access
     ).isInstanceOf(IllegalStateException.class)
       .hasMessageContaining("cycle");

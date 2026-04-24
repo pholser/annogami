@@ -1,7 +1,6 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -30,10 +29,9 @@ class SpringAliasForMetaOverrideTest {
 
   @Test
   void findsValueFromComposedAttribute() {
-    Base b =
-      META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(b.value()).isEqualTo("hello");
+    assertThat(
+      META_DIRECT.find(Base.class, Target.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("hello"));
   }
 }

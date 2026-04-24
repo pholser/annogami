@@ -1,7 +1,6 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -59,47 +58,53 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
 
   @Test
   void settingUrlPropagatesAllThreeMembers() {
-    Route r = DIRECT.find(Route.class, SetViaUrl.class, SpringAliasing.spring())
-      .orElseGet(Assertions::fail);
-
-    assertThat(r.url()).isEqualTo("/api");
-    assertThat(r.path()).isEqualTo("/api");
-    assertThat(r.value()).isEqualTo("/api");
+    assertThat(
+      DIRECT.find(Route.class, SetViaUrl.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(r -> {
+        assertThat(r.url()).isEqualTo("/api");
+        assertThat(r.path()).isEqualTo("/api");
+        assertThat(r.value()).isEqualTo("/api");
+      });
   }
 
   @Test
   void settingPathPropagatesAllThreeMembers() {
-    Route r = DIRECT.find(Route.class, SetViaPath.class, SpringAliasing.spring())
-      .orElseGet(Assertions::fail);
-
-    assertThat(r.url()).isEqualTo("/api");
-    assertThat(r.path()).isEqualTo("/api");
-    assertThat(r.value()).isEqualTo("/api");
+    assertThat(
+      DIRECT.find(Route.class, SetViaPath.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(r -> {
+        assertThat(r.url()).isEqualTo("/api");
+        assertThat(r.path()).isEqualTo("/api");
+        assertThat(r.value()).isEqualTo("/api");
+      });
   }
 
   @Test
   void settingValuePropagatesAllThreeMembers() {
-    Route r = DIRECT.find(Route.class, SetViaValue.class, SpringAliasing.spring())
-      .orElseGet(Assertions::fail);
-
-    assertThat(r.url()).isEqualTo("/api");
-    assertThat(r.path()).isEqualTo("/api");
-    assertThat(r.value()).isEqualTo("/api");
+    assertThat(
+      DIRECT.find(Route.class, SetViaValue.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(r -> {
+        assertThat(r.url()).isEqualTo("/api");
+        assertThat(r.path()).isEqualTo("/api");
+        assertThat(r.value()).isEqualTo("/api");
+      });
   }
 
   @Test
   void settingUrlAlsoPropagatesMetaAttribute() {
-    Base b = META_DIRECT.find(Base.class, SetViaUrl.class, SpringAliasing.spring())
-      .orElseGet(Assertions::fail);
-
-    assertThat(b.value()).isEqualTo("/api");
+    assertThat(
+      META_DIRECT.find(Base.class, SetViaUrl.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(b -> assertThat(b.value()).isEqualTo("/api"));
   }
 
   @Test
   void conflictingExplicitValuesOnUrlAndPathFailFast() {
     assertThatThrownBy(() ->
       DIRECT.find(Route.class, ConflictUrlAndPath.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail)
+        .orElseThrow()
         .url()
     ).isInstanceOf(IllegalStateException.class);
   }
@@ -108,7 +113,7 @@ class SpringAliasForThreeWayImplicitIntraAliasTest {
   void conflictingExplicitValuesOnUrlAndValueFailFast() {
     assertThatThrownBy(() ->
       DIRECT.find(Route.class, ConflictUrlAndValue.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail)
+        .orElseThrow()
         .value()
     ).isInstanceOf(IllegalStateException.class);
   }

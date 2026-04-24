@@ -1,7 +1,6 @@
 package com.pholser.annogami.aliasing;
 
 import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
@@ -51,41 +50,57 @@ class SpringAliasForArrayValuedAttributeTest {
 
   @Test
   void arrayValuePropagatesFromValueToBasePackages() {
-    ComponentScan cs =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(cs.value()).containsExactly("com.example", "com.other");
-    assertThat(cs.basePackages()).containsExactly("com.example", "com.other");
+    assertThat(
+      DIRECT.find(
+        ComponentScan.class, SetViaValue.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(cs -> {
+        assertThat(cs.value())
+          .containsExactly("com.example", "com.other");
+        assertThat(cs.basePackages())
+          .containsExactly("com.example", "com.other");
+      });
   }
 
   @Test
   void arrayValuePropagatesFromBasePackagesToValue() {
-    ComponentScan cs =
-      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(cs.basePackages()).containsExactly("com.example", "com.other");
-    assertThat(cs.value()).containsExactly("com.example", "com.other");
+    assertThat(
+      DIRECT.find(
+        ComponentScan.class,
+        SetViaBasePackages.class,
+        SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(cs -> {
+        assertThat(cs.basePackages())
+          .containsExactly("com.example", "com.other");
+        assertThat(cs.value())
+          .containsExactly("com.example", "com.other");
+      });
   }
 
   @Test
   void arrayValuePropagatesFromComposedToMetaAnnotation() {
-    Scan scan =
-      META_DIRECT.find(Scan.class, SetViaValue.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
-
-    assertThat(scan.packages()).containsExactly("com.example", "com.other");
+    assertThat(
+      META_DIRECT.find(
+        Scan.class, SetViaValue.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(scan ->
+        assertThat(scan.packages())
+          .containsExactly("com.example", "com.other"));
   }
 
   @Test
   void twoSynthesizedAnnotationsWithSameArrayValueAreEqual() {
     ComponentScan cs1 =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
+      DIRECT.find(
+          ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
+        .orElseThrow();
     ComponentScan cs2 =
-      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
+      DIRECT.find(
+          ComponentScan.class,
+          SetViaBasePackages.class,
+          SpringAliasing.spring())
+        .orElseThrow();
 
     assertThat(cs1).isEqualTo(cs2);
   }
@@ -93,43 +108,52 @@ class SpringAliasForArrayValuedAttributeTest {
   @Test
   void twoSynthesizedAnnotationsWithSameArrayValueHaveSameHashCode() {
     ComponentScan cs1 =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
+      DIRECT.find(
+          ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
+        .orElseThrow();
     ComponentScan cs2 =
-      DIRECT.find(ComponentScan.class, SetViaBasePackages.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
+      DIRECT.find(
+          ComponentScan.class,
+          SetViaBasePackages.class,
+          SpringAliasing.spring())
+        .orElseThrow();
 
     assertThat(cs1.hashCode()).isEqualTo(cs2.hashCode());
   }
 
   @Test
   void synthesizedAnnotationEqualsRealAnnotationWithSameValues() {
-    ComponentScan synthesized =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
     ComponentScan real = SetViaBoth.class.getAnnotation(ComponentScan.class);
-
-    assertThat(synthesized).isEqualTo(real);
+    assertThat(
+      DIRECT.find(
+        ComponentScan.class, SetViaValue.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(synthesized ->
+        assertThat(synthesized).isEqualTo(real));
   }
 
   @Test
   void realAnnotationEqualsSynthesizedAnnotationWithSameValues() {
-    ComponentScan synthesized =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
     ComponentScan real = SetViaBoth.class.getAnnotation(ComponentScan.class);
-
-    // Symmetry: the JVM's AnnotationInvocationHandler must also consider them equal.
-    assertThat(real).isEqualTo(synthesized);
+    assertThat(
+      DIRECT.find(
+        ComponentScan.class, SetViaValue.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(synthesized -> {
+        // Symmetry: the JVM's AnnotationInvocationHandler must also
+        // consider them equal.
+        assertThat(real).isEqualTo(synthesized);
+      });
   }
 
   @Test
   void synthesizedAnnotationAndRealAnnotationWithSameValuesHaveSameHashCode() {
-    ComponentScan synthesized =
-      DIRECT.find(ComponentScan.class, SetViaValue.class, SpringAliasing.spring())
-        .orElseGet(Assertions::fail);
     ComponentScan real = SetViaBoth.class.getAnnotation(ComponentScan.class);
-
-    assertThat(synthesized.hashCode()).isEqualTo(real.hashCode());
+    assertThat(
+      DIRECT.find(
+        ComponentScan.class, SetViaValue.class, SpringAliasing.spring()))
+      .isPresent()
+      .hasValueSatisfying(synthesized ->
+        assertThat(synthesized.hashCode()).isEqualTo(real.hashCode()));
   }
 }
