@@ -1,19 +1,17 @@
 package com.pholser.annogami.aliasing;
 
-import com.pholser.annogami.spring.SpringAliasing;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.annotation.AliasFor;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
-import java.util.List;
 
 import static com.pholser.annogami.Presences.DIRECT;
 import static com.pholser.annogami.Presences.META_DIRECT;
+import static com.pholser.annogami.spring.SpringAliasing.spring;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
   @Retention(RUNTIME)
@@ -45,63 +43,48 @@ class SpringAliasForAllImplicitIntraAliasesViaSameMetaTargetTest {
 
   @Test
   void settingNameAlsoSetsValueBecauseTheyAreImplicitAliases() {
-    List<Annotation> all = DIRECT.all(TargetNameOnly.class, SpringAliasing.spring());
-
-    Composed c =
-      all.stream()
-        .filter(a -> a.annotationType() == Composed.class)
-        .map(Composed.class::cast)
-        .findFirst()
-        .orElseGet(Assertions::fail);
-
-    assertThat(c.name()).isEqualTo("hello");
-    assertThat(c.value()).isEqualTo("hello");
+    assertThat(DIRECT.all(TargetNameOnly.class, spring()))
+      .filteredOn(a -> a.annotationType() == Composed.class)
+      .singleElement(type(Composed.class))
+      .satisfies(c -> {
+        assertThat(c.name()).isEqualTo("hello");
+        assertThat(c.value()).isEqualTo("hello");
+      });
   }
 
   @Test
   void settingValueAlsoSetsNameBecauseTheyAreImplicitAliases() {
-    List<Annotation> all = DIRECT.all(TargetValueOnly.class, SpringAliasing.spring());
-
-    Composed c =
-      all.stream()
-        .filter(a -> a.annotationType() == Composed.class)
-        .map(Composed.class::cast)
-        .findFirst()
-        .orElseGet(Assertions::fail);
-
-    assertThat(c.value()).isEqualTo("hello");
-    assertThat(c.name()).isEqualTo("hello");
+    assertThat(DIRECT.all(TargetValueOnly.class, spring()))
+      .filteredOn(a -> a.annotationType() == Composed.class)
+      .singleElement(type(Composed.class))
+      .satisfies(c -> {
+        assertThat(c.value()).isEqualTo("hello");
+        assertThat(c.name()).isEqualTo("hello");
+      });
   }
 
   @Test
   void conflictingExplicitValuesOnImplicitAliasesFailFast() {
-    assertThatThrownBy(
-      () -> DIRECT.all(TargetConflict.class, SpringAliasing.spring()))
+    assertThatThrownBy(() -> DIRECT.all(TargetConflict.class, spring()))
       .isInstanceOf(IllegalStateException.class);
   }
 
   @Test
   void metaViewAlsoSeesTheResolvedValue() {
-    List<Annotation> all =
-      META_DIRECT.all(TargetNameOnly.class, SpringAliasing.spring());
+    var all = META_DIRECT.all(TargetNameOnly.class, spring());
 
-    Composed c =
-      all.stream()
-        .filter(a -> a.annotationType() == Composed.class)
-        .map(Composed.class::cast)
-        .findFirst()
-        .orElseGet(Assertions::fail);
+    assertThat(all)
+      .filteredOn(a -> a.annotationType() == Composed.class)
+      .singleElement(type(Composed.class))
+      .satisfies(c -> {
+        assertThat(c.name()).isEqualTo("hello");
+        assertThat(c.value()).isEqualTo("hello");
+      });
 
-    assertThat(c.name()).isEqualTo("hello");
-    assertThat(c.value()).isEqualTo("hello");
-
-    Base b =
-      all.stream()
-        .filter(a -> a.annotationType() == Base.class)
-        .map(Base.class::cast)
-        .findFirst()
-        .orElseGet(Assertions::fail);
-
-    assertThat(b.value()).isEqualTo("hello");
+    assertThat(all)
+      .filteredOn(a -> a.annotationType() == Base.class)
+      .singleElement(type(Base.class))
+      .extracting(Base::value)
+      .isEqualTo("hello");
   }
 }
