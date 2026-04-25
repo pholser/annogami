@@ -1,0 +1,47 @@
+java {
+  withSourcesJar()
+  withJavadocJar()
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      pom {
+        name = project.name
+        description = project.ext.pomDescription
+        url = 'https://github.com/pholser/annogami'
+        licenses {
+          license {
+            name = 'Apache License, Version 2.0'
+            url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+        developers {
+          developer {
+            id = 'pholser'
+            name = 'Paul Holser'
+            email = 'pholser@gmail.com'
+          }
+        }
+        scm {
+          connection = 'scm:git:https://github.com/pholser/annogami.git'
+          developerConnection = 'scm:git:ssh://git@github.com/pholser/annogami.git'
+          url = 'https://github.com/pholser/annogami'
+        }
+      }
+    }
+  }
+}
+
+signing {
+  sign publishing.publications.mavenJava
+}
+
+nmcp {
+  publish('mavenJava') {
+    username = providers.gradleProperty('centralUsername')
+    password = providers.gradleProperty('centralPassword')
+    publicationType = 'USER_MANAGED'
+  }
+}

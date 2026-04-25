@@ -1,5 +1,8 @@
 plugins {
   id 'java-library'
+  id 'maven-publish'
+  id 'signing'
+  id 'com.gradleup.nmcp'
 }
 
 java {
@@ -8,6 +11,9 @@ java {
 
 group = 'com.pholser.annogami'
 version = '1.0.0-SNAPSHOT'
+
+ext.pomDescription =
+  'Spring @AliasFor attribute synthesis for annogami'
 
 repositories {
   mavenCentral()
@@ -35,3 +41,5 @@ tasks.withType(JavaCompile).configureEach {
 test {
   useJUnitPlatform()
 }
+
+apply from: rootProject.file('gradle/publish.gradle')

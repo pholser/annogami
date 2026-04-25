@@ -1,13 +1,19 @@
 plugins {
   id 'java-library'
+  id 'maven-publish'
+  id 'signing'
+  id 'com.gradleup.nmcp'
 }
 
 java {
   modularity.inferModulePath = true
 }
 
-group = 'com.pholser.spring'
+group = 'com.pholser.annogami'
 version = '1.0.0-SNAPSHOT'
+
+ext.pomDescription =
+  'Compile-time @AliasFor validation annotation processor'
 
 repositories {
   mavenCentral()
@@ -22,3 +28,4 @@ test {
   useJUnitPlatform()
 }
 
+apply from: rootProject.file('gradle/publish.gradle')
