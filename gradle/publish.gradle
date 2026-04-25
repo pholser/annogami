@@ -21,7 +21,7 @@ publishing {
           developer {
             id = 'pholser'
             name = 'Paul Holser'
-            email = 'pholser@gmail.com'
+            email = 'pholser@alumni.rice.edu'
           }
         }
         scm {

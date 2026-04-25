@@ -10,7 +10,7 @@ java {
 }
 
 group = 'com.pholser.annogami'
-version = '1.0.0-SNAPSHOT'
+version = '0.1-SNAPSHOT'
 
 ext.pomDescription =
   'Compile-time @AliasFor validation annotation processor'
