@@ -1,0 +1,14 @@
+plugins {
+  id 'pl.allegro.tech.build.axion-release'
+}
+
+scmVersion {
+  tag {
+    prefix = 'v'
+  }
+}
+
+allprojects {
+  group = 'com.pholser.annogami'
+  version = scmVersion.version
+}

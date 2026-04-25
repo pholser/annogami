@@ -9,8 +9,6 @@ java {
   modularity.inferModulePath = true
 }
 
-group = 'com.pholser.annogami'
-version = '0.1-SNAPSHOT'
 
 ext.pomDescription =
   'Spring @AliasFor attribute synthesis for annogami'

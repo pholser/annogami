@@ -2,8 +2,6 @@ plugins {
   id 'java-library'
 }
 
-group = 'com.pholser.annogami'
-version = '0.1-SNAPSHOT'
 
 java {
   modularity.inferModulePath = true
